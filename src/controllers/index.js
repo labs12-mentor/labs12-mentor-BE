@@ -4,6 +4,7 @@ const experiencesController = require('./experiences');
 const matchesController = require('./matches');
 const menteeProfilesController = require('./menteeProfiles');
 const mentorProfilesController = require('./mentorProfiles');
+const meetingsController = require('./meetings');
 const notificationsController = require('./notifications');
 const organizationsController = require('./organizations');
 const rolesController = require('./roles');
@@ -16,6 +17,7 @@ module.exports = {
     matchesController,
     menteeProfilesController,
     mentorProfilesController,
+    meetingsController,
     notificationsController,
     organizationsController,
     rolesController,
