@@ -4,8 +4,6 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('experiences', table => {
         table
             .increments();
-        
-        fkey(table, 'match_id', 'matches');
 
         table
             .string('name')
