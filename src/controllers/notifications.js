@@ -3,6 +3,7 @@ module.exports = {
     addNotification,
     getNotification,
     updateNotification,
+    markNotification,
     deleteNotification,
     removeNotification
 }
@@ -22,6 +23,10 @@ async function getNotification(req, res){
 
 async function updateNotification(req, res){
     res.status(200).json({ message: 'update notification API OK' });
+}
+
+async function markNotification(req, res){
+    res.status(200).json({ message: 'mark notification API OK' });
 }
 
 async function deleteNotification(req, res){
