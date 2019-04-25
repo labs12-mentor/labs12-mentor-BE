@@ -12,6 +12,10 @@ exports.up = function(knex, Promise) {
             .notNullable();
 
         table
+            .boolean('watched')
+            .default(false);
+
+        table
             .boolean('deleted')
             .default(false);
     });
