@@ -6,7 +6,7 @@ module.exports = {
 const Users = require('../database/helpers/users');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../middleware/generateToken');
-const { usersValidator } = require('../validators');
+const { authValidator } = require('../validators');
 
 async function loginUser(req, res){
     const {
@@ -19,7 +19,7 @@ async function loginUser(req, res){
         password
     }
     
-    if(!usersValidator.validateCredentials(userData)){
+    if(!authValidator.validateCredentials(userData)){
         return await res
             .status(404)
             .json({ error: 'Login failed. Wrong credentials!' });
@@ -68,7 +68,7 @@ async function registerUser(req, res){
         zipcode
     }
 
-    if(!usersValidator.validateUser(userData)){
+    if(!authValidator.validateUser(userData)){
         return await res
             .status(400)
             .json({ error: 'Cannot register user!' });

@@ -1,5 +1,6 @@
 module.exports = {
-    validateUser
+    validateUser,
+    validateCredentials
 }
 
 async function validateUser(userData){
@@ -10,6 +11,12 @@ async function validateUser(userData){
         || !userData.last_name
         || !userData.email
     ) return false;
+
+    return true;
+}
+
+async function validateCredentials(userData){
+    if(!userData.username || !userData.password) return false;
 
     return true;
 }
