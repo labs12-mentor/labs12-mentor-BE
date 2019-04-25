@@ -1,4 +1,4 @@
-const { dropTable } = require('../helpers/db');
+const { dropTable, fkey } = require('../helpers/db');
 
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('notifications', table => {
