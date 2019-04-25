@@ -1,5 +1,11 @@
-const apiController = require('./apiController');
+const apiController = require('./api');
+const usersController = require('./users');
+const rolesController = require('./roles');
+const authController = require('./auth');
 
 module.exports = {
-    apiController
+    apiController,
+    authController,
+    usersController,
+    rolesController
 }
