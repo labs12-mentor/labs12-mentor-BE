@@ -1,5 +1,6 @@
 module.exports = {
     truncate,
+    getAllUsers,
     getUserByUsername,
     getUserById,
     insertUser,
@@ -11,6 +12,12 @@ const db = require('../dbConfig');
 
 async function truncate() {
     return await db('users').truncate();
+}
+
+async function getAllUsers() {
+    return await db
+        .select('*')
+        .from('users');
 }
 
 async function getUserByUsername(username) {
@@ -30,7 +37,19 @@ async function getUserById(id) {
 
 async function insertUser(user) {
     return await db('users')
-        .insert({ username: user.username, password: user.password })
+        .insert({
+            username: user.username,
+            password: user.password,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            country: user.country || '',
+            state: user.state || '',
+            city: user.city || '',
+            zipcode: user.zipcode || '',
+            role: user.role || 0,
+            deleted: user.deleted || false
+        })
         .then(response => {
             return {
                 id: response[0]
