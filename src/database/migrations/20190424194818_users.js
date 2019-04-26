@@ -38,7 +38,14 @@ exports.up = function(knex, Promise) {
         table
             .string('zipcode');
         
-        fkey(table, 'role_id', 'roles');
+        table
+            .integer('role_id')
+            .notNullable()
+            .unsigned()
+            .references('id')
+            .inTable('roles')
+            .onDelete('RESTRICT')
+            .onUpdate('CASCADE');
 
         table
             .boolean('deleted')
