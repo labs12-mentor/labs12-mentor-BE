@@ -2,8 +2,9 @@ require('dotenv').config();
 const faker = require('faker');
 const bcrypt = require('bcryptjs');
 
-function makeUser(){
+function makeUser(i){
   return {
+    id: i,
     username: faker.internet.userName(),
     password: bcrypt.hashSync('password', 5),
     first_name: faker.name.firstName(),
@@ -17,11 +18,11 @@ function makeUser(){
 }
 
 exports.seed = function(knex, Promise) {
-  return knex('users').truncate()
+  return knex('users').del()
     .then(function () {
       const usersList = [];
       for(let i=0; i<1000; i++){
-        usersList.push(makeUser())
+        usersList.push(makeUser(i))
         console.log(i);
       }
       return knex('users').insert(usersList);
