@@ -9,7 +9,8 @@ module.exports = {
 const Organizations = require('../database/helpers/organizations');
 
 async function getOrganizations(req, res){
-    res.status(200).json({ message: 'get organizations API OK' });
+    const organizations = await Organizations.getOrganizations();
+    res.status(200).json(organizations);
 }
 
 async function addOrganization(req, res){
@@ -17,7 +18,8 @@ async function addOrganization(req, res){
 }
 
 async function getOrganization(req, res){
-    res.status(200).json({ message: 'get organization API OK' });
+    const organization = await Organizations.getOrganizationById(req.params.id);
+    res.status(200).json(organization);
 }
 
 async function updateOrganization(req, res){
