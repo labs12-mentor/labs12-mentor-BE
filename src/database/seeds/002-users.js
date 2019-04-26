@@ -6,7 +6,7 @@ function makeUser(i){
   return {
     id: i,
     username: faker.internet.userName(),
-    password: bcrypt.hashSync('password', 5),
+    password: bcrypt.hashSync('password', 10),
     first_name: faker.name.firstName(),
     last_name: faker.name.lastName(),
     email: faker.internet.email(),
