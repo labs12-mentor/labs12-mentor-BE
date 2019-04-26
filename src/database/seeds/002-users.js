@@ -22,7 +22,7 @@ exports.seed = function(knex, Promise) {
   return knex('users').del()
     .then(function () {
       const usersList = [];
-      for(let i=0; i<1000; i++){
+      for(let i=0; i<500; i++){
         usersList.push(makeUser(i))
         console.log(i);
       }
