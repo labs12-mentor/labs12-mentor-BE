@@ -13,7 +13,7 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       const userRolesList = [];
       for(let i=0; i<1000; i++){
-        usersList.push(makeUserRole(i))
+        userRolesList.push(makeUserRole(i))
         console.log(i);
       }
       return knex('user_roles').insert(userRolesList);
