@@ -12,8 +12,7 @@ function makeUser(){
     country: faker.address.country(),
     state: faker.address.state(),
     city: faker.address.city(),
-    zipcode: faker.address.zipCode(),
-    role_id: Math.round(Math.random()*3, 0)
+    zipcode: faker.address.zipCode()
   }
 }
 
