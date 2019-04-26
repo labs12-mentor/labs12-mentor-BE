@@ -21,7 +21,7 @@ async function getMentorProfiles() {
 
 async function getMentorProfileById(id) {
     return await db
-        .select('id', 'user_id', 'experience', 'deleted')
+        .select('id', 'user_id', 'deleted')
         .from('mentorprofiles')
         .where({ id })
         .first();

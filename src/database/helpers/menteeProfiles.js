@@ -21,7 +21,7 @@ async function getMenteeProfiles() {
 
 async function getMenteeProfileById(id) {
     return await db
-        .select('id', 'user_id', 'desired_zip', 'lambda_week', 'experience', 'interests', 'application_answers', 'wanted_mentor', 'deleted')
+        .select('id', 'user_id', 'desired_zip', 'lambda_week', 'interests', 'application_answers', 'wanted_mentor_id', 'deleted')
         .from('menteeprofiles')
         .where({ id })
         .first();
