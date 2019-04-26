@@ -10,7 +10,8 @@ module.exports = {
 const Notifications = require('../database/helpers/notifications');
 
 async function getNotifications(req, res){
-    res.status(200).json({ message: 'get notifications API OK' });
+    const notifications = await Notifications.getNotifications();
+    res.status(200).json(notifications);
 }
 
 async function addNotification(req, res){
@@ -18,7 +19,8 @@ async function addNotification(req, res){
 }
 
 async function getNotification(req, res){
-    res.status(200).json({ message: 'get notification API OK' });
+    const notification = await Notifications.getNotificationById(req.params.id);
+    res.status(200).json(notification);
 }
 
 async function updateNotification(req, res){
