@@ -22,6 +22,8 @@ function makeRoles(){
 exports.seed = function(knex, Promise) {
   return knex('roles').del()
     .then(function () {
-      return knex('roles').insert(makeRoles());
+      const roles = makeRoles();
+      console.log("----- Roles added! -----");
+      return knex('roles').insert(roles);
     });
 };
