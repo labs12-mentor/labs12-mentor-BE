@@ -9,7 +9,8 @@ module.exports = {
 const Roles = require('../database/helpers/roles');
 
 async function getAllRoles(req, res){
-    res.status(200).json({ message: 'get all roles API OK' });
+    const roles = await Roles.getAllRoles();
+    res.status(200).json(roles);
 }
 
 async function addNewRole(req, res){
@@ -17,7 +18,8 @@ async function addNewRole(req, res){
 }
 
 async function getRole(req, res){
-    res.status(200).json({ message: 'get role API OK' });
+    const role = await Roles.getRoleById(req.params.id);
+    res.status(200).json(role);
 }
 
 async function updateRole(req, res){
