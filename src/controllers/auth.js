@@ -53,7 +53,8 @@ async function registerUser(req, res){
         country,
         state,
         city,
-        zipcode
+        zipcode,
+        role_id
     } = req.body;
 
     let userData = {
@@ -65,7 +66,8 @@ async function registerUser(req, res){
         country,
         state,
         city,
-        zipcode
+        zipcode,
+        role_id: role_id || 0
     }
 
     if(!authValidator.validateUser(userData)){
@@ -74,7 +76,7 @@ async function registerUser(req, res){
             .json({ error: 'Cannot register user!' });
     }
     try {
-        let hashedPassword = bcrypt.hashSync(userData.password, 12);
+        let hashedPassword = bcrypt.hashSync(userData.password, 10);
         userData.password = hashedPassword;
         const user = await Users.getUserByUsername(userData.username);
         if(user !== undefined) throw new Error('User already registered!');

@@ -37,8 +37,6 @@ exports.up = function(knex, Promise) {
         
         table
             .string('zipcode');
-        
-        fkey(table, 'role', 'roles');
 
         table
             .boolean('deleted')
