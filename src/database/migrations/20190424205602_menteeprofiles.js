@@ -13,16 +13,12 @@ exports.up = function(knex, Promise) {
         table
             .integer('lambda_week')
             .notNullable();
-
-        fkey(table, 'experience', 'experiences');
         
         table
             .string('interests');
 
         table
             .string('application_answers');
-        
-        fkey(table, 'wanted_mentor', 'mentorprofiles');
 
         table
             .boolean('deleted')
