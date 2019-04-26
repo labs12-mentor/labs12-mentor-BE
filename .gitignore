@@ -81,3 +81,6 @@ typings/
 
 # sqlite
 *.sqlite3
+
+# yarn lock file
+yarn.lock
