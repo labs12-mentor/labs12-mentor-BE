@@ -9,11 +9,7 @@ function makeAdministrator(i){
     first_name: faker.name.firstName(),
     last_name: faker.name.lastName(),
     email: faker.internet.email(),
-    country: faker.address.country(),
-    state: faker.address.state(),
-    city: faker.address.city(),
-    zipcode: faker.address.zipCode(),
-    company_name: faker.company.companyName(),
+    company_name: faker.company.companyName()
   }
 }
 
