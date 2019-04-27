@@ -4,6 +4,7 @@ function makeOrganization(i){
   return {
     id: i,
     name: faker.company.companyName(),
+    logo: faker.image.business(),
     admin_id: i
   }
 }
