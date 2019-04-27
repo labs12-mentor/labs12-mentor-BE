@@ -5,7 +5,9 @@ function makeMeeting(i){
     id: i,
     match_id: i,
     meeting_date: faker.date.future(1),
-    location: faker.address.city()
+    location: faker.address.city(),
+    notes: faker.random.words(5),
+    rating: Math.floor((Math.random()*5))
   }
 }
 
