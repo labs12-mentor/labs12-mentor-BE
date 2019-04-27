@@ -21,7 +21,7 @@ async function getOrganizations() {
 
 async function getOrganizationById(id) {
     return await db
-        .select('id', 'name', 'logo', 'deleted')
+        .select('id', 'name', 'logo', 'admin_id', 'deleted')
         .from('organizations')
         .where({ id })
         .first();
@@ -31,7 +31,8 @@ async function insertOrganization(organization) {
     return await db('organizations')
         .insert({
             name: organization.name,
-            logo: organization.logo
+            logo: organization.logo,
+            admin_id: organization.admin_id
         })
         .then(response => {
             return {
@@ -46,6 +47,7 @@ async function updateOrganization(id, organization) {
         .update({
             name: organization.name,
             logo: organization.logo,
+            admin_id: organization.admin_id,
             deleted: organization.deleted
         });
 }
