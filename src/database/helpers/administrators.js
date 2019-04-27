@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getAdministrators,
     getAdministratorById,
+    getAdministratorByUsername,
     insertAdministrator,
     updateAdministrator,
     deleteAdministrator,
@@ -24,6 +25,14 @@ async function getAdministratorById(id) {
         .select('id', 'username', 'first_name', 'last_name', 'email', 'company_name', 'deleted')
         .from('administrators')
         .where({ id })
+        .first();
+}
+
+async function getAdministratorByUsername(username) {
+    return await db
+        .select('id', 'username', 'first_name', 'last_name', 'email', 'company_name', 'deleted')
+        .from('administrators')
+        .where({ username })
         .first();
 }
 

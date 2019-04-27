@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getOwners,
     getOwnerById,
+    getOwnerByUsername,
     insertOwner,
     updateOwner,
     deleteOwner,
@@ -24,6 +25,14 @@ async function getOwnerById(id) {
         .select('id', 'username', 'email', 'company_name', 'deleted')
         .from('owners')
         .where({ id })
+        .first();
+}
+
+async function getOwnerByUsername(username) {
+    return await db
+        .select('id', 'username', 'email', 'company_name', 'deleted')
+        .from('owners')
+        .where({ username })
         .first();
 }
 
