@@ -81,8 +81,9 @@ async function checkIfCanRegister() {
         .select('*')
         .from('owners')
         .where({ deleted: false })
-        .count()
+        .count('id')
+        .first()
         .then(result => {
-            return result === 0;
+            return result['count(`id`)'] === 0;
         });
 }
