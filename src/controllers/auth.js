@@ -146,8 +146,8 @@ async function registerOwner(req, res){
         email,
         company_name
     }
-
-    if(!authValidator.validateOwner(userData) || !Owners.checkIfCanRegister()){
+    const checkIfCanRegister = await Owners.checkIfCanRegister();
+    if(!authValidator.validateOwner(userData) || !checkIfCanRegister){
         return await res
             .status(400)
             .json({ error: 'Cannot register new owner!' });
