@@ -33,7 +33,6 @@ async function insertMenteeProfile(menteeProfile) {
             user_id: menteeProfile.user_id,
             desired_zip: menteeProfile.desired_zip,
             lambda_week: menteeProfile.lambda_week,
-            experience: menteeProfile.experience,
             interests: menteeProfile.interests,
             application_answers: menteeProfile.application_answers,
             wanted_mentor: menteeProfile.wanted_mentor
@@ -42,7 +41,7 @@ async function insertMenteeProfile(menteeProfile) {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateMenteeProfile(id, menteeProfile) {
@@ -52,7 +51,6 @@ async function updateMenteeProfile(id, menteeProfile) {
             user_id: menteeProfile.user_id,
             desired_zip: menteeProfile.desired_zip,
             lambda_week: menteeProfile.lambda_week,
-            experience: menteeProfile.experience,
             interests: menteeProfile.interests,
             application_answers: menteeProfile.application_answers,
             wanted_mentor: menteeProfile.wanted_mentor,
