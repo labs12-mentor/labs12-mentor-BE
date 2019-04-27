@@ -24,10 +24,10 @@ async function loginUser(req, res){
         username,
         password
     }
-    
-    if(!authValidator.validateCredentials(userData)){
+    const validCredentials = await authValidator.validateCredentials(userData);
+    if(!validCredentials){
         return await res
-            .status(404)
+            .status(400)
             .json({ error: 'Login failed. Wrong credentials!' });
     }
     try {
@@ -40,7 +40,7 @@ async function loginUser(req, res){
         } else {
             return await res
                 .status(404)
-                .json({ message: 'No user found!' });
+                .json({ error: 'No user found!' });
         }
     } catch(error) {
         return await res
@@ -76,7 +76,8 @@ async function registerUser(req, res){
         role_id: role_id || 0
     }
 
-    if(!authValidator.validateUser(userData)){
+    const validUser = await authValidator.validateUser(userData);
+    if(!validUser){
         return await res
             .status(400)
             .json({ error: 'Cannot register user!' });
@@ -107,10 +108,11 @@ async function loginOwner(req, res){
         username,
         password
     }
-    
-    if(!authValidator.validateCredentials(userData)){
+
+    const validCredentials = await authValidator.validateCredentials(userData);
+    if(!validCredentials){
         return await res
-            .status(404)
+            .status(400)
             .json({ error: 'Login failed. Wrong credentials!' });
     }
     try {
@@ -123,7 +125,7 @@ async function loginOwner(req, res){
         } else {
             return await res
                 .status(404)
-                .json({ message: 'No owner found!' });
+                .json({ error: 'No owner found!' });
         }
     } catch(error) {
         return await res
@@ -147,7 +149,8 @@ async function registerOwner(req, res){
         company_name
     }
     const checkIfCanRegister = await Owners.checkIfCanRegister();
-    if(!authValidator.validateOwner(userData) || !checkIfCanRegister){
+    const validOwner = await authValidator.validateOwner(userData);
+    if(!validOwner || !checkIfCanRegister){
         return await res
             .status(400)
             .json({ error: 'Cannot register new owner!' });
@@ -179,9 +182,10 @@ async function loginAdministrator(req, res){
         password
     }
     
-    if(!authValidator.validateCredentials(userData)){
+    const validCredentials = await authValidator.validateCredentials(userData);
+    if(!validCredentials){
         return await res
-            .status(404)
+            .status(400)
             .json({ error: 'Login failed. Wrong credentials!' });
     }
     try {
@@ -194,7 +198,7 @@ async function loginAdministrator(req, res){
         } else {
             return await res
                 .status(404)
-                .json({ message: 'No administrator found!' });
+                .json({ error: 'No administrator found!' });
         }
     } catch(error) {
         return await res
@@ -221,8 +225,8 @@ async function registerAdministrator(req, res){
         email,
         company_name
     }
-
-    if(!authValidator.validateUser(userData)){
+    const validAdministrator = await authValidator.validateAdministrator(userData);
+    if(!validAdministrator){
         return await res
             .status(400)
             .json({ error: 'Cannot register new administrator!' });
