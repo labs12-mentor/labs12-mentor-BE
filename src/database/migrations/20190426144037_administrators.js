@@ -27,18 +27,6 @@ exports.up = function(knex, Promise) {
             .notNullable();
 
         table
-            .string('country');
-        
-        table
-            .string('state');
-        
-        table
-            .string('city');
-        
-        table
-            .string('zipcode');
-
-        table
             .string('company_name');
 
         table
