@@ -34,7 +34,7 @@ async function insertRole(role) {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateRole(id, role) {
