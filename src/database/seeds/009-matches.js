@@ -3,8 +3,8 @@ const faker = require('faker');
 function makeMatch(i){
   return {
     id: i,
-    mentee_id: i,
     mentor_id: Math.round((Math.random()*1000),0)%5,
+    mentee_id: i,
     status: 'DEFAULT',
     start_date: faker.date.past(1),
     end_date: faker.date.future(1)
