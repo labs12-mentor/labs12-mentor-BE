@@ -30,7 +30,7 @@ async function getAdministratorById(id) {
 
 async function getAdministratorByUsername(username) {
     return await db
-        .select('id', 'username', 'first_name', 'last_name', 'email', 'company_name', 'deleted')
+        .select('*')
         .from('administrators')
         .where({ username })
         .first();

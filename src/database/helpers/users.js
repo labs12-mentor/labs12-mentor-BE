@@ -22,7 +22,7 @@ async function getAllUsers() {
 
 async function getUserByUsername(username) {
     return await db
-        .select('id', 'username', 'first_name', 'last_name', 'email', 'country', 'state', 'city', 'zipcode', 'role_id', 'organization_id')
+        .select('*')
         .from('users')
         .where({ username })
         .first();

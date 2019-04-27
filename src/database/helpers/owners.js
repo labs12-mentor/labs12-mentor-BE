@@ -31,7 +31,7 @@ async function getOwnerById(id) {
 
 async function getOwnerByUsername(username) {
     return await db
-        .select('id', 'username', 'email', 'company_name', 'deleted')
+        .select('*')
         .from('owners')
         .where({ username })
         .first();
