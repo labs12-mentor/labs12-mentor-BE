@@ -39,6 +39,8 @@ exports.up = function(knex, Promise) {
             .string('zipcode');
 
         fkey(table, 'role_id', 'roles');
+        
+        fkey(table, 'organization_id', 'organizations');
 
         table
             .boolean('deleted')
