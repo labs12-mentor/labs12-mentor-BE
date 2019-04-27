@@ -21,7 +21,7 @@ async function getOwners() {
 
 async function getOwnerById(id) {
     return await db
-        .select('id', 'username', 'deleted')
+        .select('id', 'username', 'email', 'company_name', 'deleted')
         .from('owners')
         .where({ id })
         .first();
@@ -30,22 +30,26 @@ async function getOwnerById(id) {
 async function insertOwner(owner) {
     return await db('owners')
         .insert({
-            user_id: owner.user_id,
-            name: owner.name,
+            username: owner.username,
+            password: owner.password,
+            email: owner.email,
+            company_name: owner.company_name
         })
         .then(response => {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateOwner(id, owner) {
     return await db('owners')
         .where({ id })
         .update({
-            user_id: owner.user_id,
-            name: owner.name,
+            username: owner.username,
+            password: owner.password,
+            email: owner.email,
+            company_name: owner.company_name,
             deleted: owner.deleted
         });
 }
