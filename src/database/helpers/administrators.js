@@ -21,7 +21,7 @@ async function getAdministrators() {
 
 async function getAdministratorById(id) {
     return await db
-        .select('id', 'username', 'deleted')
+        .select('id', 'username', 'first_name', 'last_name', 'email', 'company_name', 'deleted')
         .from('administrators')
         .where({ id })
         .first();
@@ -30,22 +30,30 @@ async function getAdministratorById(id) {
 async function insertAdministrator(administrator) {
     return await db('administrators')
         .insert({
-            user_id: administrator.user_id,
-            name: administrator.name,
+            username: administrator.username,
+            password: administrator.password,
+            first_name: administrator.first_name,
+            last_name: administrator.last_name,
+            email: administrator.email,
+            company_name: administrator.company_name
         })
         .then(response => {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateAdministrator(id, administrator) {
     return await db('administrators')
         .where({ id })
         .update({
-            user_id: administrator.user_id,
-            name: administrator.name,
+            username: administrator.username,
+            password: administrator.password,
+            first_name: administrator.first_name,
+            last_name: administrator.last_name,
+            email: administrator.email,
+            company_name: administrator.company_name,
             deleted: administrator.deleted
         });
 }
