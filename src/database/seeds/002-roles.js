@@ -2,19 +2,11 @@ function makeRoles(){
   return [
     {
       id: 0,
-      name: 'User'
-    },
-    {
-      id: 1,
       name: 'Mentee'
     },
     {
-      id: 2,
+      id: 1,
       name: 'Mentor'
-    },
-    {
-      id: 3,
-      name: 'Administrator'
     }
   ];
 }
