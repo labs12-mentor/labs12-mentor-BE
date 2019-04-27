@@ -27,7 +27,8 @@ exports.up = function(knex, Promise) {
             .notNullable();
 
         table
-            .string('company_name');
+            .string('company_name')
+            .notNullable();
 
         table
             .boolean('deleted')
