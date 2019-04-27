@@ -6,7 +6,8 @@ module.exports = {
     insertOwner,
     updateOwner,
     deleteOwner,
-    removeOwner
+    removeOwner,
+    checkIfCanRegister
 };
 const db = require('../dbConfig');
 
@@ -73,4 +74,15 @@ async function removeOwner(id) {
     return await db('owners')
         .where({ id })
         .del();
+}
+
+async function checkIfCanRegister() {
+    return await db
+        .select('*')
+        .from('owners')
+        .where({ deleted: false })
+        .count()
+        .then(result => {
+            return result === 0;
+        });
 }
