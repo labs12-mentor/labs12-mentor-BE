@@ -31,13 +31,12 @@ async function insertMentorProfile(mentorProfile) {
     return await db('mentorprofiles')
         .insert({
             user_id: mentorProfile.user_id,
-            experience: mentorProfile.experience
         })
         .then(response => {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateMentorProfile(id, mentorProfile) {
@@ -45,7 +44,6 @@ async function updateMentorProfile(id, mentorProfile) {
         .where({ id })
         .update({
             user_id: mentorProfile.user_id,
-            experience: mentorProfile.experience,
             deleted: mentorProfile.deleted
         });
 }
