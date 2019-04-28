@@ -154,6 +154,224 @@ describe('AUTH ROUTER', () => {
     });
   });
 
+  describe('POST ROUTE /REGISTER', () => {
+    it('should return 201 on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(201);
+    });
+
+    it('should return a message on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ message: 'User successfully registered!' });
+    });
+
+    it('should return 400 on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: '',
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: '',
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no first name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: '',
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no last name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: '',
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: '',
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return an error on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: '',
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+
+    it('should return an error on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: '',
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+
+    it('should return an error on fail (no first name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: '',
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+
+    it('should return an error on fail (no last name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: '',
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+
+    it('should return an error on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: '',
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+  });
+
   describe('POST ROUTE /OWNER/LOGIN', () => {
     it('should return 200 on success', async () => {
       await createOwner();
