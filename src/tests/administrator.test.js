@@ -93,7 +93,24 @@ describe('ADMIN ROUTER', () => {
                     first_name: "Johnny"
                 });
             expect(res.status).toEqual(200);
+        })
+    })
 
+    describe('DELETE ROUTE /:id', () => {
+        it('should return 200 on success', async () => {
+            await createAdministrator();
+            const res = await request(server)
+                .delete(AUTH_API_URL + '/0');
+            expect(res.status).toEqual(200);
+        })
+    })
+
+    describe('DELETE ROUTE /:id/remove', () => {
+        it('should return 200 on success', async () => {
+            await createAdministrator();
+            const res = await request(server)
+                .delete(AUTH_API_URL + '/0/remove');
+            expect(res.status).toEqual(200);
         })
     })
 })
