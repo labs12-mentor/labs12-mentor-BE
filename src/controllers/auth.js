@@ -94,7 +94,7 @@ async function registerUser(req, res){
     } catch(error) {
         return await res
             .status(500)
-            .json({ error });
+            .json({ error: error.message });
     }
 }
 
@@ -167,7 +167,7 @@ async function registerOwner(req, res){
     } catch(error) {
         return await res
             .status(500)
-            .json({ error });
+            .json({ error: error.message });
     }
 }
 
@@ -243,6 +243,6 @@ async function registerAdministrator(req, res){
     } catch(error) {
         return await res
             .status(500)
-            .json({ error });
+            .json({ error: error.message });
     }
 }
