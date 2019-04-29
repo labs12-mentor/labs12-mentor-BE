@@ -242,6 +242,16 @@ describe("MEETINGS ROUTER", () => {
       const res = await request(server).get(`${MEETING_API_URL}/1`);
       expect(res.body).toEqual({ id: 1, ...sampleMeeting });
     });
+
+    it("should return status 404 if no such meeting", async () => {
+        const res = await request(server).get(`${MEETING_API_URL}/1`);
+        expect(res.status).toEqual(404);
+      });
+
+      it("should return error if no such meeting", async () => {
+        const res = await request(server).get(`${MEETING_API_URL}/1`);
+        expect(res.body).toEqual({error: "Your meeting does not exist."});
+      });
   });
 
   describe("PUT ROUTE /MEETINGS/:id", () => {
@@ -277,21 +287,6 @@ describe("MEETINGS ROUTER", () => {
       expect(res.body).toEqual({ message: "Your meeting has been updated" });
     });
 
-    it("should return status 400 on fail (no match id)", async () => {
-      await createMeeting();
-
-      const res = await request(server)
-        .put(`${MEETING_API_URL}/1`)
-        .send({
-          match_id: null,
-          meeting_date: "2016-02-05T03:30:17.883Z",
-          location: "New York --- MANHATTAN",
-          notes: "some cool meeting",
-          rating: Math.floor(Math.random() * 5)
-        });
-
-      expect(res.status).toEqual(400);
-    });
   });
 
   describe("DELETE ROUTE /MEETINGS/:id", async () => {
