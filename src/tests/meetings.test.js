@@ -4,9 +4,13 @@ const Meetings = require('../database/helpers/meetings');
 
 const MEETING_API_URL = '/api/meetings';
 
-// const sampleMeeting = {
-
-// }
+ const sampleMeeting = {
+    match_id: 1,
+    meeting_date: '2016-02-05T03:30:17.883Z',
+    location: 'Hong Kong',
+    notes: 'some meeting',
+    rating: Math.floor((Math.random()*5))
+ }
 
 afterEach(async () => {
     await Meetings.truncate();
@@ -15,6 +19,12 @@ afterEach(async () => {
 beforeEach(async () => {
     await Meetings.truncate();
 })
+
+async function createMeeting() {
+    return await request(server)
+    .post(MEETING_API_URL)
+    .send(sampleMeeting);
+}
 
 describe('MEETINGS ROUTER', () => {
     describe('GET ROUTE /MEETINGS', () => {
@@ -181,6 +191,7 @@ describe('MEETINGS ROUTER', () => {
 
     describe('GET ROUTE /MEETINGS/:id', () => {
         it('should return status 200 on success', async () => {
+            await createMeeting();
             const res = await request(server).get(`${MEETING_API_URL}/1`);
             expect(res.status).toEqual(200);
         })
