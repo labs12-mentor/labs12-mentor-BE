@@ -29,6 +29,7 @@ async function createMeeting() {
 describe("MEETINGS ROUTER", () => {
   describe("GET ROUTE /MEETINGS", () => {
     it("should return status 200 on success", async () => {
+      await createMeeting();  
       const res = await request(server).get(MEETING_API_URL);
       expect(res.status).toEqual(200);
     });
@@ -37,6 +38,12 @@ describe("MEETINGS ROUTER", () => {
       const res = await request(server).get(MEETING_API_URL);
       expect(res.body).toHaveLength(0);
     });
+
+    it("should return an array with length of", async () => {
+        await createMeeting();
+        const res = await request(server).get(MEETING_API_URL);
+        expect(res.body).toHaveLength(1);
+      });
     
   });
 
