@@ -46,5 +46,16 @@ describe("MENTEES ROUTER", () => {
         expect(res.body).toHaveLength(1);
     });
   });
+
+  describe("POST ROUTE/MENTEES", () => {
+      it("should return status 201 on success", async () => {
+          const res = await request(server)
+          .post(MENTEE_API_URL)
+          .send(sampleProfile);
+
+          expect(res.status).toEqual(201);
+      })
+  })
+
 });
 
