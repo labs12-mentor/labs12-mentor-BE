@@ -127,7 +127,7 @@ describe('MEETINGS ROUTER', () => {
             expect(res.body).toEqual({error: 'Please fill out the required fields'});
         }
         
-        it('should return status 400 on fail (no meeting date)'), async () => {
+        it('should return error on fail (no meeting date)'), async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -140,7 +140,18 @@ describe('MEETINGS ROUTER', () => {
             expect(res.body).toEqual({error: 'Please fill out the required fields'});
         }
 
-        
+        it('should return error on fail (no location)'), async () => {
+            const res = await request(server)
+            .post(MEETING_API_URL)
+            .send({
+                match_id: 1,
+                meeting_date: '2016-02-05T03:30:17.883Z',
+                location: '',
+                notes: 'some meeting',
+                rating: Math.floor((Math.random()*5))
+            });
+            expect(res.body).toEqual({error: 'Please fill out the required fields'});
+        }
         
     })
 })
