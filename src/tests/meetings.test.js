@@ -161,4 +161,20 @@ describe('MEETINGS ROUTER', () => {
             expect(res.status).toEqual(200);
         })
     })
+
+    describe('PUT ROUTE /MEETINGS/:id', () => {
+        it('should return status 200 on success', () => {
+            const res = await request(server)
+            .put(`${MEETING_API_URL}/1`)
+            .send({
+                match_id: 1,
+                meeting_date: '2016-02-05T03:30:17.883Z',
+                location: 'New York --- MANHATTAN',
+                notes: 'some meeting',
+                rating: Math.floor((Math.random()*5))
+            });
+
+            expect(res.status).toEqual(200)
+        })
+    })
 })
