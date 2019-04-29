@@ -61,6 +61,20 @@ describe('MEETINGS ROUTER', () => {
             expect(res.status).toEqual(201);
         })
 
+
+        it('should return status 201 on success (without notes and rating)', async () => {
+            const res = await request(server)
+            .post(MEETING_API_URL)
+            .send({
+                match_id: 1,
+                meeting_date: '2016-02-05T03:30:17.883Z',
+                location: 'New York',
+                notes: '',
+                rating: ''
+            });
+            expect(res.status).toEqual(201);
+        })
+
         it('should return a message on success', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
@@ -74,7 +88,7 @@ describe('MEETINGS ROUTER', () => {
             expect(res.body).toEqual({message:'Meeting has been created'})
         })
 
-        it('should return status 400 on fail (no match id)'), async () => {
+        it('should return status 400 on fail (no match id)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -85,9 +99,9 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.status).toEqual(400);
-        }
+        })
 
-        it('should return status 400 on fail (no meeting date)'), async () => {
+        it('should return status 400 on fail (no meeting date)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -98,9 +112,10 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.status).toEqual(400);
-        }
+        })
+    
 
-        it('should return status 400 on fail (no location)'), async () => {
+        it('should return status 400 on fail (no location)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -111,10 +126,10 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.status).toEqual(400);
-        }
+        })
 
 
-        it('should return error on fail (no match id)'), async () => {
+        it('should return error on fail (no match id)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -125,9 +140,9 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.body).toEqual({error: 'Please fill out the required fields'});
-        }
+        })
         
-        it('should return error on fail (no meeting date)'), async () => {
+        it('should return error on fail (no meeting date)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -138,9 +153,9 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.body).toEqual({error: 'Please fill out the required fields'});
-        }
+        })
 
-        it('should return error on fail (no location)'), async () => {
+        it('should return error on fail (no location)', async () => {
             const res = await request(server)
             .post(MEETING_API_URL)
             .send({
@@ -151,7 +166,7 @@ describe('MEETINGS ROUTER', () => {
                 rating: Math.floor((Math.random()*5))
             });
             expect(res.body).toEqual({error: 'Please fill out the required fields'});
-        }
+        })
         
     })
 
@@ -163,7 +178,7 @@ describe('MEETINGS ROUTER', () => {
     })
 
     describe('PUT ROUTE /MEETINGS/:id', () => {
-        it('should return status 200 on success', () => {
+        it('should return status 200 on success', async () => {
             const res = await request(server)
             .put(`${MEETING_API_URL}/1`)
             .send({
@@ -177,7 +192,7 @@ describe('MEETINGS ROUTER', () => {
             expect(res.status).toEqual(200)
         })
 
-        it('should return message on success', () => {
+        it('should return message on success', async () => {
             const res = await request(server)
             .put(`${MEETING_API_URL}/1`)
             .send({
@@ -189,6 +204,10 @@ describe('MEETINGS ROUTER', () => {
             });
 
             expect(res.body).toEqual({message: 'Your meeting has been updated'})
+        })
+
+        it('should return status 400 on fail (no match id)', async () => {
+            const res = await request(server)
         })
     })
 })
