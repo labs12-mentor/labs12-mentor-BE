@@ -11,7 +11,6 @@ const mentorProfiles = require('./mentorProfiles');
 const notifications = require('./notifications');
 const organizations = require('./organizations');
 const owners = require('./owners');
-const roles = require('./roles');
 const users = require('./users');
 
 router.route('/')
@@ -27,7 +26,6 @@ router.use('/mentors', mentorProfiles);
 router.use('/notifications', notifications);
 router.use('/organizations', organizations);
 router.use('/owners', owners);
-router.use('/roles', roles);
 router.use('/users', users);
 
 module.exports = router;

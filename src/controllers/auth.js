@@ -59,8 +59,7 @@ async function registerUser(req, res){
         country,
         state,
         city,
-        zipcode,
-        role_id
+        zipcode
     } = req.body;
 
     let userData = {
@@ -72,8 +71,7 @@ async function registerUser(req, res){
         country,
         state,
         city,
-        zipcode,
-        role_id: role_id || 0
+        zipcode
     }
 
     const validUser = await authValidator.validateUser(userData);

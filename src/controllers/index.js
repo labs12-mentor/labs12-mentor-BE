@@ -9,7 +9,6 @@ const meetingsController = require('./meetings');
 const notificationsController = require('./notifications');
 const organizationsController = require('./organizations');
 const ownersController = require('./owners');
-const rolesController = require('./roles');
 const usersController = require('./users');
 
 module.exports = {
@@ -24,6 +23,5 @@ module.exports = {
     notificationsController,
     organizationsController,
     ownersController,
-    rolesController,
     usersController
 }
