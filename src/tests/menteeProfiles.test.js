@@ -39,6 +39,12 @@ describe("MENTEES ROUTER", () => {
       const res = await request(server).get(MENTEE_API_URL);
       expect(res.body).toHaveLength(0);
     })
+
+    it("should return an array with length of 1", async () => {
+        await createMentee();
+        const res = await request(server).get(MENTEE_API_URL);
+        expect(res.body).toHaveLength(1);
+    });
   });
 });
 
