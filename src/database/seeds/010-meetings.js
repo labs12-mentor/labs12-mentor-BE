@@ -15,7 +15,7 @@ exports.seed = function(knex, Promise) {
   return knex('meetings').del()
     .then(function () {
       const meetingsList = [];
-      for(let i=0; i<10; i++){
+      for(let i=0; i<500; i++){
         meetingsList.push(makeMeeting(i));
         console.log(i);
       }

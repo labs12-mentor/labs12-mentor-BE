@@ -12,7 +12,7 @@ exports.seed = function(knex, Promise) {
   return knex('experiences').del()
     .then(function () {
       const experiencesList = [];
-      for(let i=0; i<10; i++){
+      for(let i=0; i<500; i++){
         experiencesList.push(makeExperience(i));
         console.log(i);
       }

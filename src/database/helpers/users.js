@@ -30,7 +30,7 @@ async function getUserByUsername(username) {
 
 async function getUserById(id) {
     return await db
-        .select('id', 'username', 'first_name', 'last_name', 'email', 'country', 'state', 'city', 'zipcode', 'role_id', 'organization_id')
+        .select('id', 'username', 'first_name', 'last_name', 'email', 'country', 'state', 'city', 'zipcode', 'organization_id')
         .from('users')
         .where({ id })
         .first();
@@ -48,7 +48,6 @@ async function insertUser(user) {
             state: user.state || '',
             city: user.city || '',
             zipcode: user.zipcode || '',
-            role_id: user.role_id || 0,
             organization_id: user.organization_id || 0
         })
         .then(response => {
@@ -71,7 +70,6 @@ async function updateUser(id, user) {
             state: user.state,
             city: user.city,
             zipcode: user.zipcode,
-            role_id: user.role_id,
             organization_id: user.organization_id,
             deleted: user.deleted
         });

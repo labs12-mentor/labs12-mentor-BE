@@ -12,7 +12,7 @@ exports.seed = function(knex, Promise) {
   return knex('notifications').del()
     .then(function () {
       const notificationsList = [];
-      for(let i=0; i<10; i++){
+      for(let i=0; i<500; i++){
         notificationsList.push(makeNotification(i));
         console.log(i);
       }

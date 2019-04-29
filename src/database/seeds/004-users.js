@@ -13,7 +13,6 @@ function makeUser(i){
     state: faker.address.state(),
     city: faker.address.city(),
     zipcode: faker.address.zipCode(),
-    role_id: 0,
     organization_id: 0
   }
 }
@@ -22,7 +21,7 @@ exports.seed = function(knex, Promise) {
   return knex('users').del()
     .then(function () {
       const usersList = [];
-      for(let i=0; i<10; i++){
+      for(let i=0; i<500; i++){
         usersList.push(makeUser(i));
         console.log(i);
       }

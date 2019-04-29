@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
   return knex('mentorprofiles').del()
     .then(function () {
       const mentorsList = [];
-      for(let i=0; i<5; i++){
+      for(let i=0; i<50; i++){
         mentorsList.push(makeMentor(i));
         console.log(i);
       }
