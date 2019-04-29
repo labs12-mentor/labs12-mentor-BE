@@ -300,5 +300,17 @@ describe("MEETINGS ROUTER", () => {
           const res = await request(server).delete(`${MEETING_API_URL}/1`)
           expect(res.status).toEqual(200)
       })
-  })
+
+      it("should return message on success", () => {
+        await createMeeting();
+        const res = await request(server).delete(`${MEETING_API_URL}/1`)
+        expect(res.body).toEqual({message: 'Your meeting has been deleted'});
+    })
+  });
+
+//   describe("DELETE ROUTE /MEETINGS/:id/REMOVE", async () => {
+//       it("should return status 200 on success", () => {
+
+//       } )
+//   })
 });
