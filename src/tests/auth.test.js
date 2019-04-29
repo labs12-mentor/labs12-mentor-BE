@@ -281,6 +281,25 @@ describe('AUTH ROUTER', () => {
       expect(res.status).toEqual(400);
     });
 
+    it('should return 500 on fail (user already registered)', async () => {
+      await createUser();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.status).toEqual(500);
+    });
+
     it('should return an error on fail (no username)', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
@@ -369,6 +388,25 @@ describe('AUTH ROUTER', () => {
           organization_id: 0
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
+    });
+
+    it('should return an error on fail (user already registered)', async () => {
+      await createUser();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          username: user.username,
+          password: user.password,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          country: user.country,
+          state: user.state,
+          city: user.city,
+          zipcode: user.zipcode,
+          organization_id: 0
+        });
+      expect(res.body).toEqual({ error: 'User already registered!' });
     });
   });
 
@@ -459,6 +497,130 @@ describe('AUTH ROUTER', () => {
     });
   });
 
+  describe('POST ROUTE /OWNER/REGISTER', () => {
+    it('should return 201 on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.status).toEqual(201);
+    });
+
+    it('should return a message on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.body).toEqual({ message: 'Owner successfully registered!' });
+    });
+
+    it('should return 400 on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: '',
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: '',
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: '',
+          company_name: owner.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return an error on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: '',
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new owner!' });
+    });
+
+    it('should return an error on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: '',
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new owner!' });
+    });
+
+    it('should return an error on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: '',
+          company_name: owner.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new owner!' });
+    });
+
+    it('should return 400 on fail (owner already registered)', async () => {
+      await createOwner();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return a message on fail (owner already registered)', async () => {
+      await createOwner();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/owner/register')
+        .send({
+          username: owner.username,
+          password: owner.password,
+          email: owner.email,
+          company_name: owner.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new owner!' });
+    });
+  });
+
   describe('POST ROUTE /ADMIN/LOGIN', () => {
     it('should return 200 on success', async () => {
       await createAdministrator();
@@ -543,6 +705,234 @@ describe('AUTH ROUTER', () => {
           password: ''
         });
       expect(res.body).toEqual({ error: 'Login failed. Wrong credentials!' });
+    });
+  });
+
+  describe('POST ROUTE /ADMIN/REGISTER', () => {
+    it('should return 201 on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(201);
+    });
+
+    it('should return a message on success', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ message: 'Administrator successfully registered!' });
+    });
+
+    it('should return 400 on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: '',
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: '',
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no first name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: '',
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no last name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: '',
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: '',
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return 400 on fail (no company name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: ''
+        });
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return an error on fail (no username)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: '',
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return an error on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: '',
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return an error on fail (no first name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: '',
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return an error on fail (no last name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: '',
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return an error on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: '',
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return an error on fail (no company name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: ''
+        });
+      expect(res.body).toEqual({ error: 'Cannot register new administrator!' });
+    });
+
+    it('should return 500 on fail (administrator already registered)', async () => {
+      await createAdministrator();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.status).toEqual(500);
+    });
+
+    it('should return a message on fail (administrator already registered)', async () => {
+      await createAdministrator();
+      const res = await request(server)
+        .post(AUTH_API_URL + '/admin/register')
+        .send({
+          username: administrator.username,
+          password: administrator.password,
+          first_name: administrator.first_name,
+          last_name: administrator.last_name,
+          email: administrator.email,
+          company_name: administrator.company_name
+        });
+      expect(res.body).toEqual({ error: 'Administrator already registered!' });
     });
   });
 });
