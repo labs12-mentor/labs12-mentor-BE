@@ -87,6 +87,31 @@ describe('MEETINGS ROUTER', () => {
             expect(res.status).toEqual(400);
         }
 
+        it('should return status 400 on fail (no meeting date)'), async () => {
+            const res = await request(server)
+            .post(MEETING_API_URL)
+            .send({
+                match_id: 1,
+                meeting_date: '',
+                location: 'New York',
+                notes: 'some meeting',
+                rating: Math.floor((Math.random()*5))
+            });
+            expect(res.status).toEqual(400);
+        }
+
+        it('should return status 400 on fail (no location)'), async () => {
+            const res = await request(server)
+            .post(MEETING_API_URL)
+            .send({
+                match_id: 1,
+                meeting_date: '2016-02-05T03:30:17.883Z',
+                location: '',
+                notes: 'some meeting',
+                rating: Math.floor((Math.random()*5))
+            });
+            expect(res.status).toEqual(400);
+        }
         
     })
 })
