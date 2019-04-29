@@ -4,6 +4,10 @@ const Meetings = require('../database/helpers/meetings');
 
 const MEETING_API_URL = '/api/meetings';
 
+// const sampleMeeting = {
+
+// }
+
 afterEach(async () => {
     await Meetings.truncate();
 })
@@ -18,6 +22,11 @@ describe('MEETINGS ROUTER', () => {
             const res = await request(server).get(MEETING_API_URL);
             expect(res.status).toEqual(200);
         });
+
+        it('should return an empty array', async () => {
+            const res = await request(server).get(MEETING_API_URL);
+            expect(res.body).toHaveLength(0);
+        })
 
     })
 
