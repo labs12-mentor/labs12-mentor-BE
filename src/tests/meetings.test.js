@@ -154,4 +154,11 @@ describe('MEETINGS ROUTER', () => {
         }
         
     })
+
+    describe('GET ROUTE /MEETINGS/:id', () => {
+        it('should return status 200 on success', async () => {
+            const res = await request(server).get(`${MEETING_API_URL}/1`);
+            expect(res.status).toEqual(200);
+        })
+    })
 })
