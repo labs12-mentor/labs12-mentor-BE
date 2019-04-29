@@ -9,7 +9,8 @@ module.exports = {
 const Experiences = require('../database/helpers/experiences');
 
 async function getExperiences(req, res){
-    res.status(200).json({ message: 'get experiences API OK' });
+    const experiences = await Experiences.getExperiences();
+    res.status(200).json(experiences);
 }
 
 async function addExperience(req, res){
@@ -17,7 +18,8 @@ async function addExperience(req, res){
 }
 
 async function getExperience(req, res){
-    res.status(200).json({ message: 'get experience API OK' });
+    const experience = await Experiences.getExperienceById(req.params.id);
+    res.status(200).json(experience);
 }
 
 async function updateExperience(req, res){

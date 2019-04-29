@@ -20,6 +20,8 @@ exports.up = function(knex, Promise) {
         table
             .string('application_answers');
 
+        fkey(table, 'wanted_mentor_id', 'mentorprofiles');
+
         table
             .boolean('deleted')
             .default(false);

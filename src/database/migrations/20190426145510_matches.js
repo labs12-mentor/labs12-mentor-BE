@@ -12,7 +12,7 @@ exports.up = function(knex, Promise) {
             .double('match_score');
 
         table
-            .integer('status')
+            .string('status')
             .notNullable();
 
         table

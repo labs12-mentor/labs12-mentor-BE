@@ -32,7 +32,7 @@ async function insertMatch(match) {
         .insert({
             mentor_id: match.mentor_id,
             mentee_id: match.mentee_id,
-            match_score: match.match_score,
+            match_score: match.match_score || 0,
             status: match.status,
             start_date: match.start_date,
             end_date: match.end_date,
@@ -41,7 +41,7 @@ async function insertMatch(match) {
             return {
                 id: response[0]
             }
-        })
+        });
 }
 
 async function updateMatch(id, match) {

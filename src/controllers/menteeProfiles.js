@@ -9,7 +9,8 @@ module.exports = {
 const MenteeProfiles = require('../database/helpers/menteeProfiles');
 
 async function getMenteeProfiles(req, res){
-    res.status(200).json({ message: 'get mentee profiles API OK' });
+    const mentees = await MenteeProfiles.getMenteeProfiles();
+    res.status(200).json(mentees);
 }
 
 async function addMenteeProfile(req, res){
@@ -17,7 +18,8 @@ async function addMenteeProfile(req, res){
 }
 
 async function getMenteeProfile(req, res){
-    res.status(200).json({ message: 'get mentee profile API OK' });
+    const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
+    res.status(200).json(mentee);
 }
 
 async function updateMenteeProfile(req, res){

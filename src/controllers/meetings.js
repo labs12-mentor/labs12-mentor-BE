@@ -9,7 +9,8 @@ module.exports = {
 const Meetings = require('../database/helpers/meetings');
 
 async function getMeetings(req, res){
-    res.status(200).json({ message: 'get meetings API OK' });
+    const meetings = await Meetings.getMeetings();
+    res.status(200).json(meetings);
 }
 
 async function addMeeting(req, res){
@@ -17,7 +18,8 @@ async function addMeeting(req, res){
 }
 
 async function getMeeting(req, res){
-    res.status(200).json({ message: 'get meeting API OK' });
+    const meeting = await Meetings.getMeetingById(req.params.id);
+    res.status(200).json(meeting);
 }
 
 async function updateMeeting(req, res){

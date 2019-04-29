@@ -1,4 +1,3 @@
-require('dotenv').config();
 const faker = require('faker');
 const bcrypt = require('bcryptjs');
 
@@ -13,7 +12,8 @@ function makeUser(i){
     country: faker.address.country(),
     state: faker.address.state(),
     city: faker.address.city(),
-    zipcode: faker.address.zipCode()
+    zipcode: faker.address.zipCode(),
+    organization_id: 0
   }
 }
 
@@ -21,10 +21,11 @@ exports.seed = function(knex, Promise) {
   return knex('users').del()
     .then(function () {
       const usersList = [];
-      for(let i=0; i<1000; i++){
-        usersList.push(makeUser(i))
+      for(let i=0; i<500; i++){
+        usersList.push(makeUser(i));
         console.log(i);
       }
+      console.log("----- Users added! -----");
       return knex('users').insert(usersList);
     });
 };

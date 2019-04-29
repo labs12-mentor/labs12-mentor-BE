@@ -13,7 +13,7 @@ exports.up = function(knex, Promise) {
         table
             .string('logo');
         
-        fkey(table, 'admin_id', 'users');
+        fkey(table, 'admin_id', 'administrators');
 
         table
             .boolean('deleted')

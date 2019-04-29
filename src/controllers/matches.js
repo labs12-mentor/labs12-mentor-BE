@@ -9,7 +9,8 @@ module.exports = {
 const Matches = require('../database/helpers/matches');
 
 async function getMatches(req, res){
-    res.status(200).json({ message: 'get matches API OK' });
+    const matches = await Matches.getMatches();
+    res.status(200).json(matches);
 }
 
 async function addMatch(req, res){
@@ -17,7 +18,8 @@ async function addMatch(req, res){
 }
 
 async function getMatch(req, res){
-    res.status(200).json({ message: 'get match API OK' });
+    const match = await Matches.getMatchById(req.params.id);
+    res.status(200).json(match);
 }
 
 async function updateMatch(req, res){

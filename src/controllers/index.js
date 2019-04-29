@@ -1,3 +1,4 @@
+const administratorsController = require('./administrators');
 const apiController = require('./api');
 const authController = require('./auth');
 const experiencesController = require('./experiences');
@@ -7,10 +8,11 @@ const mentorProfilesController = require('./mentorProfiles');
 const meetingsController = require('./meetings');
 const notificationsController = require('./notifications');
 const organizationsController = require('./organizations');
-const rolesController = require('./roles');
+const ownersController = require('./owners');
 const usersController = require('./users');
 
 module.exports = {
+    administratorsController,
     apiController,
     authController,
     experiencesController,
@@ -20,6 +22,6 @@ module.exports = {
     meetingsController,
     notificationsController,
     organizationsController,
-    rolesController,
+    ownersController,
     usersController
 }

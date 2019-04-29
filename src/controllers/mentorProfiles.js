@@ -9,7 +9,8 @@ module.exports = {
 const MentorProfiles = require('../database/helpers/mentorProfiles');
 
 async function getMentorProfiles(req, res){
-    res.status(200).json({ message: 'get mentor profiles API OK' });
+    const mentors = await MentorProfiles.getMentorProfiles();
+    res.status(200).json(mentors);
 }
 
 async function addMentorProfile(req, res){
@@ -17,7 +18,8 @@ async function addMentorProfile(req, res){
 }
 
 async function getMentorProfile(req, res){
-    res.status(200).json({ message: 'get mentor profile API OK' });
+    const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
+    res.status(200).json(mentor);
 }
 
 async function updateMentorProfile(req, res){
