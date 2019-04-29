@@ -37,6 +37,7 @@ describe("MEETINGS ROUTER", () => {
       const res = await request(server).get(MEETING_API_URL);
       expect(res.body).toHaveLength(0);
     });
+    
   });
 
   describe("POST ROUTE /MEETINGS", () => {
@@ -292,4 +293,12 @@ describe("MEETINGS ROUTER", () => {
       expect(res.status).toEqual(400);
     });
   });
+
+  describe("DELETE ROUTE /MEETINGS/:id", async () => {
+      it("should return status 200 on success", () => {
+          await createMeeting();
+          const res = await request(server).delete(`${MEETING_API_URL}/1`)
+          expect(res.status).toEqual(200)
+      })
+  })
 });
