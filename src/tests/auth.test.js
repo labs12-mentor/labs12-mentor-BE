@@ -32,8 +32,7 @@ const user = {
   state: 'CA',
   city: 'San Francisco',
   zipcode: '94131',
-  role_id: 0,
-  organization_id: 0
+  organization_id: 1
 };
 
 afterEach(async () => {
@@ -168,7 +167,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(201);
     });
@@ -186,7 +185,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ message: 'User successfully registered!' });
     });
@@ -204,7 +203,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(400);
     });
@@ -222,7 +221,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(400);
     });
@@ -240,7 +239,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(400);
     });
@@ -258,7 +257,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(400);
     });
@@ -276,7 +275,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(400);
     });
@@ -295,7 +294,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.status).toEqual(500);
     });
@@ -313,7 +312,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
     });
@@ -331,7 +330,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
     });
@@ -349,7 +348,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
     });
@@ -367,7 +366,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
     });
@@ -385,7 +384,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'Cannot register user!' });
     });
@@ -404,7 +403,7 @@ describe('AUTH ROUTER', () => {
           state: user.state,
           city: user.city,
           zipcode: user.zipcode,
-          organization_id: 0
+          organization_id: 1
         });
       expect(res.body).toEqual({ error: 'User already registered!' });
     });
