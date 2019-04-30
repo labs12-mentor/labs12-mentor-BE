@@ -69,7 +69,36 @@ describe("MENTEES ROUTER", () => {
         });
       expect(res.status).toEqual(201);
     });
-  });
 
+    it("should return status 201 without desired zip", async () => {
+      const res = await request(server)
+        .post(MENTEE_API_URL)
+        .send({
+          user_id: 1,
+          desired_zip: null,
+          lambda_week: 5,
+          interests: "",
+          application_answers: "yes",
+          wanted_mentor_id: 6
+        });
+      expect(res.status).toEqual(201);
+    });
+
+    it("should return status 201 without application answers", async () => {
+      const res = await request(server)
+        .post(MENTEE_API_URL)
+        .send({
+          user_id: 1,
+          desired_zip: null,
+          lambda_week: 5,
+          interests: "",
+          application_answers: "",
+          wanted_mentor_id: 6
+        });
+      expect(res.status).toEqual(201);
+    });
+
+    it("should return message on success",)
+  });
 });
 
