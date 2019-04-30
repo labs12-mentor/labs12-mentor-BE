@@ -44,11 +44,11 @@ async function insertUser(user) {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
-            country: user.country || '',
-            state: user.state || '',
-            city: user.city || '',
-            zipcode: user.zipcode || '',
-            organization_id: user.organization_id || 0
+            country: user.country,
+            state: user.state,
+            city: user.city,
+            zipcode: user.zipcode,
+            organization_id: user.organization_id
         })
         .then(response => {
             return {
