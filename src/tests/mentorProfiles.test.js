@@ -107,6 +107,35 @@ const sampleProfile = {
 
               expect(res.status).toEqual(201)
           })
+
+          it("should return message on success", () => {
+              const res = await request(server)
+              .post(MENTOR_API_URL)
+              .send(sampleProfile);
+
+              expect(res.body).toEqual({message: "Mentor's Profile created"})
+          })
+
+          it("should return status 400 on failure without user_id", () => {
+              const res = await request(server)
+              .post(MENTOR_API_URL)
+              .send({
+                  user_id: null
+              })
+
+              expect(res.status).toEqual(400)
+          })
+
+          it("should return error on failure without user_id", () => {
+              const res = await request(server)
+              .post(MENTOR_API_URL)
+              .send({
+                  user_id: null
+              })
+
+              expect(res.body).toEqual({error: "Need user id to make profile"})
+          })
+
       })
 
       describe("GET ROUTE /MENTORS/:id")
