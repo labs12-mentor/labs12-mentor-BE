@@ -39,7 +39,7 @@ describe("MEETINGS ROUTER", () => {
       expect(res.body).toHaveLength(0);
     });
 
-    it("should return an array with length of", async () => {
+    it("should return an array with length of 1", async () => {
         await createMeeting();
         const res = await request(server).get(MEETING_API_URL);
         expect(res.body).toHaveLength(1);
@@ -296,14 +296,14 @@ describe("MEETINGS ROUTER", () => {
 
   });
 
-  describe("DELETE ROUTE /MEETINGS/:id", async () => {
-    it("should return status 200 on success", () => {
+  describe("DELETE ROUTE /MEETINGS/:id", () => {
+    it("should return status 200 on success", async () => {
         await createMeeting();
         const res = await request(server).delete(`${MEETING_API_URL}/1`)
         expect(res.status).toEqual(200)
     })
 
-    it("should return message on success", () => {
+    it("should return message on success", async () => {
         await createMeeting();
         const res = await request(server).delete(`${MEETING_API_URL}/1`)
         expect(res.body).toEqual({message: 'Your meeting has been deleted'});
