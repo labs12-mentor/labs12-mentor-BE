@@ -192,7 +192,7 @@ describe("MENTEES ROUTER", () => {
       expect(res.status).toEqual(200);
     })
 
-    it("should return specified meeting", () => {
+    it("should return specified meeting", async () => {
       await createMentee();
 
       const res = await request(server).get(`${MENTEE_API_URL}/1`);
@@ -206,6 +206,13 @@ describe("MENTEES ROUTER", () => {
         application_answers: "yes",
         wanted_mentor_id: 6
       });
+    });
+
+    it("should return status 404 if no such meeting", async () => {
+      const res = await request(server).get(`${MENTEE_API_URL}/1`);
+
+      expect(res.status).toEqual(404);
     })
+
   })
 });
