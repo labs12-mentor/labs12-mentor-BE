@@ -2,25 +2,20 @@ const faker = require('faker');
 
 function makeMentee(i){
   return {
-    id: i,
-    user_id: i,
+    user_id: i+1,
     desired_zip: faker.address.zipCode(),
     lambda_week: Math.round(Math.random()*30, 0),
     interests: faker.random.words(),
     application_answers: faker.random.words(),
-    wanted_mentor_id: Math.round(Math.random()*40, 0)
+    wanted_mentor_id: i%10+1
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('menteeprofiles').del()
-    .then(function () {
-      const menteesList = [];
-      for(let i=0; i<500; i++){
-        menteesList.push(makeMentee(i));
-        console.log(i);
-      }
-      console.log("----- Mentees added! -----");
-      return knex('menteeprofiles').insert(menteesList);
-    });
+exports.seed = async (knex, Promise) => {
+  const menteesList = [];
+  for(let i=0; i<50; i++){
+    await menteesList.push(makeMentee(i));
+  }
+  console.log("----- Mentees added! -----");
+  return await knex('menteeprofiles').insert(menteesList);
 };
