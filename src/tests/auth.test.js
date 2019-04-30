@@ -1,9 +1,5 @@
 const request = require('supertest');
 const server = require('../server');
-const Users = require('../database/helpers/users');
-const Owners = require('../database/helpers/owners');
-const Administrators = require('../database/helpers/administrators');
-const Organizations = require('../database/helpers/organizations');
 const db = require('../database/dbConfig');
 
 const AUTH_API_URL = '/api/auth';
