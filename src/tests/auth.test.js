@@ -3,6 +3,8 @@ const server = require('../server');
 const Users = require('../database/helpers/users');
 const Owners = require('../database/helpers/owners');
 const Administrators = require('../database/helpers/administrators');
+const Organizations = require('../database/helpers/organizations');
+const db = require('../database/dbConfig');
 
 const AUTH_API_URL = '/api/auth';
 
@@ -35,16 +37,31 @@ const user = {
   organization_id: 1
 };
 
+const organization = {
+  id: 1,
+  name: 'Test Organization',
+  logo: 'logo url',
+  admin_id: 1
+}
+
 afterEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
+  await db('users').del();
+  await db('administrators').del();
+  await db('owners').del();
+  await db.raw('ALTER SEQUENCE owners_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE organizations_id_seq RESTART WITH 1');
 });
 
 beforeEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
+  await db('users').del();
+  await db('administrators').del();
+  await db('owners').del();
+  await db.raw('ALTER SEQUENCE owners_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
+  await db.raw('ALTER SEQUENCE organizations_id_seq RESTART WITH 1');
 });
 
 async function createUser() {
@@ -65,9 +82,15 @@ async function createAdministrator() {
     .send(administrator);
 }
 
+async function createOrganization() {
+  await db('administrators').insert([administrator])
+  return await db('organizations').insert([organization]);
+}
+
 describe('AUTH ROUTER', () => {
   describe('POST ROUTE /LOGIN', () => {
     it('should return 200 on success', async () => {
+      await createOrganization();
       await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/login')
@@ -109,6 +132,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return a token on success', async () => {
+      await createOrganization();
       await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/login')
@@ -155,6 +179,7 @@ describe('AUTH ROUTER', () => {
 
   describe('POST ROUTE /REGISTER', () => {
     it('should return 201 on success', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -173,6 +198,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return a message on success', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -191,6 +217,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 400 on fail (no username)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -209,6 +236,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 400 on fail (no password)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -227,6 +255,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 400 on fail (no first name)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -245,6 +274,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 400 on fail (no last name)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -263,6 +293,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 400 on fail (no email)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -281,6 +312,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return 500 on fail (user already registered)', async () => {
+      await createOrganization();
       await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
@@ -300,6 +332,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (no username)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -318,6 +351,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (no password)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -336,6 +370,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (no first name)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -354,6 +389,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (no last name)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -372,6 +408,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (no email)', async () => {
+      await createOrganization();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({
@@ -390,6 +427,7 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return an error on fail (user already registered)', async () => {
+      await createOrganization();
       await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
