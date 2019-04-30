@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 
 function makeAdministrator(i){
   return {
-    id: i,
     username: faker.internet.userName(),
     password: bcrypt.hashSync('password', 10),
     first_name: faker.name.firstName(),
@@ -13,15 +12,11 @@ function makeAdministrator(i){
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('administrators').del()
-    .then(function () {
-      const administratorsList = [];
-      for(let i=0; i<1; i++){
-        administratorsList.push(makeAdministrator(i));
-        console.log(i);
-      }
-      console.log("----- Administrators added! -----");
-      return knex('administrators').insert(administratorsList);
-    });
+exports.seed = async (knex, Promise) => {
+  const administratorsList = [];
+  for(let i=0; i<1; i++){
+    await administratorsList.push(makeAdministrator(i));
+  }
+  await console.log("----- Administrators added! -----");
+  return await knex('administrators').insert(administratorsList);
 };

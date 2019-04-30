@@ -2,8 +2,7 @@ const faker = require('faker');
 
 function makeMeeting(i){
   return {
-    id: i,
-    match_id: i,
+    match_id: i+1,
     meeting_date: faker.date.future(1),
     location: faker.address.city(),
     notes: faker.random.words(5),
@@ -11,15 +10,11 @@ function makeMeeting(i){
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('meetings').del()
-    .then(function () {
-      const meetingsList = [];
-      for(let i=0; i<500; i++){
-        meetingsList.push(makeMeeting(i));
-        console.log(i);
-      }
-      console.log("----- Meetings added! -----");
-      return knex('meetings').insert(meetingsList);
-    });
+exports.seed = async (knex, Promise) => {
+  const meetingsList = [];
+  for(let i=0; i<50; i++){
+    await meetingsList.push(makeMeeting(i));
+  }
+  console.log("----- Meetings added! -----");
+  return await knex('meetings').insert(meetingsList);
 };

@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 
 function makeUser(i){
   return {
-    id: i,
     username: faker.internet.userName(),
     password: bcrypt.hashSync('password', 10),
     first_name: faker.name.firstName(),
@@ -13,19 +12,15 @@ function makeUser(i){
     state: faker.address.state(),
     city: faker.address.city(),
     zipcode: faker.address.zipCode(),
-    organization_id: 0
+    organization_id: 1
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('users').del()
-    .then(function () {
-      const usersList = [];
-      for(let i=0; i<500; i++){
-        usersList.push(makeUser(i));
-        console.log(i);
-      }
-      console.log("----- Users added! -----");
-      return knex('users').insert(usersList);
-    });
+exports.seed = async (knex, Promise) => {
+  const usersList = [];
+  for(let i=0; i<50; i++){
+    await usersList.push(makeUser(i));
+  }
+  console.log("----- Users added! -----");
+  return await knex('users').insert(usersList);
 };
