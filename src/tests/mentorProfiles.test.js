@@ -100,7 +100,7 @@ const sampleProfile = {
       })
 
       describe("POST ROUTE /MENTORS", () => {
-          it("should return status 201 on success", () => {
+          it("should return status 201 on success", async () => {
               const res = await request(server)
               .post(MENTOR_API_URL)
               .send(sampleProfile)
@@ -108,7 +108,7 @@ const sampleProfile = {
               expect(res.status).toEqual(201)
           })
 
-          it("should return message on success", () => {
+          it("should return message on success", async () => {
               const res = await request(server)
               .post(MENTOR_API_URL)
               .send(sampleProfile);
@@ -116,7 +116,7 @@ const sampleProfile = {
               expect(res.body).toEqual({message: "Mentor's Profile created"})
           })
 
-          it("should return status 400 on failure without user_id", () => {
+          it("should return status 400 on failure without user_id", async () => {
               const res = await request(server)
               .post(MENTOR_API_URL)
               .send({
@@ -126,7 +126,7 @@ const sampleProfile = {
               expect(res.status).toEqual(400)
           })
 
-          it("should return error on failure without user_id", () => {
+          it("should return error on failure without user_id", async () => {
               const res = await request(server)
               .post(MENTOR_API_URL)
               .send({
@@ -138,7 +138,15 @@ const sampleProfile = {
 
       })
 
-      describe("GET ROUTE /MENTORS/:id")
+      describe("GET ROUTE /MENTORS/:id", () => {
+         it("should return 200 on success", async () => {
+             await createMentor();
+             const res = await request(server).get(`${MENTOR_API_URL}/1`)
+
+             expect(res.status).toEqual(200);
+
+         })
+      })
 
       describe("PUT ROUTE /MENTORS/:id")
 
