@@ -277,4 +277,62 @@ describe("MENTEES ROUTER", () => {
       expect(res.body).toEqual({error: "Your mentee does not exist"})
     })
   })
+
+  describe("PUT ROUTE /MENTEES/:id", () => {
+    it("should return 200 on success", async () => {
+      await createMentee();
+
+      const res = await request(server)
+       .put(`${MENTEE_API_URL}/1`)
+       .send({
+        user_id: 1,
+        desired_zip: 11109,
+        lambda_week: 7,
+        interests: "football",
+        application_answers: "yes",
+        wanted_mentor_id: 7
+       });
+
+       expect(res.status).toEqual(200);
+    })
+
+    it("should return message on success", async () => {
+      await createMentee();
+
+      const res = await request(server)
+       .put(`${MENTEE_API_URL}/1`)
+       .send({
+        user_id: 1,
+        desired_zip: 11109,
+        lambda_week: 7,
+        interests: "football",
+        application_answers: "yes",
+        wanted_mentor_id: 7
+       });
+
+       expect(res.body).toEqual({message: "Profile has been updated"})
+    })
+  })
+
+  describe("DELETE /MENTEES/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createMentee();
+      const res = await request(server).delete(`${MENTEE_API_URL}/1`)
+
+      expect(res.status).toEqual(200)
+    })
+
+    it("should return message on success", async () => {
+      await createMentee();
+      const res = await request(server).delete(`${MENTEE_API_URL}/1`)
+
+      expect(res.body).toEqual({message: " The profile has been deleted"})
+    })
+  })
+
+//   describe("DELETE ROUTE /MEETINGS/:id/REMOVE", async () => {
+//       it("should return status 200 on success", () => {
+
+//       } )
+//   })
 });
