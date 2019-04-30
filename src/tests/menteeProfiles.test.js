@@ -14,31 +14,31 @@ const sampleProfile = {
 };
 
 const owner = {
-  username: 'user',
-  password: 'password',
-  email: 'email@example.org',
-  company_name: 'Lambda School'
+  username: "user",
+  password: "password",
+  email: "email@example.org",
+  company_name: "Lambda School"
 };
 
 const administrator = {
-  username: 'user',
-  password: 'password',
-  first_name: 'John',
-  last_name: 'Doe',
-  email: 'email@example.org',
-  company_name: 'Lambda School'
-}
+  username: "user",
+  password: "password",
+  first_name: "John",
+  last_name: "Doe",
+  email: "email@example.org",
+  company_name: "Lambda School"
+};
 
 const user = {
-  username: 'user',
-  password: 'password',
-  first_name: 'John',
-  last_name: 'Doe',
-  email: 'email@example.org',
-  country: 'United States',
-  state: 'CA',
-  city: 'San Francisco',
-  zipcode: '94131',
+  username: "user",
+  password: "password",
+  first_name: "John",
+  last_name: "Doe",
+  email: "email@example.org",
+  country: "United States",
+  state: "CA",
+  city: "San Francisco",
+  zipcode: "94131",
   role_id: 0,
   organization_id: 0
 };
@@ -48,7 +48,6 @@ afterEach(async () => {
   await Owners.truncate();
   await Administrators.truncate();
   await Mentees.truncate();
-
 });
 
 beforeEach(async () => {
@@ -56,27 +55,25 @@ beforeEach(async () => {
   await Owners.truncate();
   await Administrators.truncate();
   await Mentees.truncate();
-
 });
 
 async function createUser() {
   return await request(server)
-    .post(AUTH_API_URL + '/register')
+    .post(AUTH_API_URL + "/register")
     .send(user);
 }
 
 async function createOwner() {
   return await request(server)
-    .post(AUTH_API_URL + '/owner/register')
+    .post(AUTH_API_URL + "/owner/register")
     .send(owner);
 }
 
 async function createAdministrator() {
   return await request(server)
-    .post(AUTH_API_URL + '/admin/register')
+    .post(AUTH_API_URL + "/admin/register")
     .send(administrator);
 }
-
 
 async function createMentee() {
   return await request(server)
@@ -247,7 +244,7 @@ describe("MENTEES ROUTER", () => {
       const res = await request(server).get(`${MENTEE_API_URL}/1`);
 
       expect(res.status).toEqual(200);
-    })
+    });
 
     it("should return specified mentee", async () => {
       await createMentee();
@@ -269,70 +266,70 @@ describe("MENTEES ROUTER", () => {
       const res = await request(server).get(`${MENTEE_API_URL}/1`);
 
       expect(res.status).toEqual(404);
-    })
+    });
 
     it("should return error if no such meeting", async () => {
       const res = await request(server).get(`${MENTEE_API_URL}/1`);
-      
-      expect(res.body).toEqual({error: "Your mentee does not exist"})
-    })
-  })
+
+      expect(res.body).toEqual({ error: "Your mentee does not exist" });
+    });
+  });
 
   describe("PUT ROUTE /MENTEES/:id", () => {
     it("should return 200 on success", async () => {
       await createMentee();
 
       const res = await request(server)
-       .put(`${MENTEE_API_URL}/1`)
-       .send({
-        user_id: 1,
-        desired_zip: 11109,
-        lambda_week: 7,
-        interests: "football",
-        application_answers: "yes",
-        wanted_mentor_id: 7
-       });
+        .put(`${MENTEE_API_URL}/1`)
+        .send({
+          user_id: 1,
+          desired_zip: 11109,
+          lambda_week: 7,
+          interests: "football",
+          application_answers: "yes",
+          wanted_mentor_id: 7
+        });
 
-       expect(res.status).toEqual(200);
-    })
+      expect(res.status).toEqual(200);
+    });
 
     it("should return message on success", async () => {
       await createMentee();
 
       const res = await request(server)
-       .put(`${MENTEE_API_URL}/1`)
-       .send({
-        user_id: 1,
-        desired_zip: 11109,
-        lambda_week: 7,
-        interests: "football",
-        application_answers: "yes",
-        wanted_mentor_id: 7
-       });
+        .put(`${MENTEE_API_URL}/1`)
+        .send({
+          user_id: 1,
+          desired_zip: 11109,
+          lambda_week: 7,
+          interests: "football",
+          application_answers: "yes",
+          wanted_mentor_id: 7
+        });
 
-       expect(res.body).toEqual({message: "Profile has been updated"})
-    })
-  })
+      expect(res.body).toEqual({ message: "Profile has been updated" });
+    });
+  });
 
   describe("DELETE /MENTEES/:id", () => {
     it("should return status 200 on success", async () => {
       await createMentee();
-      const res = await request(server).delete(`${MENTEE_API_URL}/1`)
+      const res = await request(server).delete(`${MENTEE_API_URL}/1`);
 
-      expect(res.status).toEqual(200)
-    })
+      expect(res.status).toEqual(200);
+    });
 
     it("should return message on success", async () => {
       await createMentee();
-      const res = await request(server).delete(`${MENTEE_API_URL}/1`)
+      const res = await request(server).delete(`${MENTEE_API_URL}/1`);
 
-      expect(res.body).toEqual({message: " The profile has been deleted"})
-    })
-  })
+      expect(res.body).toEqual({ message: " The profile has been deleted" });
+    });
+  });
 
-//   describe("DELETE ROUTE /MEETINGS/:id/REMOVE", async () => {
-//       it("should return status 200 on success", () => {
+  //   describe("DELETE ROUTE /MEETINGS/:id/REMOVE", async () => {
+  //       it("should return status 200 on success", () => {
 
-//       } )
-//   })
+  //       } )
+  //   })
 });
