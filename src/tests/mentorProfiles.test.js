@@ -189,18 +189,45 @@ const sampleProfile = {
             expect(res.body).toEqual({message: "Profile has been updated"});
           })
 
-          it("should return status 400 on failure without user_id", async () => {
+          it("should return status 404 on failure without user_id", async () => {
             await createMentor();
 
             const res = await request(server)
             .put(`${MENTOR_API_URL}/1`)
             .send({user_id: null, deleted: true});
 
-            expect(res.status).toEqual(400);
+            expect(res.status).toEqual(404);
+          })
+
+          it("should return error on failure without user_id", async () => {
+
+            await createMentor();
+
+            const res = await request(server)
+            .put(`${MENTOR_API_URL}/1`)
+            .send({user_id: null, deleted: true});
+
+            expect(res.body).toEqual({error: "Please provide the user id"});
           })
       })
 
-      describe("DELETE ROUTE /MENTORS/:id")
+      describe("DELETE ROUTE /MENTORS/:id", () => {
+          it("should return status 200 on success", async () => {
+              await createMentor();
+
+              const res = await request(server).delete(`${MENTOR_API_URL}/1`);
+
+              expect(res.status).toEqual(200);
+          })
+
+          it("should return message on success", async () => {
+              await createMentor();
+
+              const res = await request(server).delete(`${MENTOR_API_URL}/1`);
+              
+              expect(res.body).toEqual({message: "Profile has been deleted"})
+          })
+      })
 
     //   describe("DELETE ROUTE /MENTORS/:id/REMOVE")
   })
