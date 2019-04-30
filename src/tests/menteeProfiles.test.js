@@ -214,5 +214,10 @@ describe("MENTEES ROUTER", () => {
       expect(res.status).toEqual(404);
     })
 
+    it("should return error if no such meeting", async () => {
+      const res = await request(server).get(`${MENTEE_API_URL}/1`);
+      
+      expect(res.body).toEqual({error: "Your mentee does not exist"})
+    })
   })
 });
