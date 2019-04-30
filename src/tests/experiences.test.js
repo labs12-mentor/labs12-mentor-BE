@@ -1,0 +1,79 @@
+const request = require("supertest");
+const server = require("../server");
+const Experiences = require("../database/helpers/experiences");
+const Users = require("../database/helpers/users");
+const Owners = require("../database/helpers/owners");
+const Administrators = require("../database/helpers/administrators");
+
+const EXPERIENCE_API_URL = "/api/experiences";
+
+const samepleExperience = {
+    name: "React",
+    user_id: 1,
+    deleted: false
+}
+
+afterEach(async () => {
+    await Users.truncate();
+    await Owners.truncate();
+    await Administrators.truncate();
+    await Mentees.truncate();
+  });
+  
+  beforeEach(async () => {
+    await Users.truncate();
+    await Owners.truncate();
+    await Administrators.truncate();
+    await Experiences.truncate();
+  });
+  
+  async function createUser() {
+    return await request(server)
+      .post(AUTH_API_URL + "/register")
+      .send(user);
+  }
+  
+  async function createOwner() {
+    return await request(server)
+      .post(AUTH_API_URL + "/owner/register")
+      .send(owner);
+  }
+  
+  async function createAdministrator() {
+    return await request(server)
+      .post(AUTH_API_URL + "/admin/register")
+      .send(administrator);
+  }
+  
+  async function createExperience() {
+    return await request(server)
+      .post(EXPERIENCE_API_URL)
+      .send(sampleExperience);
+  }
+
+  describe("EXPERIENCES ROUTE", () => {
+      describe("GET ROUTE /EXPERIENCES", () => {
+          it("should return status 200 on success", async () => {
+              await createExperience();
+
+              const res = await request(server).get(EXPERIENCE_API_URL);
+
+              expect(res.status).toEqual(200);
+          })
+
+          it("should return an empty array", async () => {
+
+              const res = await request(server).get(EXPERIENCE_API_URL);
+
+              expect(res.body).toHaveLength(0)
+          })
+
+          it("should return an array with length of 1", async () => {
+              await createExperience();
+
+              const res = await request(server).get(EXPERIENCE_API_URL);
+
+              expect(res.body).toHaveLength(1);
+          })
+      })
+  })
