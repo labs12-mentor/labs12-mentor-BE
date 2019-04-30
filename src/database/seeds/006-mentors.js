@@ -1,19 +1,14 @@
 function makeMentor(i){
   return {
-    id: i,
-    user_id: i
+    user_id: i+1
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('mentorprofiles').del()
-    .then(function () {
-      const mentorsList = [];
-      for(let i=0; i<50; i++){
-        mentorsList.push(makeMentor(i));
-        console.log(i);
-      }
-      console.log("----- Mentors added! -----");
-      return knex('mentorprofiles').insert(mentorsList);
-    });
+exports.seed = async (knex, Promise) => {
+  const mentorsList = [];
+  for(let i=0; i<10; i++){
+    await mentorsList.push(makeMentor(i));
+  }
+  console.log("----- Mentors added! -----");
+  return await knex('mentorprofiles').insert(mentorsList);
 };
