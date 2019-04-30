@@ -123,7 +123,7 @@ const sampleProfile = {
                   user_id: null
               })
 
-              expect(res.status).toEqual(400)
+              expect(res.status).toEqual(404)
           })
 
           it("should return error on failure without user_id", async () => {
