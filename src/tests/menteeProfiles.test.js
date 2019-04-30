@@ -13,13 +13,70 @@ const sampleProfile = {
   wanted_mentor_id: 6
 };
 
+const owner = {
+  username: 'user',
+  password: 'password',
+  email: 'email@example.org',
+  company_name: 'Lambda School'
+};
+
+const administrator = {
+  username: 'user',
+  password: 'password',
+  first_name: 'John',
+  last_name: 'Doe',
+  email: 'email@example.org',
+  company_name: 'Lambda School'
+}
+
+const user = {
+  username: 'user',
+  password: 'password',
+  first_name: 'John',
+  last_name: 'Doe',
+  email: 'email@example.org',
+  country: 'United States',
+  state: 'CA',
+  city: 'San Francisco',
+  zipcode: '94131',
+  role_id: 0,
+  organization_id: 0
+};
+
 afterEach(async () => {
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
   await Mentees.truncate();
+
 });
 
 beforeEach(async () => {
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
   await Mentees.truncate();
+
 });
+
+async function createUser() {
+  return await request(server)
+    .post(AUTH_API_URL + '/register')
+    .send(user);
+}
+
+async function createOwner() {
+  return await request(server)
+    .post(AUTH_API_URL + '/owner/register')
+    .send(owner);
+}
+
+async function createAdministrator() {
+  return await request(server)
+    .post(AUTH_API_URL + '/admin/register')
+    .send(administrator);
+}
+
 
 async function createMentee() {
   return await request(server)
@@ -31,7 +88,7 @@ describe("MENTEES ROUTER", () => {
   describe("GET ROUTE /MENTEES", () => {
     it("should return status 200 on success", async () => {
       await createMentee();
-      const res = await request(server).get(MEETING_API_URL);
+      const res = await request(server).get(MENTEE_API_URL);
       expect(res.status).toEqual(200);
     });
 
@@ -192,7 +249,7 @@ describe("MENTEES ROUTER", () => {
       expect(res.status).toEqual(200);
     })
 
-    it("should return specified meeting", async () => {
+    it("should return specified mentee", async () => {
       await createMentee();
 
       const res = await request(server).get(`${MENTEE_API_URL}/1`);
