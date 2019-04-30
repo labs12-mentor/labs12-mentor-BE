@@ -188,6 +188,16 @@ const sampleProfile = {
 
             expect(res.body).toEqual({message: "Profile has been updated"});
           })
+
+          it("should return status 400 on failure without user_id", async () => {
+            await createMentor();
+
+            const res = await request(server)
+            .put(`${MENTOR_API_URL}/1`)
+            .send({user_id: null, deleted: true});
+
+            expect(res.status).toEqual(400);
+          })
       })
 
       describe("DELETE ROUTE /MENTORS/:id")
