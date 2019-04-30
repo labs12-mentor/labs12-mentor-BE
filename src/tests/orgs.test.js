@@ -20,35 +20,35 @@ afterEach(async () => {
   await Orgs.truncate();
 })
 
-async function getOrganizations(){
+async function getOrganizations() {
   return await request(server)
     .get(ORGS_API_URL);
 }
 
-async function insertOrganization(){
+async function insertOrganization() {
   return await request(server)
     .post(ORGS_API_URL)
     .send(organization);
 }
 
-async function getOrganizationById(){
+async function getOrganizationById() {
   return await request(server)
     .get(ORGS_API_URL + '/:id')
 }
 
-async function updateOrganization(){
+async function updateOrganization() {
   return await request(server)
     .put(ORGS_API_URL + '/:id')
     .send(organization);
 }
 
-async function deleteOrganization(){
+async function deleteOrganization() {
   return await request(server)
     .delete(ORGS_API_URL + '/:id')
     .send(organization)
 }
 
-async function removeOrganization(){
+async function removeOrganization() {
   return await request(server)
     .delete(ORGS_API_URL + '/:id/remove')
     .send(organization)
@@ -140,10 +140,10 @@ describe('ORG ROUTER', () => {
       expect(res.status).toEqual(404);
     })
   })
-  
+
   describe('PUT ROUTE /:ID', () => {
-  //similar to POSTs above
-  //how to send ID info from req.params.id?
+    //similar to POSTs above
+    //how to send ID info from req.params.id?
     it('should return 200 on success', async () => {
       await updateOrganization();
       const res = await request(server)
@@ -154,7 +154,7 @@ describe('ORG ROUTER', () => {
           admin_id: 0,
         })
       expect(res.status).toEqual(200);
-    })  
+    })
     it('should return the org on success', async () => {
       await updateOrganization();
       const res = await request(server)
@@ -177,7 +177,7 @@ describe('ORG ROUTER', () => {
           admin_id: 0,
         })
       expect(res.status).toEqual(404);
-    }) 
+    })
 
     it('should return 200 on success', async () => {
       await deleteOrganization();
@@ -186,7 +186,7 @@ describe('ORG ROUTER', () => {
         .send({
           deleted: true
         })
-        expect(res.status).toEqual(200);
+      expect(res.status).toEqual(200);
     })
     it('should return 404 on fail (org not found)', async () => {
       await deleteOrganization();
@@ -195,8 +195,8 @@ describe('ORG ROUTER', () => {
         .send({
           deleted: true
         })
-        expect(res.status).toEqual(404)
-    })  
+      expect(res.status).toEqual(404)
+    })
   })
 
   describe('DELETE ROUTE /:ID/REMOVE', () => {
