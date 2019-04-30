@@ -2,21 +2,16 @@ const faker = require('faker');
 
 function makeExperience(i){
   return {
-    id: i,
-    user_id: i,
+    user_id: i+1,
     name: faker.random.words()
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('experiences').del()
-    .then(function () {
-      const experiencesList = [];
-      for(let i=0; i<500; i++){
-        experiencesList.push(makeExperience(i));
-        console.log(i);
-      }
-      console.log("----- Experiences added! -----");
-      return knex('experiences').insert(experiencesList);
-    });
+exports.seed = async (knex, Promise) => {
+  const experiencesList = [];
+  for(let i=0; i<50; i++){
+    await experiencesList.push(makeExperience(i));
+  }
+  console.log("----- Experiences added! -----");
+  return await knex('experiences').insert(experiencesList);
 };
