@@ -167,7 +167,28 @@ const sampleProfile = {
          })
       })
 
-      describe("PUT ROUTE /MENTORS/:id")
+      describe("PUT ROUTE /MENTORS/:id", () => {
+          it("should return status 200 on success", async () => {
+              await createMentor();
+
+              const res = await request(server)
+              .put(`${MENTOR_API_URL}/1`)
+              .send({user_id: 1, deleted: true});
+
+              expect(res.status).toEqual(200);
+
+          })
+
+          it("should return message on success", async () => {
+            await createMentor();
+
+            const res = await request(server)
+            .put(`${MENTOR_API_URL}/1`)
+            .send({user_id: 1, deleted: true});
+
+            expect(res.body).toEqual({message: "Profile has been updated"});
+          })
+      })
 
       describe("DELETE ROUTE /MENTORS/:id")
 
