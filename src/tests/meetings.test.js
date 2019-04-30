@@ -296,7 +296,7 @@ describe("MEETINGS ROUTER", () => {
 
   });
 
-  describe("DELETE ROUTE /MEETINGS/:id", async () => {
+  describe("DELETE ROUTE /MEETINGS/:id", () => {
     it("should return status 200 on success", async () => {
         await createMeeting();
         const res = await request(server).delete(`${MEETING_API_URL}/1`)
