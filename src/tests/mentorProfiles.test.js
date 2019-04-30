@@ -5,241 +5,236 @@ const Users = require("../database/helpers/users");
 const Owners = require("../database/helpers/owners");
 const Administrators = require("../database/helpers/administrators");
 
-
 const AUTH_API_URL = "/api/auth";
 const MENTOR_API_URL = "/api/mentorProfiles";
 
 const sampleProfile = {
-    user_id: 1,
-    deleted:false 
-  };
-  
-  const owner = {
-    username: "user",
-    password: "password",
-    email: "email@example.org",
-    company_name: "Lambda School"
-  };
-  
-  const administrator = {
-    username: "user",
-    password: "password",
-    first_name: "John",
-    last_name: "Doe",
-    email: "email@example.org",
-    company_name: "Lambda School"
-  };
-  
-  const user = {
-    username: "user",
-    password: "password",
-    first_name: "John",
-    last_name: "Doe",
-    email: "email@example.org",
-    country: "United States",
-    state: "CA",
-    city: "San Francisco",
-    zipcode: "94131",
-    role_id: 0,
-    organization_id: 0
-  };
-  
-  afterEach(async () => {
-    await Users.truncate();
-    await Owners.truncate();
-    await Administrators.truncate();
-    await Mentors.truncate();
+  user_id: 1,
+  deleted: false
+};
+
+const owner = {
+  username: "user",
+  password: "password",
+  email: "email@example.org",
+  company_name: "Lambda School"
+};
+
+const administrator = {
+  username: "user",
+  password: "password",
+  first_name: "John",
+  last_name: "Doe",
+  email: "email@example.org",
+  company_name: "Lambda School"
+};
+
+const user = {
+  username: "user",
+  password: "password",
+  first_name: "John",
+  last_name: "Doe",
+  email: "email@example.org",
+  country: "United States",
+  state: "CA",
+  city: "San Francisco",
+  zipcode: "94131",
+  role_id: 0,
+  organization_id: 0
+};
+
+afterEach(async () => {
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
+  await Mentors.truncate();
+});
+
+beforeEach(async () => {
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
+  await Mentors.truncate();
+});
+
+async function createUser() {
+  return await request(server)
+    .post(AUTH_API_URL + "/register")
+    .send(user);
+}
+
+async function createOwner() {
+  return await request(server)
+    .post(AUTH_API_URL + "/owner/register")
+    .send(owner);
+}
+
+async function createAdministrator() {
+  return await request(server)
+    .post(AUTH_API_URL + "/admin/register")
+    .send(administrator);
+}
+
+async function createMentor() {
+  return await request(server)
+    .post(MENTOR_API_URL)
+    .send(sampleProfile);
+}
+
+describe("MENTORS ROUTER", () => {
+  describe("GET ROUTE/MENTORS", () => {
+    it("should return status 200 on success", async () => {
+      await createMentor();
+
+      const res = await request(server).get(MENTOR_API_URL);
+
+      expect(res.status).toEqual(200);
+    });
+
+    it("should return an empty array", async () => {
+      const res = await request(server).get(MENTOR_API_URL);
+
+      expect(res.body).toHaveLength(0);
+    });
   });
-  
-  beforeEach(async () => {
-    await Users.truncate();
-    await Owners.truncate();
-    await Administrators.truncate();
-    await Mentors.truncate();
-  });
-  
-  async function createUser() {
-    return await request(server)
-      .post(AUTH_API_URL + "/register")
-      .send(user);
-  }
-  
-  async function createOwner() {
-    return await request(server)
-      .post(AUTH_API_URL + "/owner/register")
-      .send(owner);
-  }
-  
-  async function createAdministrator() {
-    return await request(server)
-      .post(AUTH_API_URL + "/admin/register")
-      .send(administrator);
-  }
-  
-  async function createMentor() {
-    return await request(server)
-      .post(MENTOR_API_URL)
-      .send(sampleProfile);
-  }
 
-  describe("MENTORS ROUTER", () => {
-      describe("GET ROUTE/MENTORS", () => {
-        it("should return status 200 on success", async () => {
-            await createMentor();
+  describe("POST ROUTE /MENTORS", () => {
+    it("should return status 201 on success", async () => {
+      const res = await request(server)
+        .post(MENTOR_API_URL)
+        .send(sampleProfile);
 
-            const res = await request(server).get(MENTOR_API_URL);
+      expect(res.status).toEqual(201);
+    });
 
-            expect(res.status).toEqual(200);
+    it("should return message on success", async () => {
+      const res = await request(server)
+        .post(MENTOR_API_URL)
+        .send(sampleProfile);
+
+      expect(res.body).toEqual({ message: "Mentor's Profile created" });
+    });
+
+    it("should return status 400 on failure without user_id", async () => {
+      const res = await request(server)
+        .post(MENTOR_API_URL)
+        .send({
+          user_id: null
         });
 
-        it("should return an empty array", async () => {
-            const res = await request(server).get(MENTOR_API_URL);
-            
-            expect(res.body).toHaveLength(0);
-        })
-      })
+      expect(res.status).toEqual(404);
+    });
 
-      describe("POST ROUTE /MENTORS", () => {
-          it("should return status 201 on success", async () => {
-              const res = await request(server)
-              .post(MENTOR_API_URL)
-              .send(sampleProfile)
+    it("should return error on failure without user_id", async () => {
+      const res = await request(server)
+        .post(MENTOR_API_URL)
+        .send({
+          user_id: null
+        });
 
-              expect(res.status).toEqual(201)
-          })
+      expect(res.body).toEqual({ error: "Need user id to make profile" });
+    });
+  });
 
-          it("should return message on success", async () => {
-              const res = await request(server)
-              .post(MENTOR_API_URL)
-              .send(sampleProfile);
+  describe("GET ROUTE /MENTORS/:id", () => {
+    it("should return 200 on success", async () => {
+      await createMentor();
+      const res = await request(server).get(`${MENTOR_API_URL}/1`);
 
-              expect(res.body).toEqual({message: "Mentor's Profile created"})
-          })
+      expect(res.status).toEqual(200);
+    });
 
-          it("should return status 400 on failure without user_id", async () => {
-              const res = await request(server)
-              .post(MENTOR_API_URL)
-              .send({
-                  user_id: null
-              })
+    it("should return specified mentor", async () => {
+      await createMentor();
+      const res = await request(server).get(`${MENTOR_API_URL}/1`);
 
-              expect(res.status).toEqual(404)
-          })
+      expect(res.body).toEqual({ id: 1, user_id: 1 });
+    });
 
-          it("should return error on failure without user_id", async () => {
-              const res = await request(server)
-              .post(MENTOR_API_URL)
-              .send({
-                  user_id: null
-              })
+    it("should return status 404 on failure", async () => {
+      const res = await request(server).get(`${MENTOR_API_URL}/1`);
 
-              expect(res.body).toEqual({error: "Need user id to make profile"})
-          })
+      expect(res.status).toEqual(404);
+    });
 
-      })
+    it("should return error on failure", async () => {
+      const res = await request(server).get(`${MENTOR_API_URL}/1`);
 
-      describe("GET ROUTE /MENTORS/:id", () => {
-         it("should return 200 on success", async () => {
-             await createMentor();
-             const res = await request(server).get(`${MENTOR_API_URL}/1`)
+      expect(res.body).toEqual({ error: "Profile does not exist" });
+    });
+  });
 
-             expect(res.status).toEqual(200);
+  describe("PUT ROUTE /MENTORS/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createMentor();
 
-         })
+      const res = await request(server)
+        .put(`${MENTOR_API_URL}/1`)
+        .send({ user_id: 1, deleted: true });
 
-         it("should return specified mentor", async () => {
-             await createMentor();
-             const res = await request(server).get(`${MENTOR_API_URL}/1`)
+      expect(res.status).toEqual(200);
+    });
 
-             expect(res.body).toEqual({id: 1, user_id: 1});
-         })
+    it("should return message on success", async () => {
+      await createMentor();
 
-         it("should return status 404 on failure", async () => {
-            const res = await request(server).get(`${MENTOR_API_URL}/1`)
+      const res = await request(server)
+        .put(`${MENTOR_API_URL}/1`)
+        .send({ user_id: 1, deleted: true });
 
-            expect(res.status).toEqual(404);
-         })
+      expect(res.body).toEqual({ message: "Profile has been updated" });
+    });
 
-         it("should return error on failure", async () => {
-            const res = await request(server).get(`${MENTOR_API_URL}/1`)
-            
-            expect(res.body).toEqual({error: "Profile does not exist"})
-         })
-      })
+    it("should return status 404 on failure without user_id", async () => {
+      await createMentor();
 
-      describe("PUT ROUTE /MENTORS/:id", () => {
-          it("should return status 200 on success", async () => {
-              await createMentor();
+      const res = await request(server)
+        .put(`${MENTOR_API_URL}/1`)
+        .send({ user_id: null, deleted: true });
 
-              const res = await request(server)
-              .put(`${MENTOR_API_URL}/1`)
-              .send({user_id: 1, deleted: true});
+      expect(res.status).toEqual(404);
+    });
 
-              expect(res.status).toEqual(200);
+    it("should return error on failure without user_id", async () => {
+      await createMentor();
 
-          })
+      const res = await request(server)
+        .put(`${MENTOR_API_URL}/1`)
+        .send({ user_id: null, deleted: true });
 
-          it("should return message on success", async () => {
-            await createMentor();
+      expect(res.body).toEqual({ error: "Please provide the user id" });
+    });
+  });
 
-            const res = await request(server)
-            .put(`${MENTOR_API_URL}/1`)
-            .send({user_id: 1, deleted: true});
+  describe("DELETE ROUTE /MENTORS/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createMentor();
 
-            expect(res.body).toEqual({message: "Profile has been updated"});
-          })
+      const res = await request(server).delete(`${MENTOR_API_URL}/1`);
 
-          it("should return status 404 on failure without user_id", async () => {
-            await createMentor();
+      expect(res.status).toEqual(200);
+    });
 
-            const res = await request(server)
-            .put(`${MENTOR_API_URL}/1`)
-            .send({user_id: null, deleted: true});
+    it("should return message on success", async () => {
+      await createMentor();
 
-            expect(res.status).toEqual(404);
-          })
+      const res = await request(server).delete(`${MENTOR_API_URL}/1`);
 
-          it("should return error on failure without user_id", async () => {
+      expect(res.body).toEqual({ message: "Profile has been deleted" });
+    });
 
-            await createMentor();
+    it("should return status 404 failure if no profile", async () => {
+      const res = await request(server).delete(`${MENTOR_API_URL}/1`);
 
-            const res = await request(server)
-            .put(`${MENTOR_API_URL}/1`)
-            .send({user_id: null, deleted: true});
+      expect(res.status).toEqual(404);
+    });
 
-            expect(res.body).toEqual({error: "Please provide the user id"});
-          })
-      })
+    it("should return error on failure if no profile", async () => {
+      const res = await request(server).delete(`${MENTOR_API_URL}/1`);
 
-      describe("DELETE ROUTE /MENTORS/:id", () => {
-          it("should return status 200 on success", async () => {
-              await createMentor();
+      expect(res.body).toEqual({ error: "Profile does not exist" });
+    });
+  });
 
-              const res = await request(server).delete(`${MENTOR_API_URL}/1`);
-
-              expect(res.status).toEqual(200);
-          })
-
-          it("should return message on success", async () => {
-              await createMentor();
-
-              const res = await request(server).delete(`${MENTOR_API_URL}/1`);
-              
-              expect(res.body).toEqual({message: "Profile has been deleted"})
-          })
-
-          it("should return status 404 failure if no profile", async () => {
-            const res = await request(server).delete(`${MENTOR_API_URL}/1`);
-              
-            expect(res.status).toEqual(404);
-          })
-
-          it("should return error on failure if no profile", async () => {
-            const res = await request(server).delete(`${MENTOR_API_URL}/1`);
-
-            expect(res.body).toEqual({error: "Profile does not exist"});
-          })
-      })
-
-    //   describe("DELETE ROUTE /MENTORS/:id/REMOVE")
-  })
+  //   describe("DELETE ROUTE /MENTORS/:id/REMOVE")
+});
