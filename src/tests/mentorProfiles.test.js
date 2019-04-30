@@ -1,6 +1,6 @@
 const request = require("supertest");
 const server = require("../server");
-const Mentor = require("../database/helpers/mentorProfiles");
+const Mentors = require("../database/helpers/mentorProfiles");
 const Users = require("../database/helpers/users");
 const Owners = require("../database/helpers/owners");
 const Administrators = require("../database/helpers/administrators");
@@ -145,6 +145,25 @@ const sampleProfile = {
 
              expect(res.status).toEqual(200);
 
+         })
+
+         it("should return specified mentor", async () => {
+             await createMentor();
+             const res = await request(server).get(`${MENTOR_API_URL}/1`)
+
+             expect(res.body).toEqual({id: 1, user_id: 1});
+         })
+
+         it("should return status 404 on failure", async () => {
+            const res = await request(server).get(`${MENTOR_API_URL}/1`)
+
+            expect(res.status).toEqual(404);
+         })
+
+         it("should return error on failure", async () => {
+            const res = await request(server).get(`${MENTOR_API_URL}/1`)
+            
+            expect(res.body).toEqual({error: "Profile does not exist"})
          })
       })
 
