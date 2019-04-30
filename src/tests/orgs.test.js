@@ -62,6 +62,13 @@ describe('ORG ROUTER', () => {
         .get(ORGS_API_URL)
       expect(res.status).toEqual(200);
     })
+    //it should return an object
+    it('should return an object (organizations', async () => {
+      await getOrganizations();
+      const res = await request(server)
+        .get(ORGS_API_URL)
+      expect(res.body).toEqual({ organizations })
+    })
     //should this be 500 or 404 (no users?)
     it('should return 500 on fail (cannot access database)', async () => {
       await getOrganizations();
@@ -124,14 +131,12 @@ describe('ORG ROUTER', () => {
       await getOrganizationById();
       const res = await request(server)
         .get(ORGS_API_URL + '/:id')
-        .send(req.params.id)
       expect(res.status).toEqual(200);
     })
     it('should return 404 on fail (org does not exist)', async () => {
       await getOrganizationById();
       const res = await request(server)
         .get(ORGS_API_URL + '/:id')
-        .send(req.params.id) //do i need this?
       expect(res.status).toEqual(404);
     })
   })
