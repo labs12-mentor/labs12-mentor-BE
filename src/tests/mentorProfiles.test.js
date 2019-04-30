@@ -99,7 +99,15 @@ const sampleProfile = {
         })
       })
 
-      describe("POST ROUTE /MENTORS")
+      describe("POST ROUTE /MENTORS", () => {
+          it("should return status 201 on success", () => {
+              const res = await request(server)
+              .post(MENTOR_API_URL)
+              .send(sampleProfile)
+
+              expect(res.status).toEqual(201)
+          })
+      })
 
       describe("GET ROUTE /MENTORS/:id")
 
