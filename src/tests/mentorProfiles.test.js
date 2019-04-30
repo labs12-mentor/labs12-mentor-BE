@@ -227,6 +227,18 @@ const sampleProfile = {
               
               expect(res.body).toEqual({message: "Profile has been deleted"})
           })
+
+          it("should return status 404 failure if no profile", async () => {
+            const res = await request(server).delete(`${MENTOR_API_URL}/1`);
+              
+            expect(res.status).toEqual(404);
+          })
+
+          it("should return error on failure if no profile", async () => {
+            const res = await request(server).delete(`${MENTOR_API_URL}/1`);
+
+            expect(res.body).toEqual({error: "Profile does not exist"});
+          })
       })
 
     //   describe("DELETE ROUTE /MENTORS/:id/REMOVE")
