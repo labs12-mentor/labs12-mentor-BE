@@ -2,21 +2,16 @@ const faker = require('faker');
 
 function makeNotification(i){
   return {
-    id: i,
-    user_id: i,
+    user_id: i+1,
     content: faker.lorem.sentence()
   }
 }
 
-exports.seed = function(knex, Promise) {
-  return knex('notifications').del()
-    .then(function () {
-      const notificationsList = [];
-      for(let i=0; i<500; i++){
-        notificationsList.push(makeNotification(i));
-        console.log(i);
-      }
-      console.log("----- Notifications added! -----");
-      return knex('notifications').insert(notificationsList);
-    });
+exports.seed = async (knex, Promise) => {
+  const notificationsList = [];
+  for(let i=0; i<50; i++){
+    await notificationsList.push(makeNotification(i));
+  }
+  console.log("----- Notifications added! -----");
+  return await knex('notifications').insert(notificationsList);
 };
