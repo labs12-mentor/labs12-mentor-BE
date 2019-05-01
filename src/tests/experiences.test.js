@@ -1,9 +1,10 @@
 const request = require("supertest");
 const server = require("../server");
-const Experiences = require("../database/helpers/experiences");
-const Users = require("../database/helpers/users");
-const Owners = require("../database/helpers/owners");
-const Administrators = require("../database/helpers/administrators");
+const db = require('../database/dbConfig');
+// const Experiences = require("../database/helpers/experiences");
+// const Users = require("../database/helpers/users");
+// const Owners = require("../database/helpers/owners");
+// const Administrators = require("../database/helpers/administrators");
 
 const EXPERIENCE_API_URL = "/api/experiences";
 
@@ -13,18 +14,16 @@ const samepleExperience = {
   deleted: false
 };
 
+
+
 afterEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
-  await Mentees.truncate();
+  await db("experiences").del();
+  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1")
 });
 
 beforeEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
-  await Experiences.truncate();
+  await db("experiences").del();
+  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1")
 });
 
 async function createUser() {
@@ -46,9 +45,8 @@ async function createAdministrator() {
 }
 
 async function createExperience() {
-  return await request(server)
-    .post(EXPERIENCE_API_URL)
-    .send(sampleExperience);
+  return await db("experiences").insert([samepleExperience]);
+  
 }
 
 describe("EXPERIENCES ROUTE", () => {
