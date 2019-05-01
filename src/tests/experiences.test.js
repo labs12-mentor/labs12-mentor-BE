@@ -75,5 +75,15 @@ afterEach(async () => {
 
               expect(res.body).toHaveLength(1);
           })
+      });
+
+      describe("POST ROUTE /EXPERIENCES", () => {
+          it("should return status 201 on success", async () => {
+            const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send(samepleExperience);
+
+            expect(res.status).toEqual(201);
+          })
       })
   })
