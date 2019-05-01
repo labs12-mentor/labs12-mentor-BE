@@ -1,6 +1,6 @@
 const request = require("supertest");
 const server = require("../server");
-const db = require('../database/dbConfig');
+const db = require("../database/dbConfig");
 // const Experiences = require("../database/helpers/experiences");
 // const Users = require("../database/helpers/users");
 // const Owners = require("../database/helpers/owners");
@@ -14,16 +14,14 @@ const samepleExperience = {
   deleted: false
 };
 
-
-
 afterEach(async () => {
   await db("experiences").del();
-  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1")
+  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1");
 });
 
 beforeEach(async () => {
   await db("experiences").del();
-  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1")
+  await db.raw("ALTER SEQUENCE experieces_id_seq RESTART WITH 1");
 });
 
 async function createUser() {
@@ -46,7 +44,6 @@ async function createAdministrator() {
 
 async function createExperience() {
   return await db("experiences").insert([samepleExperience]);
-  
 }
 
 describe("EXPERIENCES ROUTE", () => {
