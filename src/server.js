@@ -4,6 +4,7 @@ const router = require('./routes');
 const server = express();
 
 initServerMiddleware(server);
+require('./middleware/passport');
 
 server.use('/api', router);
 
