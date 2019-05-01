@@ -30,6 +30,9 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.16.5",
     "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "pg": "^7.10.0",
     "redis": "^2.8.0",
     "sqlite3": "^4.0.6"
