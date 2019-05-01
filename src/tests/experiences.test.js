@@ -160,5 +160,19 @@ afterEach(async () => {
 
           expect(res.body).toEqual({message: "Your experience has been updated"})
         })
+
+        it("should return status 400 on failure (without name)", async () => {
+          await createExperience();
+          
+          const res = await request(server)
+          .post(EXPERIENCE_API_URL)
+          .send({
+            name: "",
+            user_id: 1,
+            deleted: false
+          })
+
+          expect(res.status).toEqual(400)
+        })
       })
   })
