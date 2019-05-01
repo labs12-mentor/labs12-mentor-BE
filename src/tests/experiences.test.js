@@ -138,7 +138,7 @@ afterEach(async () => {
         it("should return status 200 on success", async () => {
           await createExperience();
           const res = await request(server)
-            .post(EXPERIENCE_API_URL)
+            .put(EXPERIENCE_API_URL)
             .send({
               name: "Redux",
               user_id: 1,
@@ -151,7 +151,7 @@ afterEach(async () => {
         it("should return message on success", async () => {
           await createExperience();
           const res = await request(server)
-            .post(EXPERIENCE_API_URL)
+            .put(EXPERIENCE_API_URL)
             .send({
               name: "Redux",
               user_id: 1,
@@ -165,7 +165,7 @@ afterEach(async () => {
           await createExperience();
           
           const res = await request(server)
-          .post(EXPERIENCE_API_URL)
+          .put(EXPERIENCE_API_URL)
           .send({
             name: "",
             user_id: 1,
