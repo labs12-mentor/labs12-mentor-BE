@@ -13,6 +13,7 @@ const Administrators = require('../database/helpers/administrators');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../middleware/generateToken');
 const { authValidator } = require('../validators');
+const passport = require('passport');
 
 async function loginUser(req, res){
     const {
@@ -31,21 +32,35 @@ async function loginUser(req, res){
             .json({ error: 'Login failed. Wrong credentials!' });
     }
     try {
-        const user = await Users.getUserByUsername(userData.username);
-        if(user && !user.deleted && bcrypt.compareSync(userData.password, user.password)){
-            const token = await generateToken(user);
-            return await res
-                .status(200)
-                .json({ token });
-        } else {
-            return await res
-                .status(404)
-                .json({ error: 'No user found!' });
-        }
+        passport.authenticate('local', { session: false }, (err, user, info) => {
+            if(err || !user) return res.status(400).json({ error: 'Cannot log in! Wrong credentials.' })
+            req.login(user, { session: false }, async (err) => {
+                if(err) throw new Error('Cannot log in!');
+                const token = await generateToken(user);
+                return res
+                    .status(200)
+                    .json({
+                        user,
+                        token
+                    });
+            })
+        })(req, res);
+        
+        // const user = await Users.getUserByUsername(userData.username);
+        // if(user && !user.deleted && bcrypt.compareSync(userData.password, user.password)){
+        //     const token = await generateToken(user);
+        //     return await res
+        //         .status(200)
+        //         .json({ token });
+        // } else {
+        //     return await res
+        //         .status(404)
+        //         .json({ error: 'No user found!' });
+        // }
     } catch(error) {
         return await res
             .status(500)
-            .json({ error });
+            .json({ error: error.message });
     }
 }
 
