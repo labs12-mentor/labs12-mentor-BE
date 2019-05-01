@@ -133,4 +133,19 @@ afterEach(async () => {
           expect(res.body).toHaveLength(0);
         })
       })
+
+      describe("PUT ROUTE /EXPERIENCES/:id", () => {
+        it("should return status 200 on success", async () => {
+          await createExperience();
+          const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send({
+              name: "Redux",
+              user_id: 1,
+              deleted: false
+            });
+
+            expect(res.status).toEqual(200)
+        })
+      })
   })
