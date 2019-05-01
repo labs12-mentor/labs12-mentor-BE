@@ -8,199 +8,206 @@ const Administrators = require("../database/helpers/administrators");
 const EXPERIENCE_API_URL = "/api/experiences";
 
 const samepleExperience = {
-    name: "React",
-    user_id: 1,
-    deleted: false
-}
+  name: "React",
+  user_id: 1,
+  deleted: false
+};
 
 afterEach(async () => {
-    await Users.truncate();
-    await Owners.truncate();
-    await Administrators.truncate();
-    await Mentees.truncate();
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
+  await Mentees.truncate();
+});
+
+beforeEach(async () => {
+  await Users.truncate();
+  await Owners.truncate();
+  await Administrators.truncate();
+  await Experiences.truncate();
+});
+
+async function createUser() {
+  return await request(server)
+    .post(AUTH_API_URL + "/register")
+    .send(user);
+}
+
+async function createOwner() {
+  return await request(server)
+    .post(AUTH_API_URL + "/owner/register")
+    .send(owner);
+}
+
+async function createAdministrator() {
+  return await request(server)
+    .post(AUTH_API_URL + "/admin/register")
+    .send(administrator);
+}
+
+async function createExperience() {
+  return await request(server)
+    .post(EXPERIENCE_API_URL)
+    .send(sampleExperience);
+}
+
+describe("EXPERIENCES ROUTE", () => {
+  describe("GET ROUTE /EXPERIENCES", () => {
+    it("should return status 200 on success", async () => {
+      await createExperience();
+
+      const res = await request(server).get(EXPERIENCE_API_URL);
+
+      expect(res.status).toEqual(200);
+    });
+
+    it("should return an empty array", async () => {
+      const res = await request(server).get(EXPERIENCE_API_URL);
+
+      expect(res.body).toHaveLength(0);
+    });
+
+    it("should return an array with length of 1", async () => {
+      await createExperience();
+
+      const res = await request(server).get(EXPERIENCE_API_URL);
+
+      expect(res.body).toHaveLength(1);
+    });
   });
-  
-  beforeEach(async () => {
-    await Users.truncate();
-    await Owners.truncate();
-    await Administrators.truncate();
-    await Experiences.truncate();
+
+  describe("POST ROUTE /EXPERIENCES", () => {
+    it("should return status 201 on success", async () => {
+      const res = await request(server)
+        .post(EXPERIENCE_API_URL)
+        .send(samepleExperience);
+
+      expect(res.status).toEqual(201);
+    });
+
+    it("should return message on success", async () => {
+      const res = await request(server)
+        .post(EXPERIENCE_API_URL)
+        .send(samepleExperience);
+
+      expect(res.body).toEqual({ message: "Experience has been added" });
+    });
+
+    it("should return status 400 on failure (no name) ", async () => {
+      const res = await request(server)
+        .post(EXPERIENCE_API_URL)
+        .send({
+          name: "",
+          user_id: 1,
+          deleted: false
+        });
+
+      expect(res.status).toEqual(400);
+    });
+
+    it("should return error on failure (no name)", async () => {
+      const res = await request(server)
+        .post(EXPERIENCE_API_URL)
+        .send({
+          name: "",
+          user_id: 1,
+          deleted: false
+        });
+
+      expect(res.body).toEqual({ error: "Please provide a name" });
+    });
   });
-  
-  async function createUser() {
-    return await request(server)
-      .post(AUTH_API_URL + "/register")
-      .send(user);
-  }
-  
-  async function createOwner() {
-    return await request(server)
-      .post(AUTH_API_URL + "/owner/register")
-      .send(owner);
-  }
-  
-  async function createAdministrator() {
-    return await request(server)
-      .post(AUTH_API_URL + "/admin/register")
-      .send(administrator);
-  }
-  
-  async function createExperience() {
-    return await request(server)
-      .post(EXPERIENCE_API_URL)
-      .send(sampleExperience);
-  }
 
-  describe("EXPERIENCES ROUTE", () => {
-      describe("GET ROUTE /EXPERIENCES", () => {
-          it("should return status 200 on success", async () => {
-              await createExperience();
+  describe("GET ROUTE /EXPERIENCES/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createExperience();
+      const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
 
-              const res = await request(server).get(EXPERIENCE_API_URL);
+      expect(res.status).toEqual(200);
+    });
 
-              expect(res.status).toEqual(200);
-          })
+    it("should return an empty array", async () => {
+      const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
 
-          it("should return an empty array", async () => {
+      expect(res.body).toHaveLength(0);
+    });
+  });
 
-              const res = await request(server).get(EXPERIENCE_API_URL);
+  describe("PUT ROUTE /EXPERIENCES/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createExperience();
+      const res = await request(server)
+        .put(EXPERIENCE_API_URL)
+        .send({
+          name: "Redux",
+          user_id: 1,
+          deleted: false
+        });
 
-              expect(res.body).toHaveLength(0)
-          })
+      expect(res.status).toEqual(200);
+    });
 
-          it("should return an array with length of 1", async () => {
-              await createExperience();
+    it("should return message on success", async () => {
+      await createExperience();
+      const res = await request(server)
+        .put(EXPERIENCE_API_URL)
+        .send({
+          name: "Redux",
+          user_id: 1,
+          deleted: false
+        });
 
-              const res = await request(server).get(EXPERIENCE_API_URL);
+      expect(res.body).toEqual({ message: "Your experience has been updated" });
+    });
 
-              expect(res.body).toHaveLength(1);
-          })
+    it("should return status 400 on failure (without name)", async () => {
+      await createExperience();
+
+      const res = await request(server)
+        .put(EXPERIENCE_API_URL)
+        .send({
+          name: "",
+          user_id: 1,
+          deleted: false
+        });
+
+      expect(res.status).toEqual(400);
+    });
+
+    it("should return error on failure (without name)", async () => {
+      await createExperience();
+
+      const res = await request(server)
+        .put(EXPERIENCE_API_URL)
+        .send({
+          name: "",
+          user_id: 1,
+          deleted: false
+        });
+
+      expect(res.body).toEqual({
+        error: "Please provide a name for your experience"
       });
+    });
+  });
 
-      describe("POST ROUTE /EXPERIENCES", () => {
-          it("should return status 201 on success", async () => {
-            const res = await request(server)
-            .post(EXPERIENCE_API_URL)
-            .send(samepleExperience);
+  describe("DELETE ROUTE /EXPERIENCE/:id", () => {
+    it("should return status 200 on success", async () => {
+      await createExperience();
+      const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`);
+      expect(res.status).toEqual(200);
+    });
 
-            expect(res.status).toEqual(201);
-          })
+    it("should return message on success", async () => {
+      await createExperience();
+      const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`);
+      expect(res.body).toEqual({ message: "Your experience has been deleted" });
+    });
+  });
 
-          it("should return message on success", async () => {
-            const res = await request(server)
-            .post(EXPERIENCE_API_URL)
-            .send(samepleExperience);
+  //   describe("DELETE ROUTE /MEETINGS/:id/REMOVE", async () => {
+  //       it("should return status 200 on success", () => {
 
-            expect(res.body).toEqual({message: "Experience has been added"})
-          })
-
-          it("should return status 400 on failure (no name) ", async () => {
-            const res = await request(server)
-            .post(EXPERIENCE_API_URL)
-            .send({
-              name: "",
-              user_id: 1,
-              deleted: false
-            })
-
-            expect(res.status).toEqual(400)
-          })
-
-          it("should return error on failure (no name)", async () => {
-            const res = await request(server)
-            .post(EXPERIENCE_API_URL)
-            .send({
-              name: "",
-              user_id: 1,
-              deleted: false
-            });
-
-            expect(res.body).toEqual({error: "Please provide a name"})
-          })
-      });
-
-      describe("GET ROUTE /EXPERIENCES/:id", () => {
-        it("should return status 200 on success", async () => {
-          await createExperience();
-          const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
-          
-          expect(res.status).toEqual(200)
-        })
-
-        it("should return an empty array", async () => {
-          const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
-  
-          expect(res.body).toHaveLength(0);
-        })
-      })
-
-      describe("PUT ROUTE /EXPERIENCES/:id", () => {
-        it("should return status 200 on success", async () => {
-          await createExperience();
-          const res = await request(server)
-            .put(EXPERIENCE_API_URL)
-            .send({
-              name: "Redux",
-              user_id: 1,
-              deleted: false
-            });
-
-            expect(res.status).toEqual(200)
-        })
-
-        it("should return message on success", async () => {
-          await createExperience();
-          const res = await request(server)
-            .put(EXPERIENCE_API_URL)
-            .send({
-              name: "Redux",
-              user_id: 1,
-              deleted: false
-            });
-
-          expect(res.body).toEqual({message: "Your experience has been updated"})
-        })
-
-        it("should return status 400 on failure (without name)", async () => {
-          await createExperience();
-          
-          const res = await request(server)
-          .put(EXPERIENCE_API_URL)
-          .send({
-            name: "",
-            user_id: 1,
-            deleted: false
-          })
-
-          expect(res.status).toEqual(400)
-        })
-
-        it("should return error on failure (without name)", async () => {
-          await createExperience();
-
-          const res = await request(server)
-          .put(EXPERIENCE_API_URL)
-          .send({
-            name:"",
-            user_id: 1,
-            deleted: false
-          })
-
-          expect(res.body).toEqual({error: "Please provide a name for your experience"})
-        })
-      })
-
-      describe("DELETE ROUTE /EXPERIENCE/:id", () => {
-        it("should return status 200 on success", async () => {
-          await createExperience();
-          const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`)
-          expect(res.status).toEqual(200)
-      })
-  
-      it("should return message on success", async () => {
-          await createExperience();
-          const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`)
-          expect(res.body).toEqual({message: 'Your experience has been deleted'});
-      })
-      })
-  })
+  //       } )
+  //   })
+});
