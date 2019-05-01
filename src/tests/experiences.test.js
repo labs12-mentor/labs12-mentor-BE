@@ -85,5 +85,27 @@ afterEach(async () => {
 
             expect(res.status).toEqual(201);
           })
+
+          it("should return message on success", async () => {
+            const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send(samepleExperience);
+
+            expect(res.body).toEqual({message: "Experience has been added"})
+          })
+
+          it("should return status 400 on failure (no name) ", async () => {
+            const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send({
+              name: "",
+              user_id: 1,
+              deleted: false
+            })
+
+            expect(res.status).toEqual(400)
+          })
+
+          
       })
   })
