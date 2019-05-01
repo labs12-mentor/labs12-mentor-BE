@@ -9,8 +9,12 @@ module.exports = {
 const Owners = require('../database/helpers/owners');
 
 async function getOwners(req, res){
-    const owners = await Owners.getOwners();
-    res.status(200).json(owners);
+    try {
+        const owners = await Owners.getOwners();
+        return await res.status(200).json(owners);
+    } catch(error) {
+        return await res.status(500).json({ error: 'Could not fetch owners!' });
+    }
 }
 
 async function addOwner(req, res){
