@@ -174,5 +174,19 @@ afterEach(async () => {
 
           expect(res.status).toEqual(400)
         })
+
+        it("should return error on failure (without name)", async () => {
+          await createExperience();
+
+          const res = await request(server)
+          .put(EXPERIENCE_API_URL)
+          .send({
+            name:"",
+            user_id: 1,
+            deleted: false
+          })
+
+          expect(res.body).toEqual({error: "Please provide a name for your experience"})
+        })
       })
   })
