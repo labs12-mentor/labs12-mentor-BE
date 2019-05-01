@@ -147,5 +147,18 @@ afterEach(async () => {
 
             expect(res.status).toEqual(200)
         })
+
+        it("should return message on success", async () => {
+          await createExperience();
+          const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send({
+              name: "Redux",
+              user_id: 1,
+              deleted: false
+            });
+
+          expect(res.body).toEqual({message: "Your experience has been updated"})
+        })
       })
   })
