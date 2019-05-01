@@ -106,6 +106,31 @@ afterEach(async () => {
             expect(res.status).toEqual(400)
           })
 
+          it("should return error on failure (no name)", async () => {
+            const res = await request(server)
+            .post(EXPERIENCE_API_URL)
+            .send({
+              name: "",
+              user_id: 1,
+              deleted: false
+            });
+
+            expect(res.body).toEqual({error: "Please provide a name"})
+          })
+      });
+
+      describe("GET ROUTE /EXPERIENCES/:id", () => {
+        it("should return status 200 on success", async () => {
+          await createExperience();
+          const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
           
+          expect(res.status).toEqual(200)
+        })
+
+        it("should return an empty array", async () => {
+          const res = await request(server).get(`${EXPERIENCE_API_URL}/1`);
+  
+          expect(res.body).toHaveLength(0);
+        })
       })
   })
