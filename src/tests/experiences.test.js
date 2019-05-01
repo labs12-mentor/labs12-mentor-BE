@@ -189,4 +189,18 @@ afterEach(async () => {
           expect(res.body).toEqual({error: "Please provide a name for your experience"})
         })
       })
+
+      describe("DELETE ROUTE /EXPERIENCE/:id", () => {
+        it("should return status 200 on success", async () => {
+          await createExperience();
+          const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`)
+          expect(res.status).toEqual(200)
+      })
+  
+      it("should return message on success", async () => {
+          await createExperience();
+          const res = await request(server).delete(`${EXPERIENCE_API_URL}/1`)
+          expect(res.body).toEqual({message: 'Your experience has been deleted'});
+      })
+      })
   })
