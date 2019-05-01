@@ -96,10 +96,8 @@ describe('NOTIFICATIONS ROUTER', () => {
     });
 
     it('should return message on success', async () => {
-      await createNotification();
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`);
-      console.log(res.body);
+        .post(NOTIFICATION_API_URL, notification);
       expect(res.body).toEqual({ message: 'add notification API OK' });
     });
 
@@ -107,6 +105,7 @@ describe('NOTIFICATIONS ROUTER', () => {
       const noContentNotification = {
         user_id: 1
       };
+
       const res = await request(server)
         .post(NOTIFICATION_API_URL, noContentNotification);
         console.log(res.body);
@@ -133,7 +132,7 @@ describe('NOTIFICATIONS ROUTER', () => {
     it('should return 200 on success', async () => {
       await createNotification();
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`);
+        .put(`${NOTIFICATION_API_URL}/0`);
       expect(res.status).toEqual(200);
     });
 
@@ -145,8 +144,7 @@ describe('NOTIFICATIONS ROUTER', () => {
       };
 
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`, alteredNotification);
-      console.log(res.body);
+        .put(`${NOTIFICATION_API_URL}/0`, alteredNotification);
       expect(res.body).toEqual({ message: 'update notification API OK' });
     });
   });
@@ -155,37 +153,47 @@ describe('NOTIFICATIONS ROUTER', () => {
     it('should return 200 on success', async () => {
       await createNotification();
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`);
+        .patch(`${NOTIFICATION_API_URL}/0`);
       expect(res.status).toEqual(200);
     });
 
-    
+    it('should return message on success', async () => {
+      await createNotification();
+      const alteredNotification = {
+        user_id: 1,
+        content: "This is the updated notification."
+      };
+
+      const res = await request(server)
+        .patch(`${NOTIFICATION_API_URL}/0`, alteredNotification);
+      expect(res.body).toEqual({ message: 'mark notification API OK' });
+    });
   });
 
   describe('DELETE ROUTE /:id', () => {
     it('should return 200 on success', async () => {
       await createNotification();
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`);
+        .delete(`${NOTIFICATION_API_URL}/0`);
       expect(res.status).toEqual(200);
     });
 
     it('should return a message on success', async () => {
       await createNotification();
       const res = await request(server)
-        .get(`${NOTIFICATION_API_URL}/0`);
-      expect(res.status).toEqual({ message: 'delete notification API OK' });
+        .delete(`${NOTIFICATION_API_URL}/0`);
+      expect(res.body).toEqual({ message: 'delete notification API OK' });
     });
   });
 
+  //describe delete route /:id/remove
   describe('DELETE ROUTE /:id/remove', () => {
     it('should return 200 on success', async () => {
-
+      
     });
 
     it('should return a message on success', async () => {
 
     });
   });
-
 });
