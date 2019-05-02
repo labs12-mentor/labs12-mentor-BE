@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { meetingsController } = require('../controllers');
+const authenticate = require('../middleware/authenticate');
+const authorize = require('../middleware/authorize');
 
 router.route('/')
     .get(meetingsController.getMeetings)
