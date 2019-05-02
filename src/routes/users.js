@@ -1,15 +1,17 @@
 const router = require('express').Router();
 const { usersController } = require('../controllers');
+const authenticate = require('../middleware/authenticate');
+const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(usersController.getAllUsers);
+    .get(authenticate, authorize(['ADMINISTRATOR']), usersController.getAllUsers);
 
 router.route('/:id')
-    .get(usersController.getUser)
-    .put(usersController.updateUser)
-    .delete(usersController.deleteUser);
+    .get(authenticate, authorize(['ALL']), usersController.getUser)
+    .put(authenticate, authorize('ALL'), usersController.updateUser)
+    .delete(authenticate, authorize(['ALL']), usersController.deleteUser);
 
 router.route('/:id/remove')
-    .delete(usersController.removeUser);
+    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER']), usersController.removeUser);
 
 module.exports = router;
