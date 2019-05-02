@@ -2,13 +2,17 @@ const Users = require('../database/helpers/users');
 
 module.exports = (roles) => async (req, res, next) => {
     if(roles.includes('ALL')){
-        return next();
+        return await next();
     } else {
-        const { role } = await Users.getUserById(req.user.id);
+        const user = await Users.getUserById(req.user.id);
+        if(user === undefined){
+            return await res.status(403).json({ error: 'Not authorized' });
+        }
+        const role = user.role;
         if(!roles.includes(role)){
-            return res.status(403).json({ error: 'Not authorized' });
+            return await res.status(403).json({ error: 'Not authorized' });
         } else {
-            return next();
+            return await next();
         }
     }
 }
