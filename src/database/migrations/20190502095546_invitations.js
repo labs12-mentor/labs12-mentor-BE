@@ -1,7 +1,7 @@
 const { dropTable } = require('../helpers/db');
 
 exports.up = function(knex, Promise) {
-    return knex.schema.createTable('meetings', table => {
+    return knex.schema.createTable('invitations', table => {
         table
             .increments('id');
 
@@ -35,4 +35,4 @@ exports.up = function(knex, Promise) {
     });
 };
 
-exports.down = dropTable('meetings');
+exports.down = dropTable('invitations');
