@@ -24,7 +24,7 @@ async function getNotifications() {
 
 async function getNotificationById(id) {
     return await db
-        .select('id', 'user_id', 'content', 'watched', 'deleted')
+        .select('*')
         .from('notifications')
         .where({ id })
         .first();
@@ -34,8 +34,7 @@ async function insertNotification(notification) {
     return await db('notifications')
         .insert({
             user_id: notification.user_id,
-            content: notification.content,
-            watched: notification.watched
+            content: notification.content
         })
         .then(response => {
             return {

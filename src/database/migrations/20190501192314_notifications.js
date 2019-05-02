@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('notifications', table => {
         table
             .increments('id');
+            
         table
             .string('content')
             .notNullable();
@@ -15,6 +16,11 @@ exports.up = function(knex, Promise) {
             .inTable('users')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
+        
+        table
+            .boolean('watched')
+            .defaultTo(false)
+            .notNullable();
         
         table
             .boolean('deleted')
