@@ -6,6 +6,9 @@ const authorize = require('../middleware/authorize');
 router.route('/')
     .get(authenticate, authorize(['ADMINISTRATOR']), usersController.getAllUsers);
 
+router.route('/current_user')
+    .get(authenticate, authorize(['ALL']), usersController.getCurrentUser);
+
 router.route('/:id')
     .get(authenticate, authorize(['ALL']), usersController.getUser)
     .put(authenticate, authorize('ALL'), usersController.updateUser)
