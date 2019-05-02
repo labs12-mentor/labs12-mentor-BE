@@ -3,6 +3,7 @@ const { apiController } = require('../controllers');
 
 const auth = require('./auth');
 const experiences = require('./experiences');
+const invitations = require('./invitations');
 const matches = require('./matches');
 const meetings = require('./meetings');
 const menteeProfiles = require('./menteeProfiles');
@@ -16,6 +17,7 @@ router.route('/')
 
 router.use('/auth', auth);
 router.use('/experiences', experiences);
+router.use('/invite', invitations);
 router.use('/matches', matches);
 router.use('/meetings', meetings);
 router.use('/mentees', menteeProfiles);
