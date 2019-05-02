@@ -11,20 +11,22 @@ const { authValidator } = require('../validators');
 const passport = require('passport');
 
 async function loginUser(req, res){
-    const userData = {
-        email,
-        password
-    } = req.body;
-
-    const validCredentials = await authValidator.validateCredentials(userData);
-    if(!validCredentials){
-        return await res
-            .status(400)
-            .json({ error: 'Login failed. Wrong credentials!' });
-    }
     try {
-        passport.authenticate('local', { session: false }, (err, user, info) => {
-            if(err || !user) return res.status(400).json({ error: 'Cannot log in! Wrong credentials.' })
+        const userData = {
+            email,
+            password
+        } = req.body;
+    
+        const validCredentials = await authValidator.validateCredentials(userData);
+        if(!validCredentials){
+            return await res
+                .status(400)
+                .json({ error: 'Login failed. Wrong credentials!' });
+        }
+        const userExists = await Users.getUserByEmail(userData.email);
+        if(userExists === undefined) return await res.status(404).json({ error: 'Cannot log in! User not found.' });
+        passport.authenticate('local', { session: false }, async (err, user, info) => {
+            if(!user || err) return await res.status(401).json({ error: 'Cannot log in! Wrong credentials.' });
             req.login(user, { session: false }, async (err) => {
                 if(err) throw new Error('Cannot log in!');
                 const token = await generateToken(user);
@@ -79,7 +81,7 @@ async function register(req, res){
 
     if(await Users.getUserByEmail(userData.email) || await Organizations.getOrganizationByName(organizationData.name)){
         return await res
-            .status(400)
+            .status(404)
             .json({ error: 'User or organization already exists!' });
     }
 
