@@ -36,7 +36,7 @@ async function addMenteeProfile(req, res){
 async function getMenteeProfile(req, res){
     try {
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
-        if(mentor === undefined || mentor.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
+        if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
         return await res.status(200).json(mentee);
     } catch(error) {
         return await res.status(500).json({ error: error.message });
