@@ -6,7 +6,6 @@ module.exports = function(req, res, next) {
     const token = req.get('Authorization');
     if (token){
         return jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-            console.log(decoded);
             if (err) return res.status(401).json({ error: err });
             req.user = { id: decoded.subject };
             next();
