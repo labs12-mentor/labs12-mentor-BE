@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getMentorProfiles,
     getMentorProfileById,
+    getMentorProfileByUserId,
     insertMentorProfile,
     updateMentorProfile,
     deleteMentorProfile,
@@ -29,11 +30,20 @@ async function getMentorProfileById(id) {
         .first();
 }
 
+async function getMentorProfileByUserId(user_id) {
+    return await db
+        .select('*')
+        .from('mentorprofiles')
+        .where({ user_id })
+        .first();
+}
+
 async function insertMentorProfile(mentorProfile) {
     return await db('mentorprofiles')
         .insert({
             user_id: mentorProfile.user_id
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
