@@ -49,29 +49,31 @@ const user = {
 };
 
 afterEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
-  await Mentees.truncate();
+  await db('menteeprofiles').del();
+  await db.raw('ALTER SEQUENCE menteeprofiles_id_seq RESTART WITH 1');
+  await db('users').del();
+  await db.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
+  await db('organizations').del();
+  await db.raw('ALTER SEQUENCE organizations_id_seq RESTART WITH 1');
+  await db('administrators').del();
+  await db.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
 });
 
 beforeEach(async () => {
-  await Users.truncate();
-  await Owners.truncate();
-  await Administrators.truncate();
-  await Mentees.truncate();
+  await db('menteeprofiles').del();
+  await db.raw('ALTER SEQUENCE menteeprofiles_id_seq RESTART WITH 1');
+  await db('users').del();
+  await db.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
+  await db('organizations').del();
+  await db.raw('ALTER SEQUENCE organizations_id_seq RESTART WITH 1');
+  await db('administrators').del();
+  await db.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
 });
 
 async function createUser() {
   return await request(server)
     .post(AUTH_API_URL + "/register")
     .send(user);
-}
-
-async function createOwner() {
-  return await request(server)
-    .post(AUTH_API_URL + "/owner/register")
-    .send(owner);
 }
 
 async function createAdministrator() {
@@ -89,6 +91,8 @@ async function createMentee() {
 describe("MENTEES ROUTER", () => {
   describe("GET ROUTE /MENTEES", () => {
     it("should return status 200 on success", async () => {
+      createAdministrator();
+
       await createMentee();
       const res = await request(server).get(MENTEE_API_URL);
       expect(res.status).toEqual(200);
