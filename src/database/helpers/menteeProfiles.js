@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getMenteeProfiles,
     getMenteeProfileById,
+    getMenteeProfileByUserId,
     insertMenteeProfile,
     updateMenteeProfile,
     deleteMenteeProfile,
@@ -26,6 +27,14 @@ async function getMenteeProfileById(id) {
         .select('*')
         .from('menteeprofiles')
         .where({ id })
+        .first();
+}
+
+async function getMenteeProfileByUserId(user_id) {
+    return await db
+        .select('*')
+        .from('menteeprofiles')
+        .where({ user_id })
         .first();
 }
 
