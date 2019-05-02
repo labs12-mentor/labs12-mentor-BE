@@ -4,7 +4,7 @@ module.exports = {
         table
             .integer(name)
             .unsigned()
-            .notNullable();
+            .default(null);
         table
             .foreign(name)
             .references('id')
