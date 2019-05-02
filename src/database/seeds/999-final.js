@@ -7,5 +7,5 @@ exports.seed = async (knex, Promise) => {
     // await knex('experiences').then(res => console.log(res));
     // await knex('matches').then(res => console.log(res));
     // await knex('meetings').then(res => console.log(res));
-    await knex('invitations').then(res => console.log(res));
+    // await knex('invitations').then(res => console.log(res));
 };
