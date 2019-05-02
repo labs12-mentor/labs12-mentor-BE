@@ -19,15 +19,15 @@ async function getOrganizations(req, res){
 
 async function getOrganization(req, res){
     try {
-        const user = await Users.getUserById(req.user.id);
+        // const user = await Users.getUserById(req.user.id);
 
-        if(user === undefined){
-            return await res.status(403).json({ error: 'You are not authenticated!' });
-        }
+        // if(user === undefined){
+        //     return await res.status(403).json({ error: 'You are not authenticated!' });
+        // }
 
-        if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
-            return await res.status(403).json({ error: 'This organization is not yours!' });
-        }
+        // if(user.role !== 'ADMINISTRATOR' && user.organization_id !== Number(req.params.id)){
+        //     return await res.status(403).json({ error: 'This organization is not yours!' });
+        // }
 
         const organization = await Organizations.getOrganizationById(req.params.id);
         
@@ -40,15 +40,16 @@ async function getOrganization(req, res){
 
 async function updateOrganization(req, res){
     try {
-        const user = await Users.getUserById(req.user.id);
+        // const user = await Users.getUserById(req.user.id);
 
-        if(user === undefined){
-            return await res.status(403).json({ error: 'You are not authenticated!' });
-        }
+        // if(user === undefined){
+        //     return await res.status(403).json({ error: 'You are not authenticated!' });
+        // }
 
-        if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
-            return await res.status(403).json({ error: 'This organization is not yours!' });
-        }
+        // if(user.role !== 'ADMINISTRATOR' && user.organization_id !== Number(req.params.id)){
+        //     return await res.status(403).json({ error: 'This organization is not yours!' });
+        // }
+
         const organizationData = {
             name,
             description,
@@ -66,15 +67,16 @@ async function updateOrganization(req, res){
 
 async function deleteOrganization(req, res){
     try {
-        const user = await Users.getUserById(req.user.id);
+        // const user = await Users.getUserById(req.user.id);
 
-        if(user === undefined){
-            return await res.status(403).json({ error: 'You are not authenticated!' });
-        }
+        // if(user === undefined){
+        //     return await res.status(403).json({ error: 'You are not authenticated!' });
+        // }
 
-        if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
-            return await res.status(403).json({ error: 'This organization is not yours!' });
-        }
+        // if(user.role !== 'ADMINISTRATOR' && user.organization_id !== Number(req.params.id)){
+        //     return await res.status(403).json({ error: 'This organization is not yours!' });
+        // }
+        
         const organization = await Organizations.getOrganizationById(req.params.id);
         if(organization === undefined || organization.deleted) return await res.status(404).json({ error: 'Organization not found!' });
         await Organizations.deleteOrganization(req.params.id);
