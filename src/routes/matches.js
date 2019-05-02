@@ -4,15 +4,15 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(matchesController.getMatches)
-    .post(matchesController.addMatch);
+    .get(authenticate, authorize(['ALL']), matchesController.getMatches)
+    .post(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']), matchesController.addMatch);
 
 router.route('/:id')
-    .get(matchesController.getMatch)
-    .put(matchesController.updateMatch)
-    .delete(matchesController.deleteMatch);
+    .get(authenticate, authorize(['ALL']), matchesController.getMatch)
+    .put(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']), matchesController.updateMatch)
+    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']), matchesController.deleteMatch);
 
 router.route('/:id/remove')
-    .delete(matchesController.removeMatch);
+    .delete(authenticate, authorize(['ADMINISTRATOR']), matchesController.removeMatch);
 
 module.exports = router;
