@@ -2,8 +2,7 @@ const router = require('express').Router();
 const { organizationsController } = require('../controllers');
 
 router.route('/')
-    .get(organizationsController.getOrganizations)
-    .post(organizationsController.addOrganization);
+    .get(organizationsController.getOrganizations);
 
 router.route('/:id')
     .get(organizationsController.getOrganization)
