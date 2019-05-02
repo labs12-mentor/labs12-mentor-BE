@@ -1,5 +1,6 @@
 module.exports = {
     getAllUsers,
+    getCurrentUser,
     getUser,
     updateUser,
     deleteUser,
@@ -8,13 +9,33 @@ module.exports = {
 const Users = require('../database/helpers/users');
 
 async function getAllUsers(req, res){
-    const users = await Users.getAllUsers();
-    res.status(200).json(users);
+    try {
+        const users = await Users.getAllUsers();
+        return await res.status(200).json(users);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getCurrentUser(req, res){
+    const user = await Users.getUserById(req.user.id);
+    res.status(200).json(user);
 }
 
 async function getUser(req, res){
-    const user = await Users.getUserById(req.params.id);
-    res.status(200).json(user);
+    try {
+        const user = await Users.getUserById(req.user.id);
+
+        if(user === undefined || user.deleted) return await res.status(404).json({ error: 'User not found!' });
+
+        if(user.role !== 'ADMINISTRATOR' && user.id !== req.params.id){
+            return await res.status(403).json({ error: 'This profile is not yours!' });
+        }
+        
+        return await res.status(200).json(user);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
 }
 
 async function updateUser(req, res){
