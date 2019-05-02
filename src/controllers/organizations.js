@@ -8,13 +8,22 @@ module.exports = {
 const Organizations = require('../database/helpers/organizations');
 
 async function getOrganizations(req, res){
-    const organizations = await Organizations.getOrganizations();
-    res.status(200).json(organizations);
+    try {
+        const organizations = await Organizations.getOrganizations();
+        return await res.status(200).json(organizations);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
 }
 
 async function getOrganization(req, res){
-    const organization = await Organizations.getOrganizationById(req.params.id);
-    res.status(200).json(organization);
+    try {
+        const organization = await Organizations.getOrganizationById(req.params.id);
+        if(organization === undefined) return await res.status(404).json({ error: 'Organization not found!' });
+        return await res.status(200).json(organization);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
 }
 
 async function updateOrganization(req, res){
