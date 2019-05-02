@@ -1,4 +1,5 @@
 exports.seed = async (knex, Promise) => {
+    await knex('invitations').del();
     await knex('meetings').del();
     await knex('matches').del();
     await knex('experiences').del();
@@ -7,11 +8,7 @@ exports.seed = async (knex, Promise) => {
     await knex('notifications').del();
     await knex('users').del();
     await knex('organizations').del();
-    await knex('administrators').del();
-    await knex('owners').del();
 
-    await knex.raw('ALTER SEQUENCE owners_id_seq RESTART WITH 1');
-    await knex.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
     await knex.raw('ALTER SEQUENCE organizations_id_seq RESTART WITH 1');
     await knex.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
     await knex.raw('ALTER SEQUENCE notifications_id_seq RESTART WITH 1');
@@ -20,4 +17,5 @@ exports.seed = async (knex, Promise) => {
     await knex.raw('ALTER SEQUENCE experiences_id_seq RESTART WITH 1');
     await knex.raw('ALTER SEQUENCE matches_id_seq RESTART WITH 1');
     await knex.raw('ALTER SEQUENCE meetings_id_seq RESTART WITH 1');
+    await knex.raw('ALTER SEQUENCE invitations_id_seq RESTART WITH 1');
 };

@@ -1,16 +1,17 @@
 const router = require('express').Router();
 const { organizationsController } = require('../controllers');
+const authenticate = require('../middleware/authenticate');
+const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(organizationsController.getOrganizations)
-    .post(organizationsController.addOrganization);
+    .get(authenticate, authorize(['ALL']), organizationsController.getOrganizations);
 
 router.route('/:id')
-    .get(organizationsController.getOrganization)
-    .put(organizationsController.updateOrganization)
-    .delete(organizationsController.deleteOrganization);
+    .get(authenticate, authorize(['ALL']),organizationsController.getOrganization)
+    .put(authenticate, authorize(['ALL']),organizationsController.updateOrganization)
+    .delete(authenticate, authorize(['ALL']), organizationsController.deleteOrganization);
 
 router.route('/:id/remove')
-    .delete(organizationsController.removeOrganization);
+    .delete(authenticate, authorize(['ALL']), organizationsController.removeOrganization);
 
 module.exports = router;

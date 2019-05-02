@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getMatches,
     getMatchById,
+    getMatchByMentorAndMentee,
     insertMatch,
     updateMatch,
     deleteMatch,
@@ -10,7 +11,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('matches').truncate();
+    await db('matches').del();
+    await db.raw('ALTER SEQUENCE matches_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getMatches() {
@@ -21,9 +24,18 @@ async function getMatches() {
 
 async function getMatchById(id) {
     return await db
-        .select('id', 'mentor_id', 'mentee_id', 'match_score', 'status', 'start_date', 'end_date', 'deleted')
+        .select('*')
         .from('matches')
         .where({ id })
+        .first();
+}
+
+async function getMatchByMentorAndMentee(mentor_id, mentee_id) {
+    return await db
+        .select('*')
+        .from('matches')
+        .where({ mentor_id })
+        .where({ mentee_id})
         .first();
 }
 
@@ -32,10 +44,7 @@ async function insertMatch(match) {
         .insert({
             mentor_id: match.mentor_id,
             mentee_id: match.mentee_id,
-            match_score: match.match_score || 0,
-            status: match.status,
-            start_date: match.start_date,
-            end_date: match.end_date,
+            status: match.status
         })
         .then(response => {
             return {
@@ -50,10 +59,7 @@ async function updateMatch(id, match) {
         .update({
             mentor_id: match.mentor_id,
             mentee_id: match.mentee_id,
-            match_score: match.match_score,
             status: match.status,
-            start_date: match.start_date,
-            end_date: match.end_date,
             deleted: match.deleted
         });
 }

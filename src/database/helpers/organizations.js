@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getOrganizations,
     getOrganizationById,
+    getOrganizationByName,
     insertOrganization,
     updateOrganization,
     deleteOrganization,
@@ -10,7 +11,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('organizations').truncate();
+    await db('administrators').del();
+    await db.raw('ALTER SEQUENCE administrators_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getOrganizations() {
@@ -21,9 +24,17 @@ async function getOrganizations() {
 
 async function getOrganizationById(id) {
     return await db
-        .select('id', 'name', 'logo', 'admin_id', 'deleted')
+        .select('*')
         .from('organizations')
         .where({ id })
+        .first();
+}
+
+async function getOrganizationByName(name) {
+    return await db
+        .select('*')
+        .from('organizations')
+        .where({ name })
         .first();
 }
 
@@ -31,9 +42,10 @@ async function insertOrganization(organization) {
     return await db('organizations')
         .insert({
             name: organization.name,
-            logo: organization.logo,
-            admin_id: organization.admin_id
+            description: organization.description,
+            logo: organization.logo
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
@@ -46,8 +58,8 @@ async function updateOrganization(id, organization) {
         .where({ id })
         .update({
             name: organization.name,
+            description: organization.description,
             logo: organization.logo,
-            admin_id: organization.admin_id,
             deleted: organization.deleted
         });
 }

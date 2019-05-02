@@ -11,7 +11,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('notifications').truncate();
+    await db('notifications').del();
+    await db.raw('ALTER SEQUENCE notifications_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getNotifications() {
@@ -22,7 +24,7 @@ async function getNotifications() {
 
 async function getNotificationById(id) {
     return await db
-        .select('id', 'user_id', 'content', 'watched', 'deleted')
+        .select('*')
         .from('notifications')
         .where({ id })
         .first();
@@ -32,8 +34,7 @@ async function insertNotification(notification) {
     return await db('notifications')
         .insert({
             user_id: notification.user_id,
-            content: notification.content,
-            watched: notification.watched
+            content: notification.content
         })
         .then(response => {
             return {

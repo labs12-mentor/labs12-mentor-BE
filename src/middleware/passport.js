@@ -8,10 +8,10 @@ const bcrypt = require('bcryptjs');
 const ExtractJWT  = passportJWT.ExtractJwt;
 
 passport.use(new LocalStrategy({
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password'
-    }, (username, password, cb) => {
-        return Users.getUserByUsername(username)
+    }, (email, password, cb) => {
+        return Users.getUserByEmail(email)
             .then(user => {
                 if(bcrypt.compareSync(password, user.password)){
                     return cb(null, user, { message: 'Logged in successfully!' });

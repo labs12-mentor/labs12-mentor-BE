@@ -10,7 +10,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('experiences').truncate();
+    await db('experiences').del();
+    await db.raw('ALTER SEQUENCE experiences_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getExperiences() {
@@ -21,7 +23,7 @@ async function getExperiences() {
 
 async function getExperienceById(id) {
     return await db
-        .select('id', 'name', 'user_id', 'deleted')
+        .select('*')
         .from('experiences')
         .where({ id })
         .first();

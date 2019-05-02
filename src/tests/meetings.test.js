@@ -12,12 +12,15 @@ const sampleMeeting = {
   rating: Math.floor(Math.random() * 5)
 };
 
+
 afterEach(async () => {
-  await Meetings.truncate();
+  await db('meetings').del();
+  await db.raw('ALTER SEQUENCE meetings_id_seq RESTART WITH 1');
 });
 
 beforeEach(async () => {
-  await Meetings.truncate();
+  await db('meetings').del();
+  await db.raw('ALTER SEQUENCE meetings_id_seq RESTART WITH 1');
 });
 
 async function createMeeting() {

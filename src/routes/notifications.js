@@ -1,17 +1,19 @@
 const router = require('express').Router();
 const { notificationsController } = require('../controllers');
+const authenticate = require('../middleware/authenticate');
+const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(notificationsController.getNotifications)
-    .post(notificationsController.addNotification);
+    .get(authenticate, authorize(['ALL']), notificationsController.getNotifications)
+    .post(authenticate, authorize(['ALL']), notificationsController.addNotification);
 
 router.route('/:id')
-    .get(notificationsController.getNotification)
-    .put(notificationsController.updateNotification)
-    .patch(notificationsController.markNotification)
-    .delete(notificationsController.deleteNotification);
+    .get(authenticate, authorize(['ALL']), notificationsController.getNotification)
+    .put(authenticate, authorize(['ALL']), notificationsController.updateNotification)
+    .patch(authenticate, authorize(['ALL']), notificationsController.markNotification)
+    .delete(authenticate, authorize(['ALL']), notificationsController.deleteNotification);
 
 router.route('/:id/remove')
-    .delete(notificationsController.removeNotification);
+    .delete(authenticate, authorize(['ALL']), notificationsController.removeNotification);
 
 module.exports = router;
