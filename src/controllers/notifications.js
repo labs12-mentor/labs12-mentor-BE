@@ -11,6 +11,7 @@ const Notifications = require('../database/helpers/notifications');
 
 async function getNotifications(req, res){
     try {
+        const notifications = await Notifications.getNotifications();
         return await res.status(200).json(notifications);
     } catch(error) {
         return await res.status(500).json({ error: error.message });
