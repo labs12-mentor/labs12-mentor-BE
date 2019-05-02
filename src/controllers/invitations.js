@@ -8,6 +8,8 @@ module.exports = {
 }
 const Invitations = require('../database/helpers/invitations');
 const Users = require('../database/helpers/users');
+const { authValidator } = require('../validators');
+const bcrypt = require('bcryptjs');
 
 async function getAllInvitations(req, res){
     try {
@@ -69,23 +71,24 @@ async function removeInvitation(req, res){
 
 async function register(req, res){
     const {
-        organization_id,
         user_email,
         user_password,
         user_first_name,
         user_last_name
     } = req.body;
 
-    let organizationData = {
-        id: organization_id,
-    }
+    const invitationData = {
+        organization_id,
+        role
+    } = await Invitations.getInvitationById(req.params.id);
 
     let userData = {
         email: user_email,
         password: user_password,
         first_name: user_first_name,
         last_name: user_last_name,
-        organization_id: organizationData.id
+        organization_id: invitationData.organization_id,
+        role: invitationData.role
     }
 
     const validUser = await authValidator.validateUser(userData);
