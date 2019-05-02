@@ -21,6 +21,10 @@ async function getOrganization(req, res){
     try {
         const user = await Users.getUserById(req.user.id);
 
+        if(user === undefined){
+            return await res.status(403).json({ error: 'You are not authenticated!' });
+        }
+
         if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
             return await res.status(403).json({ error: 'This organization is not yours!' });
         }
@@ -37,6 +41,10 @@ async function getOrganization(req, res){
 async function updateOrganization(req, res){
     try {
         const user = await Users.getUserById(req.user.id);
+
+        if(user === undefined){
+            return await res.status(403).json({ error: 'You are not authenticated!' });
+        }
 
         if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
             return await res.status(403).json({ error: 'This organization is not yours!' });
@@ -59,6 +67,10 @@ async function updateOrganization(req, res){
 async function deleteOrganization(req, res){
     try {
         const user = await Users.getUserById(req.user.id);
+
+        if(user === undefined){
+            return await res.status(403).json({ error: 'You are not authenticated!' });
+        }
 
         if(user.role !== 'ADMINISTRATOR' && user.organization_id !== req.params.id){
             return await res.status(403).json({ error: 'This organization is not yours!' });
