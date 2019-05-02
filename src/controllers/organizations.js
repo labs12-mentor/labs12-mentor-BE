@@ -27,7 +27,20 @@ async function getOrganization(req, res){
 }
 
 async function updateOrganization(req, res){
-    res.status(200).json({ message: 'update organization API OK' });
+    try {
+        const organizationData = {
+            name,
+            description,
+            logo
+        } = req.body;
+        
+        const organization = await Organizations.getOrganizationById(req.params.id);
+        if(organization === undefined) return await res.status(404).json({ error: 'Organization not found!' });
+        await Organizations.updateOrganization(req.params.id, organizationData);
+        return await res.status(200).json({ message: 'Organization successfully updated!' });
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
 }
 
 async function deleteOrganization(req, res){
