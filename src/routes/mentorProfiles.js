@@ -4,15 +4,15 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(mentorProfilesController.getMentorProfiles)
-    .post(mentorProfilesController.addMentorProfile);
+    .get(authenticate, authorize(['ALL']), mentorProfilesController.getMentorProfiles)
+    .post(authenticate, authorize(['ALL']), mentorProfilesController.addMentorProfile);
 
 router.route('/:id')
-    .get(mentorProfilesController.getMentorProfile)
-    .put(mentorProfilesController.updateMentorProfile)
-    .delete(mentorProfilesController.deleteMentorProfile);
+    .get(authenticate, authorize(['ALL']), mentorProfilesController.getMentorProfile)
+    .put(authenticate, authorize(['ALL']), mentorProfilesController.updateMentorProfile)
+    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']), mentorProfilesController.deleteMentorProfile);
 
 router.route('/:id/remove')
-    .delete(mentorProfilesController.removeMentorProfile);
+    .delete(authenticate, authorize(['ADMINISTRATOR']), mentorProfilesController.removeMentorProfile);
 
 module.exports = router;
