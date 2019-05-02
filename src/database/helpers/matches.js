@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getMatches,
     getMatchById,
+    getMatchByMentorAndMentee,
     insertMatch,
     updateMatch,
     deleteMatch,
@@ -26,6 +27,15 @@ async function getMatchById(id) {
         .select('*')
         .from('matches')
         .where({ id })
+        .first();
+}
+
+async function getMatchByMentorAndMentee(mentor_id, mentee_id) {
+    return await db
+        .select('*')
+        .from('matches')
+        .where({ mentor_id })
+        .where({ mentee_id})
         .first();
 }
 
