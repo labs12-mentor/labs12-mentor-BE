@@ -55,5 +55,12 @@ async function deleteOrganization(req, res){
 }
 
 async function removeOrganization(req, res){
-    res.status(200).json({ message: 'remove organization API OK' });
+    try {
+        const organization = await Organizations.getOrganizationById(req.params.id);
+        if(organization === undefined) return await res.status(404).json({ error: 'Organization not found!' });
+        await Organizations.removeOrganization(req.params.id);
+        return await res.status(200).json({ message: 'Organization successfully removed!' });
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
 }
