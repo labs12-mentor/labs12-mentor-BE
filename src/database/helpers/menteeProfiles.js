@@ -10,7 +10,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('menteeprofiles').truncate();
+    await db('menteeprofiles').del();
+    await db.raw('ALTER SEQUENCE menteeprofiles_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getMenteeProfiles() {
@@ -21,7 +23,7 @@ async function getMenteeProfiles() {
 
 async function getMenteeProfileById(id) {
     return await db
-        .select('id', 'user_id', 'desired_zip', 'lambda_week', 'interests', 'application_answers', 'wanted_mentor_id', 'deleted')
+        .select('*')
         .from('menteeprofiles')
         .where({ id })
         .first();
@@ -31,11 +33,7 @@ async function insertMenteeProfile(menteeProfile) {
     return await db('menteeprofiles')
         .insert({
             user_id: menteeProfile.user_id,
-            desired_zip: menteeProfile.desired_zip,
-            lambda_week: menteeProfile.lambda_week,
-            interests: menteeProfile.interests,
-            application_answers: menteeProfile.application_answers,
-            wanted_mentor: menteeProfile.wanted_mentor
+            wanted_mentor_id: menteeProfile.wanted_mentor_id
         })
         .then(response => {
             return {
@@ -49,11 +47,7 @@ async function updateMenteeProfile(id, menteeProfile) {
         .where({ id })
         .update({
             user_id: menteeProfile.user_id,
-            desired_zip: menteeProfile.desired_zip,
-            lambda_week: menteeProfile.lambda_week,
-            interests: menteeProfile.interests,
-            application_answers: menteeProfile.application_answers,
-            wanted_mentor: menteeProfile.wanted_mentor,
+            wanted_mentor_id: menteeProfile.wanted_mentor_id,
             deleted: menteeProfile.deleted
         });
 }

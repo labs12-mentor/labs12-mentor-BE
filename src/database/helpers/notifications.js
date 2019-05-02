@@ -11,7 +11,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('notifications').truncate();
+    await db('notifications').del();
+    await db.raw('ALTER SEQUENCE notifications_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getNotifications() {

@@ -2,6 +2,7 @@ module.exports = {
     truncate,
     getAllUsers,
     getUserByUsername,
+    getUserByEmail,
     getUserById,
     insertUser,
     updateUser,
@@ -11,7 +12,9 @@ module.exports = {
 const db = require('../dbConfig');
 
 async function truncate() {
-    return await db('users').truncate();
+    await db('users').del();
+    await db.raw('ALTER SEQUENCE users_id_seq RESTART WITH 1');
+    return;
 }
 
 async function getAllUsers() {
@@ -28,9 +31,17 @@ async function getUserByUsername(username) {
         .first();
 }
 
+async function getUserByEmail(email) {
+    return await db
+        .select('*')
+        .from('users')
+        .where({ email })
+        .first();
+}
+
 async function getUserById(id) {
     return await db
-        .select('id', 'username', 'first_name', 'last_name', 'email', 'country', 'state', 'city', 'zipcode', 'organization_id')
+        .select('*')
         .from('users')
         .where({ id })
         .first();
@@ -39,15 +50,16 @@ async function getUserById(id) {
 async function insertUser(user) {
     return await db('users')
         .insert({
-            username: user.username,
+            email: user.email,
             password: user.password,
             first_name: user.first_name,
             last_name: user.last_name,
-            email: user.email,
-            country: user.country,
-            state: user.state,
+            street: user.street,
             city: user.city,
+            state: user.state,
             zipcode: user.zipcode,
+            country: user.country,
+            role: user.role,
             organization_id: user.organization_id
         })
         .then(response => {
@@ -61,15 +73,16 @@ async function updateUser(id, user) {
     return await db('users')
         .where({ id })
         .update({
-            username: user.username,
+            email: user.email,
             password: user.password,
             first_name: user.first_name,
             last_name: user.last_name,
-            email: user.email,
-            country: user.country,
-            state: user.state,
+            street: user.street,
             city: user.city,
+            state: user.state,
             zipcode: user.zipcode,
+            country: user.country,
+            role: user.role,
             organization_id: user.organization_id,
             deleted: user.deleted
         });
