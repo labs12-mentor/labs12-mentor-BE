@@ -33,6 +33,9 @@ async function getUser(req, res){
     try {
         const current_user = await Users.getUserById(req.user.id);
         const user = await Users.getUserById(req.params.id);
+        if(current_user === undefined || user === undefined){
+            return await res.status(403).json({ error: 'Cannot find this user!' });
+        }
 
         if(current_user.role !== 'ADMINISTRATOR' && current_user.organization_id !== user.organization_id){
             return await res.status(403).json({ error: 'Cannot find this user!' });
@@ -50,6 +53,10 @@ async function updateUser(req, res){
     try {
         const current_user = await Users.getUserById(req.user.id);
         const user = await Users.getUserById(req.params.id);
+
+        if(current_user === undefined || user === undefined){
+            return await res.status(403).json({ error: 'Cannot find this user!' });
+        }
 
         if(current_user.role !== 'ADMINISTRATOR'){
             if(!((current_user.role === 'OWNER' || current_user.role === 'MANAGER') && current_user.organization_id === user.organization_id)||(current_user.role === 'USER' && current_user.id !== user.id)){
@@ -80,6 +87,10 @@ async function deleteUser(req, res){
     try {
         const current_user = await Users.getUserById(req.user.id);
         const user = await Users.getUserById(req.params.id);
+
+        if(current_user === undefined || user === undefined){
+            return await res.status(403).json({ error: 'Cannot find this user!' });
+        }
 
         if(current_user.role !== 'ADMINISTRATOR'){
             if(!((current_user.role === 'OWNER' || current_user.role === 'MANAGER') && current_user.organization_id === user.organization_id)||(current_user.role === 'USER' && current_user.id !== user.id)){
