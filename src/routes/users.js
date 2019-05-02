@@ -4,7 +4,7 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(authenticate, authorize(['ADMINISTRATOR']), usersController.getAllUsers);
+    .get(authenticate, authorize(['ALL']), usersController.getAllUsers);
 
 router.route('/current_user')
     .get(authenticate, authorize(['ALL']), usersController.getCurrentUser);
@@ -15,6 +15,6 @@ router.route('/:id')
     .delete(authenticate, authorize(['ALL']), usersController.deleteUser);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER']), usersController.removeUser);
+    .delete(authenticate, authorize(['ALL']), usersController.removeUser);
 
 module.exports = router;

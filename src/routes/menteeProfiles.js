@@ -13,6 +13,6 @@ router.route('/:id')
     .delete(authenticate, authorize(['ALL']), menteeProfilesController.deleteMenteeProfile);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR']), menteeProfilesController.removeMenteeProfile);
+    .delete(authenticate, authorize(['ALL']), menteeProfilesController.removeMenteeProfile);
 
 module.exports = router;

@@ -10,9 +10,9 @@ router.route('/')
 router.route('/:id')
     .get(authenticate, authorize(['ALL']), mentorProfilesController.getMentorProfile)
     .put(authenticate, authorize(['ALL']), mentorProfilesController.updateMentorProfile)
-    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']), mentorProfilesController.deleteMentorProfile);
+    .delete(authenticate, authorize(['ALL']), mentorProfilesController.deleteMentorProfile);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR']), mentorProfilesController.removeMentorProfile);
+    .delete(authenticate, authorize(['ALL']), mentorProfilesController.removeMentorProfile);
 
 module.exports = router;

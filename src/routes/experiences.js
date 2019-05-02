@@ -13,6 +13,6 @@ router.route('/:id')
     .delete(authenticate, authorize(['ALL']), experiencesController.deleteExperience);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR']), experiencesController.removeExperience);
+    .delete(authenticate, authorize(['ALL']), experiencesController.removeExperience);
 
 module.exports = router;

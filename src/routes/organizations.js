@@ -4,14 +4,14 @@ const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 
 router.route('/')
-    .get(authenticate, authorize(['ADMINISTRATOR']), organizationsController.getOrganizations);
+    .get(authenticate, authorize(['ALL']), organizationsController.getOrganizations);
 
 router.route('/:id')
     .get(authenticate, authorize(['ALL']),organizationsController.getOrganization)
-    .put(authenticate, authorize(['ADMINISTRATOR', 'OWNER', 'MANAGER']),organizationsController.updateOrganization)
-    .delete(authenticate, authorize(['ADMINISTRATOR', 'OWNER']), organizationsController.deleteOrganization);
+    .put(authenticate, authorize(['ALL']),organizationsController.updateOrganization)
+    .delete(authenticate, authorize(['ALL']), organizationsController.deleteOrganization);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR']), organizationsController.removeOrganization);
+    .delete(authenticate, authorize(['ALL']), organizationsController.removeOrganization);
 
 module.exports = router;

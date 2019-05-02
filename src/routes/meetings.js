@@ -13,6 +13,6 @@ router.route('/:id')
     .delete(authenticate, authorize(['ALL']), meetingsController.deleteMeeting);
 
 router.route('/:id/remove')
-    .delete(authenticate, authorize(['ADMINISTRATOR']), meetingsController.removeMeeting);
+    .delete(authenticate, authorize(['ALL']), meetingsController.removeMeeting);
 
 module.exports = router;
