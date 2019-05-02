@@ -11,11 +11,9 @@ const prodDbConnection = process.env.DATABASE_URL || localPgConnection;
 
 module.exports = {
   development: {
-    client: 'sqlite3',
+    client: 'pg',
+    connection: prodDbConnection,
     useNullAsDefault: true,
-    connection: {
-      filename: './src/database/dev.sqlite3'
-    },
     migrations: {
       directory: './src/database/migrations'
     },
@@ -25,11 +23,9 @@ module.exports = {
   },
 
   test: {
-    client: 'sqlite3',
+    client: 'pg',
+    connection: prodDbConnection,
     useNullAsDefault: true,
-    connection: {
-      filename: './src/database/test.sqlite3'
-    },
     migrations: {
       directory: './src/database/migrations'
     },
