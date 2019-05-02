@@ -37,7 +37,9 @@ async function getMentorProfiles(req, res){
 async function addMentorProfile(req, res){
     try {
         const mentorProfile = { user_id } = req.body;
-        const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
+        console.log("OK");
+        const mentor = await MentorProfiles.getMentorProfileByUserId(mentorProfile.user_id);
+        
         if(mentor !== undefined) return await res.status(404).json({ error: 'Mentor already exists!' });
 
         await MentorProfiles.insertMentorProfile(mentorProfile);
