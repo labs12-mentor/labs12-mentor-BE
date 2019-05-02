@@ -1,7 +1,5 @@
 const request = require('supertest');
 const server = require('../server');
-const Users = require('../database/helpers/users');
-const Organizations = require('../database/helpers/organizations');
 const db = require('../database/dbConfig');
 
 const AUTH_API_URL = '/api/auth';
@@ -159,273 +157,117 @@ describe('AUTH ROUTER', () => {
     });
   });
 
-  // describe('POST ROUTE /REGISTER', () => {
-  //   it('should return 201 on success', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(201);
-  //   });
+  describe('POST ROUTE /REGISTER', () => {
+    it('should return 201 on success', async () => {
+      const res = await registerOrganization();
+      expect(res.status).toEqual(201);
+    });
 
-  //   it('should return a message on success', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ message: 'User successfully registered!' });
-  //   });
+    it('should return a message on success', async () => {
+      const res = await registerOrganization();
+      expect(res.body).toEqual({ message: 'User successfully registered!' });
+    });
 
-  //   it('should return 400 on fail (no username)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: '',
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(400);
-  //   });
+    it('should return 400 on fail (no organization name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: '',
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: user.email,
+          user_password: user.password,
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.status).toEqual(400);
+    });
 
-  //   it('should return 400 on fail (no password)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: '',
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(400);
-  //   });
+    it('should return 400 on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: organization.name,
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: '',
+          user_password: user.password,
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.status).toEqual(400);
+    });
 
-  //   it('should return 400 on fail (no first name)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: '',
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(400);
-  //   });
+    it('should return 400 on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: organization.name,
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: user.email,
+          user_password: '',
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.status).toEqual(400);
+    });
 
-  //   it('should return 400 on fail (no last name)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: '',
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(400);
-  //   });
+    it('should return message on fail (no organization name)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: '',
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: user.email,
+          user_password: user.password,
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register organization or user - missing required fields!' });
+    });
 
-  //   it('should return 400 on fail (no email)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: '',
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(400);
-  //   });
+    it('should return message on fail (no email)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: organization.name,
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: '',
+          user_password: user.password,
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register organization or user - missing required fields!' });
+    });
 
-  //   it('should return 500 on fail (user already registered)', async () => {
-  //     // await createOrganization();
-  //     // await createUser();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.status).toEqual(500);
-  //   });
+    it('should return message on fail (no password)', async () => {
+      const res = await request(server)
+        .post(AUTH_API_URL + '/register')
+        .send({
+          organization_name: organization.name,
+          organization_description: organization.description,
+          organization_logo: organization.logo,
+          user_email: user.email,
+          user_password: '',
+          user_first_name: user.first_name,
+          user_last_name: user.last_name
+        });
+      expect(res.body).toEqual({ error: 'Cannot register organization or user - missing required fields!' });
+    });
 
-  //   it('should return an error on fail (no username)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: '',
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'Cannot register user!' });
-  //   });
+    it('should return 500 on fail (user or organization already registered)', async () => {
+      await registerOrganization();
+      const res = await registerOrganization();
+      expect(res.status).toEqual(404);
+    });
 
-  //   it('should return an error on fail (no password)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: '',
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'Cannot register user!' });
-  //   });
-
-  //   it('should return an error on fail (no first name)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: '',
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'Cannot register user!' });
-  //   });
-
-  //   it('should return an error on fail (no last name)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: '',
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'Cannot register user!' });
-  //   });
-
-  //   it('should return an error on fail (no email)', async () => {
-  //     // await createOrganization();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: '',
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'Cannot register user!' });
-  //   });
-
-  //   it('should return an error on fail (user already registered)', async () => {
-  //     // await createOrganization();
-  //     // await createUser();
-  //     const res = await request(server)
-  //       .post(AUTH_API_URL + '/register')
-  //       .send({
-  //         username: user.username,
-  //         password: user.password,
-  //         first_name: user.first_name,
-  //         last_name: user.last_name,
-  //         email: user.email,
-  //         country: user.country,
-  //         state: user.state,
-  //         city: user.city,
-  //         zipcode: user.zipcode,
-  //         organization_id: 1
-  //       });
-  //     expect(res.body).toEqual({ error: 'User already registered!' });
-  //   });
-  // });
+    it('should return message on fail (user or organization already registered)', async () => {
+      await registerOrganization();
+      const res = await registerOrganization();
+      expect(res.body).toEqual({ error: 'User or organization already exists!' });
+    });
+  });
 });
