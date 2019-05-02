@@ -4,11 +4,11 @@ module.exports = {
         table
             .integer(name)
             .unsigned()
-            .default(null);
-        table
+            .default(null)
             .foreign(name)
             .references('id')
             .on(ref)
+            .onUpdate('CASCADE')
             .onDelete('CASCADE');
     }
 };
