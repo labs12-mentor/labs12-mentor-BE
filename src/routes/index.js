@@ -17,7 +17,7 @@ router.route('/')
 
 router.use('/auth', auth);
 router.use('/experiences', experiences);
-router.use('/invite', invitations);
+router.use('/invitations', invitations);
 router.use('/matches', matches);
 router.use('/meetings', meetings);
 router.use('/mentees', menteeProfiles);
