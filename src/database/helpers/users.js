@@ -62,6 +62,7 @@ async function insertUser(user) {
             role: user.role,
             organization_id: user.organization_id
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
