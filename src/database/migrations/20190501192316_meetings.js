@@ -5,8 +5,7 @@ exports.up = function(knex, Promise) {
         table
             .increments('id');
         table
-            .string('content')
-            .notNullable();
+            .string('content');
         
         table
             .integer('match_id')
