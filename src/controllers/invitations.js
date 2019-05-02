@@ -7,7 +7,6 @@ module.exports = {
     removeInvitation
 }
 const Invitations = require('../database/helpers/invitations');
-const Organizations = require('../database/helpers/organizations');
 const Users = require('../database/helpers/users');
 
 async function getAllInvitations(req, res){
