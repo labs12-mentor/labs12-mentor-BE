@@ -24,7 +24,7 @@ async function getOrganizations() {
 
 async function getOrganizationById(id) {
     return await db
-        .select('id', 'name', 'description', 'logo')
+        .select('*')
         .from('organizations')
         .where({ id })
         .first();
@@ -32,7 +32,7 @@ async function getOrganizationById(id) {
 
 async function getOrganizationByName(name) {
     return await db
-        .select('id', 'name', 'description', 'logo')
+        .select('*')
         .from('organizations')
         .where({ name })
         .first();
