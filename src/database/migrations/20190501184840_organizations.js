@@ -1,9 +1,9 @@
-const { dropTable, fkey } = require('../helpers/db');
+const { dropTable } = require('../helpers/db');
 
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('organizations', table => {
         table
-            .increments();
+            .increments('id');
         
         table
             .string('name')
@@ -11,13 +11,15 @@ exports.up = function(knex, Promise) {
             .unique();
 
         table
-            .string('logo');
+            .string('description');
         
-        fkey(table, 'admin_id', 'administrators');
+        table
+            .string('logo');
 
         table
             .boolean('deleted')
-            .default(false);
+            .defaultTo(false)
+            .notNullable();
     });
 };
 
