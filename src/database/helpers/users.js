@@ -3,6 +3,7 @@ module.exports = {
     getAllUsers,
     getUserByUsername,
     getUserByEmail,
+    getUserByGithubId,
     getUserById,
     insertUser,
     updateUser,
@@ -45,6 +46,15 @@ async function getUserById(id) {
         .from('users')
         .where({ id })
         .first();
+}
+
+async function getUserByGithubId(id, cb) {
+    const user = await db
+        .select('*')
+        .from('users')
+        .where({ github_id: id })
+        .first();
+    return cb(user);
 }
 
 async function insertUser(user) {

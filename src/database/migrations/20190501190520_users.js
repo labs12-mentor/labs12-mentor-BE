@@ -40,6 +40,12 @@ exports.up = function(knex, Promise) {
             .notNullable();
         
         table
+            .string('github_id');
+        
+        table
+            .string('github_token');
+        
+        table
             .integer('organization_id')
             .unsigned()
             .references('id')
