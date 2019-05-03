@@ -1,14 +1,19 @@
 module.exports = {
     loginUser,
-    register
+    register,
+    githubAuth,
+    githubAuthCallback
 }
 
+require('dotenv').config();
 const Users = require('../database/helpers/users');
 const Organizations = require('../database/helpers/organizations');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../middleware/generateToken');
 const { authValidator } = require('../validators');
 const passport = require('passport');
+require('../middleware/passport');
+const request = require('superagent');
 
 async function loginUser(req, res){
     try {
@@ -105,4 +110,11 @@ async function register(req, res){
             .status(500)
             .json({ error: error.message });
     }
+}
+
+async function githubAuth(req, res){
+
+}
+
+async function githubAuthCallback(req, res){
 }

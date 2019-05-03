@@ -7,12 +7,15 @@ router.route('/')
     .get(authenticate, authorize(['ALL']), invitationsController.getAllInvitations)
     .post(authenticate, authorize(['ALL']), invitationsController.addInvitation);
 
-router.route('/:id')
+router.route('/:invitation_id')
     .get(invitationsController.getInvitation)
     .post(invitationsController.register)
     .delete(authenticate, authorize(['ALL']), invitationsController.deleteInvitation);
 
-router.route('/:id/remove')
+router.route('/:invitation_id/github')
+    .get(invitationsController.registerWithGithub);
+
+router.route('/:invitation_id/remove')
     .delete(authenticate, authorize(['ALL']), invitationsController.removeInvitation);
 
 module.exports = router;
