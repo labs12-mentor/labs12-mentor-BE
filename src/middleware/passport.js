@@ -54,7 +54,7 @@ passport.use(new JWTStrategy({
 passport.use(new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: "http://localhost:5000/api/auth/github/callback",
+        callbackURL: process.env.GITHUB_CALLBACK_URL,
         passReqToCallback: true,
         scope: [ 'user:email' ]
     }, (req, accessToken, refreshToken, profile, cb) => {
@@ -68,7 +68,7 @@ passport.use(new GitHubStrategy({
                         organization_id,
                         role
                     } = await Invitations.getInvitationById(invitationID);
-                    
+
                     request
                         .get('https://api.github.com/user/emails')
                         .set('Accept-Language', 'en-us')
