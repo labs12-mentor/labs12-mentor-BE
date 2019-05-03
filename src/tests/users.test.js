@@ -21,7 +21,6 @@ const organization = {
   logo: 'logo url'
 }
 
-
 const administrator = {
   email: 'email@example.org',
   password: 'password',
