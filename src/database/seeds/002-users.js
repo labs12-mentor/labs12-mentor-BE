@@ -13,7 +13,7 @@ async function makeAdmin(){
     zipcode: faker.address.zipCode(),
     country: faker.address.country(),
     role: 'ADMINISTRATOR',
-    organization_id: 1
+    organization_id: null
   }
 }
 
