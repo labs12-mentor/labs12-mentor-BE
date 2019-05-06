@@ -106,7 +106,8 @@ passport.use(new GitHubStrategy({
                         .catch(err => cb(err));
                 }
             }
-            return cb(null, user);
+            const { password, github_token, ...userWithoutPassword } = user;
+            return cb(null, userWithoutPassword);
         });
     }
 ));
