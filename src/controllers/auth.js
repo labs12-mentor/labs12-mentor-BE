@@ -1,49 +1,28 @@
 module.exports = {
     loginUser,
-    register
+    register,
+    githubAuth,
+    githubAuthCallback
 }
 
+require('dotenv').config();
 const Users = require('../database/helpers/users');
 const Organizations = require('../database/helpers/organizations');
 const bcrypt = require('bcryptjs');
-const generateToken = require('../middleware/generateToken');
+
 const { authValidator } = require('../validators');
-const passport = require('passport');
+require('../middleware/passport');
+const request = require('superagent');
 
 async function loginUser(req, res){
-    try {
-        const userData = {
-            email,
-            password
-        } = req.body;
-    
-        const validCredentials = await authValidator.validateCredentials(userData);
-        if(!validCredentials){
-            return await res
-                .status(400)
-                .json({ error: 'Login failed. Wrong credentials!' });
-        }
-        const userExists = await Users.getUserByEmail(userData.email);
-        if(userExists === undefined) return await res.status(404).json({ error: 'Cannot log in! User not found.' });
-        passport.authenticate('local', { session: false }, async (err, user, info) => {
-            if(!user || err) return await res.status(401).json({ error: 'Cannot log in! Wrong credentials.' });
-            req.login(user, { session: false }, async (err) => {
-                if(err) throw new Error('Cannot log in!');
-                const token = await generateToken(user);
-                const {password, ...userWithoutPassword} = user;
-                return res
-                    .status(200)
-                    .json({
-                        ...userWithoutPassword,
-                        token
-                    });
-            })
-        })(req, res);
-    } catch(error) {
-        return await res
-            .status(500)
-            .json({ error: error.message });
-    }
+    return await res.status(req.authInfo.status).json(
+        req.authInfo.status === 200 ? {
+            message: req.authInfo.message,
+            token: req.authInfo.token,
+            ...req.user
+        } : {
+            error: req.authInfo.error
+        });
 }
 
 async function register(req, res){
@@ -105,4 +84,11 @@ async function register(req, res){
             .status(500)
             .json({ error: error.message });
     }
+}
+
+async function githubAuth(req, res){
+
+}
+
+async function githubAuthCallback(req, res){
 }

@@ -3,6 +3,7 @@ module.exports = {
     getAllUsers,
     getUserByUsername,
     getUserByEmail,
+    getUserByGithubId,
     getUserById,
     insertUser,
     updateUser,
@@ -47,6 +48,15 @@ async function getUserById(id) {
         .first();
 }
 
+async function getUserByGithubId(github_id, cb) {
+    const user = await db
+        .select('*')
+        .from('users')
+        .where({ github_id })
+        .first();
+    return cb(user);
+}
+
 async function insertUser(user) {
     return await db('users')
         .insert({
@@ -60,7 +70,9 @@ async function insertUser(user) {
             zipcode: user.zipcode,
             country: user.country,
             role: user.role,
-            organization_id: user.organization_id
+            organization_id: user.organization_id,
+            github_id: user.github_id,
+            github_token: user.github_token
         })
         .returning('id')
         .then(response => {

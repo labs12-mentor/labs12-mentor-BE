@@ -3,6 +3,7 @@ module.exports = {
     addInvitation,
     getInvitation,
     register,
+    registerWithGithub,
     deleteInvitation,
     removeInvitation
 }
@@ -10,6 +11,8 @@ const Invitations = require('../database/helpers/invitations');
 const Users = require('../database/helpers/users');
 const { authValidator } = require('../validators');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+require('../middleware/passport');
 
 async function getAllInvitations(req, res){
     try {
@@ -39,7 +42,7 @@ async function addInvitation(req, res){
 
 async function getInvitation(req, res){
     try {
-        const invitation = await Invitations.getInvitationById(req.params.id);
+        const invitation = await Invitations.getInvitationById(req.params.invitation_id);
         if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
         return await res.status(200).json(invitation);
     } catch(error) {
@@ -49,9 +52,9 @@ async function getInvitation(req, res){
 
 async function deleteInvitation(req, res){
     try {
-        const invitation = await Invitations.getInvitationById(req.params.id);
+        const invitation = await Invitations.getInvitationById(req.params.invitation_id);
         if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
-        await Invitations.deleteInvitation(req.params.id);
+        await Invitations.deleteInvitation(req.params.invitation_id);
         return await res.status(200).json({ message: 'Successfully deleted an invitation!' });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
@@ -60,9 +63,9 @@ async function deleteInvitation(req, res){
 
 async function removeInvitation(req, res){
     try {
-        const invitation = await Invitations.getInvitationById(req.params.id);
+        const invitation = await Invitations.getInvitationById(req.params.invitation_id);
         if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
-        await Invitations.removeInvitation(req.params.id);
+        await Invitations.removeInvitation(req.params.invitation_id);
         return await res.status(200).json({ message: 'Successfully removed an invitation!' });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
@@ -80,7 +83,7 @@ async function register(req, res){
     const invitationData = {
         organization_id,
         role
-    } = await Invitations.getInvitationById(req.params.id);
+    } = await Invitations.getInvitationById(req.params.invitation_id);
 
     let userData = {
         email: user_email,
@@ -118,4 +121,9 @@ async function register(req, res){
             .status(500)
             .json({ error: error.message });
     }
+}
+
+async function registerWithGithub(req, res){
+    const invitationId = req.params.invitation_id;
+    return await passport.authenticate('github', { failureRedirect: '/', successRedirect: '/api', state: JSON.stringify({ invitation_id: invitationId })})(req, res);
 }
