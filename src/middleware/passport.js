@@ -9,6 +9,8 @@ const Invitations = require('../database/helpers/invitations');
 const bcrypt = require('bcryptjs');
 const ExtractJWT  = passportJWT.ExtractJwt;
 const request = require('superagent');
+const { authValidator } = require('../validators');
+const generateToken = require('../middleware/generateToken');
 
 passport.serializeUser(function(user, done){
     done(null, user);
@@ -20,15 +22,22 @@ passport.deserializeUser(function(user, done){
 
 passport.use(new LocalStrategy({
         usernameField: 'email',
-        passwordField: 'password'
-    }, (email, password, cb) => {
-        console.log(email, password);
+        passwordField: 'password',
+        passReqToCallback: true
+    }, (req, email, password, cb) => {
+        const validCredentials = authValidator.validateCredentials({ email, password });
+        if(!validCredentials){
+            return cb(null, false, { status: 400, error: 'Login failed. Wrong credentials!' });
+        }
         return Users.getUserByEmail(email)
             .then(user => {
+                if(user === undefined) return cb(null, false, { status: 404, error: 'Cannot log in! User not found.' });
                 if(bcrypt.compareSync(password, user.password)){
-                    return cb(null, user, { message: 'Logged in successfully!' });
+                    const token = generateToken(user);
+                    const {password, ...userWithoutPassword} = user;
+                    return cb(null, userWithoutPassword, { status: 200, message: 'Logged in successfully!', token });
                 }
-                return cb(null, false, { error: 'Incorrect credentials!' });
+                return cb(null, false, { status: 401, error: 'Incorrect credentials!' });
             })
             .catch(err => cb(err));
     }
@@ -36,8 +45,10 @@ passport.use(new LocalStrategy({
 
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("Authorization"),
-        secretOrKey: process.env.SECRET_KEY
-    }, (jwtPayload, cb) => {
+        secretOrKey: process.env.SECRET_KEY,
+        passReqToCallback: true
+    }, (req, jwtPayload, cb) => {
+        console.log(jwtPayload);
         return Users.getUserById(jwtPayload.id)
             .then(user => {
                 if(bcrypt.compareSync(password, user.password)){
@@ -71,10 +82,12 @@ passport.use(new GitHubStrategy({
 
                     request
                         .get('https://api.github.com/user/emails')
-                        .set('Accept-Language', 'en-us')
-                        .set('Accept', 'application/json')
-                        .set('Authorization', `token ${accessToken}`)
-                        .set('Accept-Encoding', 'gzip, deflate')
+                        .set({
+                            'Accept-Language' : 'en-us',
+                            'Accept' : 'application/json',
+                            'Authorization' : `token ${accessToken}`,
+                            'Accept-Encoding' : 'gzip, deflate'
+                        })
                         .then(async (response) => {
                             const userData = {
                                 email: response.body.filter(elem => elem.primary)[0].email,
