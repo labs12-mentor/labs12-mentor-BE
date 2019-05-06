@@ -70,7 +70,7 @@ passport.use(new GitHubStrategy({
         scope: [ 'user:email' ]
     }, (req, accessToken, refreshToken, profile, cb) => {
         Users.getUserByGithubId(profile.id, async (user) => {
-            if (!user) {
+            if (user == undefined) {
                 if(req.query.state.length === 0){
                     return cb("Cannot register the user - no organization ID provided!");
                 }else{
@@ -79,8 +79,7 @@ passport.use(new GitHubStrategy({
                         organization_id,
                         role
                     } = await Invitations.getInvitationById(invitationID);
-
-                    request
+                    return request
                         .get('https://api.github.com/user/emails')
                         .set({
                             'Accept-Language' : 'en-us',
