@@ -48,11 +48,11 @@ async function getUserById(id) {
         .first();
 }
 
-async function getUserByGithubId(id, cb) {
+async function getUserByGithubId(github_id, cb) {
     const user = await db
         .select('*')
         .from('users')
-        .where({ github_id: id })
+        .where({ github_id })
         .first();
     return cb(user);
 }
@@ -70,7 +70,9 @@ async function insertUser(user) {
             zipcode: user.zipcode,
             country: user.country,
             role: user.role,
-            organization_id: user.organization_id
+            organization_id: user.organization_id,
+            github_id: user.github_id,
+            github_token: user.github_token
         })
         .returning('id')
         .then(response => {
