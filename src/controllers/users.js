@@ -32,7 +32,7 @@ async function getCurrentUser(req, res){
 async function getUser(req, res){
     try {
         // const current_user = await Users.getUserById(req.user.id);
-        // const user = await Users.getUserById(req.params.id);
+        const user = await Users.getUserById(req.params.id);
         // if(current_user === undefined){
         //     return await res.status(403).json({ error: 'Cannot find this user!' });
         // }
