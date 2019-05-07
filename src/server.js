@@ -10,7 +10,7 @@ initServerMiddleware(apiServer);
 require('./middleware/passport');
 
 const io = socketio(server);
-apiServer.set('io', io);
+global.io = io;
 
 apiServer.use('/api', router);
 
