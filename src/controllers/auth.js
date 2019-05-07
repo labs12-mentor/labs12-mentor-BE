@@ -85,8 +85,12 @@ async function register(req, res){
     }
 }
 
-async function githubAuth(req, res){
-    const io = req.app.get('io');
-    io.in(req.session.socketId).emit('user', req.user);
+function githubAuth(req, res){
+    const io = global.io;
+    const socketId = req.session.socketId;
+    const user = {
+        email: req.user.email
+    };
+    io.in(socketId).emit('github', user);
     res.end();
 }
