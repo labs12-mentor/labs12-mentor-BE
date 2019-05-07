@@ -1,8 +1,7 @@
 module.exports = {
     loginUser,
     register,
-    githubAuth,
-    githubAuthCallback
+    githubAuth
 }
 
 require('dotenv').config();
@@ -87,8 +86,7 @@ async function register(req, res){
 }
 
 async function githubAuth(req, res){
-
-}
-
-async function githubAuthCallback(req, res){
+    const io = req.app.get('io');
+    io.in(req.session.socketId).emit('user', req.user);
+    res.end();
 }
