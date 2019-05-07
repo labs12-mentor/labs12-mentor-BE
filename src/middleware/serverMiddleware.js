@@ -11,7 +11,9 @@ module.exports = server => {
     server.use(express.urlencoded({ extended: false }));
     server.use(morgan('dev'));
     server.use(helmet());
-    server.use(cors());
+    server.use(cors({
+        origin: process.env.ORIGIN_URL
+    }));
     server.use(session({ 
         secret: process.env.SESSION_SECRET, 
         resave: true, 
