@@ -13,6 +13,6 @@ router.route('/github')
     .get(passport.authenticate('github'));
 
 router.route('/github/callback')
-    .get(passport.authenticate('github'), (req, res) => res.json(req.user));
+    .get(passport.authenticate('github'), authController.githubAuth);
 
 module.exports = router;
