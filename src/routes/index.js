@@ -13,7 +13,11 @@ const notifications = require('./notifications');
 const organizations = require('./organizations');
 const users = require('./users');
 
-router.use(socketMiddleware);
+// router.use(socketMiddleware);
+router.use((req, res, next) => {
+	if(req.query.socketId) req.session.socketId = req.query.socketId;
+    next();
+});
 
 router.route('/')
     .get(apiController.rootRoute);
