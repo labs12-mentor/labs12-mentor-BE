@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { apiController } = require('../controllers');
+const socketMiddleware = require('../middleware/socketMiddleware');
 
 const auth = require('./auth');
 const experiences = require('./experiences');
@@ -11,6 +12,8 @@ const mentorProfiles = require('./mentorProfiles');
 const notifications = require('./notifications');
 const organizations = require('./organizations');
 const users = require('./users');
+
+router.use(socketMiddleware);
 
 router.route('/')
     .get(apiController.rootRoute);
