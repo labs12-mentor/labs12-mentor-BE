@@ -1,11 +1,14 @@
 const express = require('express');
+const http = require('http');
+const socketio = require('socket.io');
 const initServerMiddleware = require('./middleware/serverMiddleware');
 const router = require('./routes');
-const server = express();
+const apiServer = express();
+const server = http.createServer(apiServer);
 
-initServerMiddleware(server);
+initServerMiddleware(apiServer);
 require('./middleware/passport');
 
-server.use('/api', router);
+apiServer.use('/api', router);
 
 module.exports = server;
