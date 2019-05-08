@@ -1,10 +1,34 @@
-# Labs 12: MentorMatch - Backend
+# Labs 12: MentorMatch - Backend ![CodeBuild Badge](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiUndoSlVJb01xbFV2OFVUYmtkNS94SmJFbXgxNTE5YlYyeGlBRjAwRUlwVExUNXRrcy9vaTEwNk0vVUhjcjVxQStqUWg5NG9YWjc0QURCTDZoY2hOWW5RPSIsIml2UGFyYW1ldGVyU3BlYyI6IkFQVE1PV1crV0tFZ0xvbEQiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
 
-A Node based backend for the LambdaSchool Labs12 Project "Mentor Program"
-
-![CodeBuild Badge](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiUndoSlVJb01xbFV2OFVUYmtkNS94SmJFbXgxNTE5YlYyeGlBRjAwRUlwVExUNXRrcy9vaTEwNk0vVUhjcjVxQStqUWg5NG9YWjc0QURCTDZoY2hOWW5RPSIsIml2UGFyYW1ldGVyU3BlYyI6IkFQVE1PV1crV0tFZ0xvbEQiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+A Node based backend for the LambdaSchool Labs12 Project **Mentor Program**
 
 ---
+
+![MentorMatchr](https://i.imgur.com/OVDYokb.png)
+
+## Team
+|   [**bummings**](https://github.com/bummings)  |   [**cwright0428**](cwright0428)   |    [**Estrax**](https://github.com/Estrax)    |   [**jdspell**](https:/github.com/jdspell)  | [**JorPoon**](https://github.com/JorPoon) | [**khamp19**](https://github.com/khamp19) | [**tfolbrecht**](https://github.com/tfolbrecht) |
+|:----------------:|:----------------:|:---------------:|:---------------:|:---------------:|:---------------:|:---------------:| 
+| [<img src="https://github.com/bummings.png?s=80" width="80">](https://github.com/bummings) | [<img src="https://github.com/cwright0428.png?s=80" width="80">](https://github.com/cwright0428)  | [<img src="https://github.com/Estrax.png?s=80" width="80">](https://github.com/Estrax) | [<img src="https:/github.com/jdspell.png?s=80" width="80">](https:/github.com/jdspell) | [<img src="https://github.com/JorPoon.png?s=80" width="80">](https://github.com/JorPoon) | [<img src="https://github.com/khamp19.png?s=80" width="80">](https://github.com/khamp19) | [<img src="https://github.com/tfolbrecht.png?s=80" width="80">](https://github.com/tfolbrecht) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/bummings) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/cwright0428) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/Estrax) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/jdspell) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/JorPoon) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/khamp19) | [<img src="https://github.com/favicon.ico" width="15"> Github](https://github.com/tfolbrecht) |
+
+# Index
+[Resources](#resources)
+[Running](#running)
+[Third-Party APIs](#third-party)
+
+
+## Resources
+|Project Management|
+| :---------------:| :---------------:|
+| [Trello Board](https://trello.com/b/sPX3FEno/labs12-mentor-program) |
+| [Product Canvas](https://docs.google.com/document/d/1wLlPJxiPSVHkUoUThSp11yk5ZwKqD3c81FDu_UEXrVs/edit#heading=h.crmhbig18nld) |
+| [Database Diagram](https://dbdiagram.io/d/5cc0e72ef7c5bb70c72fbf83) |
+| [Git Workflow](https://www.notion.so/Git-Workflow-34f9b468dcf74a669aff0d3797870d37) |
+| Discussion on [Slack](https://lambdaschoolstudents.slack.com/messages/GJ2DGUVGU/details/) |
+All Backend associate Trello cards should be tagged Dark Blued
+
+---
+## Running
 
 ### `npm start`
 
@@ -19,116 +43,57 @@ Launches the test runner in the interactive watch mode.
 Builds the jests tests in `--watch --verbose` mode.
 
 ---
+## Environment Variables
 
-## Resources
+##### index.js
 
-### [Database Diagram](https://dbdiagram.io/d/5cc0e72ef7c5bb70c72fbf83)
-### [Trello Board](https://trello.com/b/sPX3FEno/labs12-mentor-program)
-### [Product Canvas](https://docs.google.com/document/d/1wLlPJxiPSVHkUoUThSp11yk5ZwKqD3c81FDu_UEXrVs/edit#heading=h.crmhbig18nld)
-### [Git Workflow](https://www.notion.so/Git-Workflow-34f9b468dcf74a669aff0d3797870d37)
+`PORT` : Port Node Opens
 
-All Backend associate Trello cards should be tagged Dark Blue
+##### knexfile.js
 
-![Light Blue Trello label](https://s3.amazonaws.com/labs.mentor.frontend/backendtagtrello.png)
+`DB_HOST` : Database URL
 
-Discussion on [Slack](https://lambdaschoolstudents.slack.com/messages/GJ2DGUVGU/details/)
+`DB_NAME` : Postgres database name
 
-### Directory Structure and Style
+`DB_USER` : Postgres user name
 
-```.
-├── index.js
-├── knexfile.js
-├── LICENSE
-├── node_modules
-├── package.json
-├── README.md
-├── src
-│   ├── controllers
-│   │   ├── administrators.js
-│   │   ├── api.js
-│   │   ├── auth.js
-│   │   ├── experiences.js
-│   │   ├── index.js
-│   │   ├── matches.js
-│   │   ├── meetings.js
-│   │   ├── menteeProfiles.js
-│   │   ├── mentorProfiles.js
-│   │   ├── notifications.js
-│   │   ├── organizations.js
-│   │   ├── owners.js
-│   │   └── users.js
-│   ├── database
-│   │   ├── dbConfig.js
-│   │   ├── dev.sqlite3
-│   │   ├── helpers
-│   │   │   ├── administrators.js
-│   │   │   ├── db.js
-│   │   │   ├── experiences.js
-│   │   │   ├── matches.js
-│   │   │   ├── meetings.js
-│   │   │   ├── menteeProfiles.js
-│   │   │   ├── mentorProfiles.js
-│   │   │   ├── notifications.js
-│   │   │   ├── organizations.js
-│   │   │   ├── owners.js
-│   │   │   └── users.js
-│   │   ├── migrations
-│   │   │   ├── 20190426144036_owners.js
-│   │   │   ├── 20190426144037_administrators.js
-│   │   │   ├── 20190426144241_organizations.js
-│   │   │   ├── 20190426144545_users.js
-│   │   │   ├── 20190426144834_notifications.js
-│   │   │   ├── 20190426145035_mentorprofiles.js
-│   │   │   ├── 20190426145246_menteeprofiles.js
-│   │   │   ├── 20190426145433_experiences.js
-│   │   │   ├── 20190426145510_matches.js
-│   │   │   └── 20190426145759_meetings.js
-│   │   └── seeds
-│   │       ├── 001-owners.js
-│   │       ├── 002-administrators.js
-│   │       ├── 003-organizations.js
-│   │       ├── 004-users.js
-│   │       ├── 005-notifications.js
-│   │       ├── 006-mentors.js
-│   │       ├── 007-mentees.js
-│   │       ├── 008-experiences.js
-│   │       ├── 009-matches.js
-│   │       └── 010-meetings.js
-│   ├── middleware
-│   │   ├── authenticate.js
-│   │   ├── generateToken.js
-│   │   └── serverMiddleware.js
-│   ├── routes
-│   │   ├── administrators.js
-│   │   ├── auth.js
-│   │   ├── experiences.js
-│   │   ├── index.js
-│   │   ├── matches.js
-│   │   ├── meetings.js
-│   │   ├── menteeProfiles.js
-│   │   ├── mentorProfiles.js
-│   │   ├── notifications.js
-│   │   ├── organizations.js
-│   │   ├── owners.js
-│   │   └── users.js
-│   ├── server.js
-│   ├── tests
-│   │   ├── auth.test.js
-│   │   └── meetings.test.js
-│   └── validators
-│       ├── api.js
-│       ├── auth.js
-│       ├── experiences.js
-│       ├── index.js
-│       ├── matches.js
-│       ├── meetings.js
-│       ├── menteeProfiles.js
-│       ├── mentorProfiles.js
-│       ├── notifications.js
-│       ├── organizations.js
-│       ├── roles.js
-│       └── users.js
-└── yarn.lock
+`DB_PASS` : Postgres Password
 
-10 directories, 82 files
+##### dbConfig.js
+
+`APP_ENV` : Development/ Production, switch for Database
+
+##### authenticate.js / generateToken.js
+
+`SECRET_KEY` : Secret key used to generated JWT
+
+##### passport.js
+
+`GITHUB_CLIENT_ID` : Used in GitHub Oauth2
+
+`GITHUB_CLIENT_SECRET` : Used in GitHub Oauth2
+
+`GITHUB_CALLBACK_URL` : Used in GitHub Oauth2
+
+
+## Third-Party APIs
+
+### GitHub identity service
+
+Used for Oauth
+
+## Backend API
+
+
+### JWT payload scheme
+
 ```
+Example JWT Payload
+```
+
+### Admin Routes
+
+### Mentor Routes
+
+### Mentee Routes
+
