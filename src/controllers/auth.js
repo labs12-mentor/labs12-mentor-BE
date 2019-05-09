@@ -17,8 +17,7 @@ async function loginUser(req, res){
     return await res.status(req.authInfo.status).json(
         req.authInfo.status === 200 ? {
             message: req.authInfo.message,
-            token: req.authInfo.token,
-            ...req.user
+            token: req.authInfo.token
         } : {
             error: req.authInfo.error
         });
