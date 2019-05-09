@@ -44,6 +44,7 @@ async function insertMenteeProfile(menteeProfile) {
             user_id: menteeProfile.user_id,
             wanted_mentor_id: menteeProfile.wanted_mentor_id
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]

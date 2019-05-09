@@ -22,8 +22,8 @@ async function addMeeting(req, res){
         const meetingData = {
             match_id
         } = req.body;
-        await Meetings.insertMeeting(meetingData);
-        return await res.status(200).json({ message: 'Meeting successfully added!' });
+        const id = await Meetings.insertMeeting(meetingData);
+        return await res.status(201).json({ id, ...meetingData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -48,7 +48,7 @@ async function updateMeeting(req, res){
         } = req.body;
         if(meeting === undefined || meeting.deleted) return await res.status(404).json({ error: 'Meeting not found!' });
         await Meetings.updateMeeting(req.params.id, meetingData);
-        return await res.status(200).json({ message: 'Meeting successfully updated!' });
+        return await res.status(200).json({ id: req.params.id, ...meetingData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -59,7 +59,7 @@ async function deleteMeeting(req, res){
         const meeting = await Meetings.getMeetingById(req.params.id);
         if(meeting === undefined || meeting.deleted) return await res.status(404).json({ error: 'Meeting not found!' });
         await Meetings.deleteMeeting(req.params.id);
-        return await res.status(200).json({ message: 'Meeting successfully deleted!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -70,7 +70,7 @@ async function removeMeeting(req, res){
         const meeting = await Meetings.getMeetingById(req.params.id);
         if(meeting === undefined || meeting.deleted) return await res.status(404).json({ error: 'Meeting not found!' });
         await Meetings.removeMeeting(req.params.id);
-        return await res.status(200).json({ message: 'Meeting successfully removed!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }

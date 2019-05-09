@@ -27,8 +27,8 @@ async function addMatch(req, res){
         } = req.body;
         const match = await Matches.getMatchByMentorAndMentee(matchData.mentor_id, matchData.mentee_id);
         if(match !== undefined) return await res.status(404).json({ error: 'Match already exists!' });
-        await Matches.insertMatch(matchData);
-        return await res.status(200).json({ message: 'Match successfully added!' });
+        const id = await Matches.insertMatch(matchData);
+        return await res.status(201).json({ id, ...matchData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -54,7 +54,7 @@ async function updateMatch(req, res){
         } = req.body;
         if(match === undefined || match.deleted) return await res.status(404).json({ error: 'Match not found!' });
         await Matches.updateMatch(req.params.id, matchData);
-        return await res.status(200).json({ message: 'Match successfully updated!' });
+        return await res.status(200).json({ id: req.params.id, ...matchData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -65,7 +65,7 @@ async function deleteMatch(req, res){
         const match = await Matches.getMatchById(req.params.id);
         if(match === undefined || match.deleted) return await res.status(404).json({ error: 'Match not found!' });
         await Matches.deleteMatch(req.params.id);
-        return await res.status(200).json({ message: 'Match successfully deleted!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -76,7 +76,7 @@ async function removeMatch(req, res){
         const match = await Matches.getMatchById(req.params.id);
         if(match === undefined) return await res.status(404).json({ error: 'Match not found!' });
         await Matches.removeMatch(req.params.id);
-        return await res.status(200).json({ message: 'Match successfully removed!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
