@@ -35,6 +35,7 @@ async function insertMeeting(meeting) {
             match_id: meeting.match_id,
             content: meeting.content
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
