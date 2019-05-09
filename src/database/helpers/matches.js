@@ -46,6 +46,7 @@ async function insertMatch(match) {
             mentee_id: match.mentee_id,
             status: match.status
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
