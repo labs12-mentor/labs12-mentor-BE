@@ -23,8 +23,10 @@ module.exports = {
   },
 
   test: {
-    client: 'pg',
-    connection: prodDbConnection,
+    client: 'sqlite3',
+    connection: {
+      filename: './src.database/dev.sqlite3'
+    },
     useNullAsDefault: true,
     migrations: {
       directory: './src/database/migrations'
