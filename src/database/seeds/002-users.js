@@ -50,7 +50,7 @@ exports.seed = async (knex, Promise) => {
   for (let i = 0; i < 100; i++) {
     await users.push(await makeUser(i, "USER"));
   }
-  var chunkSize = 30;;
+  var chunkSize = 30;
   console.log("----- USERS ADDED -----");
     //return knex("users").insert(users);
     return knex.batchInsert('users', users, chunkSize)
