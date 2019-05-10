@@ -112,7 +112,7 @@ passport.use(new GitHubStrategy({
             const { password, github_token, ...userWithoutPassword } = user;
             return cb(null, userWithoutPassword, { status: 200, message: 'Logged in successfully!', token });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => cb(err));
     }
 ));
 
