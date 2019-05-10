@@ -14,23 +14,14 @@ exports.up = function(knex, Promise) {
       .notNullable();
 
     table.string("first_name");
-
     table.string("last_name");
-
     table.string("street");
-
     table.string("city");
-
     table.string("state");
-
     table.string("zipcode");
-
     table.string("country");
-
     table.string("role").notNullable();
-
     table.string("github_id");
-
     table.string("github_token");
 
     table
