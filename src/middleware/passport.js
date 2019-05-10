@@ -73,7 +73,7 @@ passport.use(new GitHubStrategy({
     }, (req, accessToken, refreshToken, profile, cb) => {
         Users.getUserByGithubId(profile.id, async (user) => {
             if (user == undefined) {
-                if(req.query.state.length === 0){
+                if(req.query.state === undefined || req.query.state.length === 0){
                     return cb("Cannot register the user - no organization ID provided!");
                 }else{
                     const invitationID = JSON.parse(req.query.state).invitation_id;
@@ -111,7 +111,8 @@ passport.use(new GitHubStrategy({
             const token = generateToken(user);
             const { password, github_token, ...userWithoutPassword } = user;
             return cb(null, userWithoutPassword, { status: 200, message: 'Logged in successfully!', token });
-        });
+        })
+        .catch((err) => console.log(err));
     }
 ));
 
