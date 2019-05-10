@@ -1,4 +1,4 @@
-# Labs 12: MentorMatch - Backend ![CodeBuild Badge](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiUndoSlVJb01xbFV2OFVUYmtkNS94SmJFbXgxNTE5YlYyeGlBRjAwRUlwVExUNXRrcy9vaTEwNk0vVUhjcjVxQStqUWg5NG9YWjc0QURCTDZoY2hOWW5RPSIsIml2UGFyYW1ldGVyU3BlYyI6IkFQVE1PV1crV0tFZ0xvbEQiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+# Labs 12: MentorMatch - Backend ![CodeBuild Badge]()
 
 A Node based backend for the LambdaSchool Labs12 Project **Mentor Program**
 
@@ -61,7 +61,7 @@ Builds the jests tests in `--watch --verbose` mode.
 
 ##### dbConfig.js
 
-`APP_ENV` : Development/ Production, switch for Database
+`APP_ENV` : Test/ Development/ Production, switch for Database
 
 ##### authenticate.js / generateToken.js
 
@@ -81,19 +81,3 @@ Builds the jests tests in `--watch --verbose` mode.
 ### GitHub identity service
 
 Used for Oauth
-
-## Backend API
-
-
-### JWT payload scheme
-
-```
-Example JWT Payload
-```
-
-### Admin Routes
-
-### Mentor Routes
-
-### Mentee Routes
-
