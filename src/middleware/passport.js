@@ -52,7 +52,9 @@ passport.use(new JWTStrategy({
         return Users.getUserById(jwtPayload.id)
             .then(user => {
                 if(bcrypt.compareSync(password, user.password)){
-                    return cb(null, user, { message: 'Logged in successfully!' });
+                    const token = generateToken(user);
+                    const {password, ...userWithoutPassword} = user;
+                    return cb(null, userWithoutPassword, { status: 200, message: 'Logged in successfully!', token });
                 }
                 return cb(null, false, { error: 'Incorrect token!' });
             })
@@ -106,8 +108,9 @@ passport.use(new GitHubStrategy({
                         .catch(err => cb(err));
                 }
             }
+            const token = generateToken(user);
             const { password, github_token, ...userWithoutPassword } = user;
-            return cb(null, userWithoutPassword);
+            return cb(null, userWithoutPassword, { status: 200, message: 'Logged in successfully!', token });
         });
     }
 ));

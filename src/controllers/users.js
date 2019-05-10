@@ -66,7 +66,7 @@ async function updateUser(req, res){
         //     }
         // }
         
-        await Users.updateUser(req.params.id, {
+        const updatedUser = {
             ...user,
             email: req.body.email,
             first_name: req.body.first_name,
@@ -76,9 +76,11 @@ async function updateUser(req, res){
             state: req.body.state,
             zipcode: req.body.zipcode,
             country: req.body.country
-        });
+        }
 
-        return await res.status(200).json({ message: 'User successfully updated!' });
+        await Users.updateUser(req.params.id, updatedUser);
+
+        return await res.status(200).json(updatedUser);
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -103,7 +105,7 @@ async function deleteUser(req, res){
 
         await Users.deleteUser(req.params.id);
 
-        return await res.status(200).json({ message: 'User successfully deleted!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -114,7 +116,7 @@ async function removeUser(req, res){
         const user = await Users.getUserById(req.params.id);
         if(user === undefined) return await res.status(404).json({ error: 'User not found!' });
         await Users.removeUser(req.params.id);
-        return await res.status(200).json({ message: 'User successfully removed!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }

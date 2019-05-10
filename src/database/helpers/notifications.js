@@ -36,6 +36,7 @@ async function insertNotification(notification) {
             user_id: notification.user_id,
             content: notification.content
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]

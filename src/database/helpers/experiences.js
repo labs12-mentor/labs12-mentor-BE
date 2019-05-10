@@ -35,6 +35,7 @@ async function insertExperience(experience) {
             user_id: experience.user_id,
             name: experience.name,
         })
+        .returning('id')
         .then(response => {
             return {
                 id: response[0]
