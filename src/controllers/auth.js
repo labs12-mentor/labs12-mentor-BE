@@ -88,8 +88,11 @@ function githubAuth(req, res){
     const io = global.io;
     const socketId = req.session.socketId;
     const user = {
-        email: req.user.email
+        email: req.user.email,
+        token: req.user.token,
+        role: req.user.role
     };
+    console.log(user);
     io.in(socketId).emit('github', user);
     res.end();
 }
