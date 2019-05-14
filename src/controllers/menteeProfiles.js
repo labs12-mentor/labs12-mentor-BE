@@ -25,7 +25,7 @@ async function addMenteeProfile(req, res) {
         if (mentee !== undefined)
             return await res.status(404).json({ error: 'Mentee profile already exist!' });
         const id = MenteeProfiles.insertMenteeProfile(menteeData);
-        return await res.status(201).json({ id, ...menteeData });
+        return await res.status(201).json({ id, ...mentee, ...menteeData });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }

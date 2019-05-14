@@ -67,7 +67,7 @@ async function updateMentorProfile(req, res) {
         if (mentor === undefined || mentor.deleted)
             return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.updateMentorProfile(req.params.id, mentorProfile);
-        return await res.status(200).json({ id: req.params.id, ...mentorProfile });
+        return await res.status(200).json({ id: req.params.id, ...mentor, ...mentorProfile });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
