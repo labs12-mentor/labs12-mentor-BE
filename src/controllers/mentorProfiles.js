@@ -37,13 +37,12 @@ async function getMentorProfiles(req, res){
 async function addMentorProfile(req, res){
     try {
         const mentorProfile = { user_id } = req.body;
-        console.log("OK");
         const mentor = await MentorProfiles.getMentorProfileByUserId(mentorProfile.user_id);
         
         if(mentor !== undefined) return await res.status(404).json({ error: 'Mentor already exists!' });
 
-        await MentorProfiles.insertMentorProfile(mentorProfile);
-        return await res.status(200).json({ message: 'Successfully added a mentor!' });
+        const id = await MentorProfiles.insertMentorProfile(mentorProfile);
+        return await res.status(201).json({ id, ...mentorProfile });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -65,7 +64,7 @@ async function updateMentorProfile(req, res){
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
         if(mentor === undefined || mentor.deleted) return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.updateMentorProfile(req.params.id, mentorProfile);
-        return await res.status(200).json({ message: 'Successfully updated a mentor!' });
+        return await res.status(200).json({ id: req.params.id, ...mentorProfile });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -76,7 +75,7 @@ async function deleteMentorProfile(req, res){
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
         if(mentor === undefined || mentor.deleted) return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.deleteMentorProfile(req.params.id);
-        return await res.status(200).json({ message: 'Successfully deleted a mentor!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -87,7 +86,7 @@ async function removeMentorProfile(req, res){
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
         if(mentor === undefined) return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.removeMentorProfile(req.params.id);
-        return await res.status(200).json({ message: 'Successfully removed a mentor!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }

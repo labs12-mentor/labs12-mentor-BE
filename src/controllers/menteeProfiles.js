@@ -26,8 +26,8 @@ async function addMenteeProfile(req, res){
         } = req.body;
         const mentee = await MenteeProfiles.getMenteeProfileByUserId(menteeData.user_id);
         if(mentee !== undefined) return await res.status(404).json({ error: 'Mentee profile already exist!' });
-        MenteeProfiles.insertMenteeProfile(menteeData);
-        return await res.status(200).json({ message: 'Successfully added a mentee!' });
+        const id = MenteeProfiles.insertMenteeProfile(menteeData);
+        return await res.status(201).json({ id, ...menteeData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -51,8 +51,8 @@ async function updateMenteeProfile(req, res){
         } = req.body;
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
         if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
-        MenteeProfiles.updateMenteeProfile(req.params.id, menteeData);
-        return await res.status(200).json({ message: 'Successfully updated a mentee!' });
+        await MenteeProfiles.updateMenteeProfile(req.params.id, menteeData);
+        return await res.status(200).json({ id: req.params.id, ...menteeData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -63,7 +63,7 @@ async function deleteMenteeProfile(req, res){
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
         if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
         MenteeProfiles.deleteMenteeProfile(req.params.id);
-        return await res.status(200).json({ message: 'Successfully deleted a mentee!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -74,7 +74,7 @@ async function removeMenteeProfile(req, res){
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
         if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
         MenteeProfiles.removeMenteeProfile(req.params.id);
-        return await res.status(200).json({ message: 'Successfully removed a mentee!' });
+        return await res.status(200).json({ id: req.params.id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }

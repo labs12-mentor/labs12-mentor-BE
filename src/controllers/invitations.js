@@ -31,10 +31,7 @@ async function addInvitation(req, res){
             role
         } = req.body;
         const id = await Invitations.insertInvitation(invitationData);
-        return await res.status(200).json({
-            message: 'Invitation successfully added!',
-            id
-        });
+        return await res.status(201).json({ id, ...invitationData });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -55,7 +52,7 @@ async function deleteInvitation(req, res){
         const invitation = await Invitations.getInvitationById(req.params.invitation_id);
         if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
         await Invitations.deleteInvitation(req.params.invitation_id);
-        return await res.status(200).json({ message: 'Successfully deleted an invitation!' });
+        return await res.status(200).json({ id: req.params.invitation_id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -66,7 +63,7 @@ async function removeInvitation(req, res){
         const invitation = await Invitations.getInvitationById(req.params.invitation_id);
         if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
         await Invitations.removeInvitation(req.params.invitation_id);
-        return await res.status(200).json({ message: 'Successfully removed an invitation!' });
+        return await res.status(200).json({ id: req.params.invitation_id });
     } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
