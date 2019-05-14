@@ -5,77 +5,76 @@ module.exports = {
     updateMenteeProfile,
     deleteMenteeProfile,
     removeMenteeProfile
-}
+};
 const MenteeProfiles = require('../database/helpers/menteeProfiles');
 
-async function getMenteeProfiles(req, res){
+async function getMenteeProfiles(req, res) {
     try {
         const mentees = await MenteeProfiles.getMenteeProfiles();
 
         return await res.status(200).json(mentees);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function addMenteeProfile(req, res){
+async function addMenteeProfile(req, res) {
     try {
-        const menteeData = {
-            user_id,
-            wanted_mentor_id
-        } = req.body;
+        const menteeData = ({ user_id, wanted_mentor_id, status } = req.body);
         const mentee = await MenteeProfiles.getMenteeProfileByUserId(menteeData.user_id);
-        if(mentee !== undefined) return await res.status(404).json({ error: 'Mentee profile already exist!' });
+        if (mentee !== undefined)
+            return await res.status(404).json({ error: 'Mentee profile already exist!' });
         const id = MenteeProfiles.insertMenteeProfile(menteeData);
         return await res.status(201).json({ id, ...menteeData });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function getMenteeProfile(req, res){
+async function getMenteeProfile(req, res) {
     try {
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
-        if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
+        if (mentee === undefined || mentee.deleted)
+            return await res.status(404).json({ error: 'Mentee not found!' });
         return await res.status(200).json(mentee);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function updateMenteeProfile(req, res){
+async function updateMenteeProfile(req, res) {
     try {
-        const menteeData = {
-            user_id,
-            wanted_mentor_id
-        } = req.body;
+        const menteeData = ({ user_id, wanted_mentor_id, status } = req.body);
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
-        if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
+        if (mentee === undefined || mentee.deleted)
+            return await res.status(404).json({ error: 'Mentee not found!' });
         await MenteeProfiles.updateMenteeProfile(req.params.id, menteeData);
         return await res.status(200).json({ id: req.params.id, ...menteeData });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function deleteMenteeProfile(req, res){
+async function deleteMenteeProfile(req, res) {
     try {
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
-        if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
+        if (mentee === undefined || mentee.deleted)
+            return await res.status(404).json({ error: 'Mentee not found!' });
         MenteeProfiles.deleteMenteeProfile(req.params.id);
         return await res.status(200).json({ id: req.params.id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function removeMenteeProfile(req, res){
+async function removeMenteeProfile(req, res) {
     try {
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
-        if(mentee === undefined || mentee.deleted) return await res.status(404).json({ error: 'Mentee not found!' });
+        if (mentee === undefined || mentee.deleted)
+            return await res.status(404).json({ error: 'Mentee not found!' });
         MenteeProfiles.removeMenteeProfile(req.params.id);
         return await res.status(200).json({ id: req.params.id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
