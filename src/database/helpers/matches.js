@@ -27,14 +27,12 @@ async function getAvailableMentors() {
         "users.last_name",
         "users.id",
         "users.zipcode"
-      )
-      .from("matches")
+        )
+    .from("matches")
     .innerJoin("mentorprofiles", "matches.mentor_id", "mentorprofiles.id")
     .innerJoin("users", "mentorprofiles.id", "users.id")
-    .whereraw(matches.status="AVAILABLE");
+    .where("matches.status", "AVAILABLE");
 }
-
-console.log(getAvailableMentors())
 
 async function getMatches() {
     return await db
