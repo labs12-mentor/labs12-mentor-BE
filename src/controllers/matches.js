@@ -1,5 +1,6 @@
 module.exports = {
     getMatches,
+    getAvailableMentors,
     addMatch,
     getMatch,
     updateMatch,
@@ -12,6 +13,15 @@ async function getMatches(req, res){
     try {
         const matches = await Matches.getMatches();
 
+        return await res.status(200).json(matches);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getAvailableMentors(req, res){
+    try {
+        const matches = await Matches.getAvailableMentors();
         return await res.status(200).json(matches);
     } catch(error) {
         return await res.status(500).json({ error: error.message });

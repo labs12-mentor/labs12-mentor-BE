@@ -1,5 +1,6 @@
 module.exports = {
     truncate,
+    getAvailableMentors,
     getMatches,
     getMatchById,
     getMatchByMentorAndMentee,
@@ -15,6 +16,25 @@ async function truncate() {
     await db.raw('ALTER SEQUENCE matches_id_seq RESTART WITH 1');
     return;
 }
+
+async function getAvailableMentors() {
+    return await db
+        .select(
+        "matches.mentor_id",
+        "matches.status",
+        "mentorprofiles.user_id",
+        "users.first_name",
+        "users.last_name",
+        "users.id",
+        "users.zipcode"
+      )
+      .from("matches")
+    .innerJoin("mentorprofiles", "matches.mentor_id", "mentorprofiles.id")
+    .innerJoin("users", "mentorprofiles.id", "users.id")
+    .whereraw(matches.status="AVAILABLE");
+}
+
+console.log(getAvailableMentors())
 
 async function getMatches() {
     return await db
