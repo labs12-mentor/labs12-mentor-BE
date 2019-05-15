@@ -20,7 +20,7 @@ async function getMatches(req, res){
     }
 }
 
-async function getAvailableMentors(res, next){
+async function getAvailableMentors(req, res){
     try {
         const matches = await Matches.getAvailableMentors();
         
@@ -30,7 +30,7 @@ async function getAvailableMentors(res, next){
     }
 }
 
-async function getAvailableMentees(res, next){
+async function getAvailableMentees(req, res){
     try {
         const matches = await Matches.getAvailableMentees();
 
