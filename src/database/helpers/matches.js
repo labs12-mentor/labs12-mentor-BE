@@ -1,5 +1,6 @@
 module.exports = {
     truncate,
+    getAvailableMentees,
     getAvailableMentors,
     getMatches,
     getMatchById,
@@ -31,7 +32,24 @@ async function getAvailableMentors() {
     .from("matches")
     .innerJoin("mentorprofiles", "matches.mentor_id", "mentorprofiles.id")
     .innerJoin("users", "mentorprofiles.id", "users.id")
-    .where("matches.status", "AVAILABLE");
+    .where('matches.status','=',"AVAILABLE");
+}
+
+async function getAvailableMentees() {
+    return await db
+        .select(
+        "matches.mentee_id",
+        "matches.status",
+        "menteeprofiles.user_id",
+        "users.first_name",
+        "users.last_name",
+        "users.id",
+        "users.zipcode"
+        )
+    .from("matches")
+    .innerJoin("menteeprofiles", "matches.mentee_id", "menteeprofiles.id")
+    .innerJoin("users", "menteeprofiles.id", "users.id")
+    .where('matches.status','=',"AVAILABLE");
 }
 
 async function getMatches() {

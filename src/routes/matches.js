@@ -8,7 +8,10 @@ router.route('/')
     .get(authenticate, authorize(['ALL']), matchesController.getMatches)
     .post(authenticate, authorize(['ALL']), matchesController.addMatch);
 
-router.route('/available')
+router.route('/availablementees')
+    .get(authenticate, authorize(['ALL']), matchesController.getAvailableMentees)
+
+router.route('/availablementors')
     .get(authenticate, authorize(['ALL']), matchesController.getAvailableMentors)
 
 router.route('/:id')
