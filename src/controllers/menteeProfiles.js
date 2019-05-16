@@ -7,6 +7,7 @@ module.exports = {
     removeMenteeProfile
 };
 const MenteeProfiles = require('../database/helpers/menteeProfiles');
+const Users = require('../database/helpers/users');
 
 async function getMenteeProfiles(req, res) {
     try {
@@ -46,6 +47,14 @@ async function updateMenteeProfile(req, res) {
     try {
         const menteeData = ({ user_id, wanted_mentor_id, status } = req.body);
         const mentee = await MenteeProfiles.getMenteeProfileById(req.params.id);
+
+        const user = await Users.getUserById(menteeData.user_id);
+        if (user.role !== 'MENTEE' && menteeData.status === 'APPROVED') {
+            await Users.updateUser(menteeData.user_id, {
+                role: 'MENTEE'
+            });
+        }
+
         if (mentee === undefined || mentee.deleted)
             return await res.status(404).json({ error: 'Mentee not found!' });
         await MenteeProfiles.updateMenteeProfile(req.params.id, menteeData);
