@@ -17,9 +17,7 @@ async function truncate() {
 }
 
 async function getMatches() {
-    return await db
-        .select('*')
-        .from('matches');
+    return await db.select('*').from('matches');
 }
 
 async function getMatchById(id) {
@@ -35,7 +33,7 @@ async function getMatchByMentorAndMentee(mentor_id, mentee_id) {
         .select('*')
         .from('matches')
         .where({ mentor_id })
-        .where({ mentee_id})
+        .where({ mentee_id })
         .first();
 }
 
@@ -44,13 +42,13 @@ async function insertMatch(match) {
         .insert({
             mentor_id: match.mentor_id,
             mentee_id: match.mentee_id,
-            status: match.status
+            status: 'AVAILABLE'
         })
         .returning('id')
-        .then(response => {
+        .then((response) => {
             return {
                 id: response[0]
-            }
+            };
         });
 }
 

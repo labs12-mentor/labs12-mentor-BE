@@ -7,7 +7,7 @@ router.route('/')
     .get(authenticate, authorize(['ALL']), organizationsController.getOrganizations);
 
 router.route('/:id')
-    .get(authenticate, authorize(['ALL']),organizationsController.getOrganization)
+    .get(organizationsController.getOrganization)
     .put(authenticate, authorize(['ALL']),organizationsController.updateOrganization)
     .delete(authenticate, authorize(['ALL']), organizationsController.deleteOrganization);
 
