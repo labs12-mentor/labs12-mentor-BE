@@ -64,6 +64,14 @@ async function updateMentorProfile(req, res) {
     try {
         const mentorProfile = ({ user_id, status } = req.body);
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
+
+        const user = await Users.getUserById(mentorProfile.user_id);
+        if (user.role !== 'MENTOR' && mentorProfile.status === 'APPROVED') {
+            await Users.updateUser(mentorProfile.user_id, {
+                role: 'MENTOR'
+            });
+        }
+
         if (mentor === undefined || mentor.deleted)
             return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.updateMentorProfile(req.params.id, mentorProfile);
