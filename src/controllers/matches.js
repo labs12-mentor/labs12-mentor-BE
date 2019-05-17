@@ -121,14 +121,39 @@ async function getMatch(req, res) {
 
 async function updateMatch(req, res) {
     try {
+        const matchData = ({ status, mentor_id, mentee_id } = req.body);
+
         const current_user = await Users.getUserById(req.user.id);
         if (current_user === undefined)
             return await res.status(403).json({ error: 'Access denied!' });
 
         const match = await Matches.getMatchById(req.params.id);
-        const matchData = ({ status, mentor_id, mentee_id } = req.body);
-        if (match === undefined || match.deleted)
-            return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
 
         if (match.mentee_id !== matchData.mentee_id) {
             const mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
@@ -188,8 +213,32 @@ async function deleteMatch(req, res) {
             return await res.status(403).json({ error: 'Access denied!' });
 
         const match = await Matches.getMatchById(req.params.id);
-        if (match === undefined || match.deleted)
-            return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Matches.deleteMatch(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
@@ -204,7 +253,32 @@ async function removeMatch(req, res) {
             return await res.status(403).json({ error: 'Access denied!' });
 
         const match = await Matches.getMatchById(req.params.id);
-        if (match === undefined) return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Matches.removeMatch(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
