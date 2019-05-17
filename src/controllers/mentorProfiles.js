@@ -32,6 +32,10 @@ async function getMentorProfiles(req, res) {
 
 async function addMentorProfile(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const mentorProfile = ({ user_id, status } = req.body);
         const mentor = await MentorProfiles.getMentorProfileByUserId(mentorProfile.user_id);
 
@@ -47,9 +51,27 @@ async function addMentorProfile(req, res) {
 
 async function getMentorProfile(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_users = await Users.getAllUsers();
+
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
-        if (mentor === undefined || mentor.deleted)
-            return await res.status(404).json({ error: 'Mentor not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (mentor === undefined)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+        } else {
+            if (mentor === undefined || mentor.deleted)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+
+            const user = all_users.find((elem) => elem.id === mentor.user_id);
+            if (current_user.id !== user.organization_id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         return await res.status(200).json(mentor);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
@@ -58,8 +80,29 @@ async function getMentorProfile(req, res) {
 
 async function updateMentorProfile(req, res) {
     try {
-        const mentorProfile = ({ user_id, status } = req.body);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_users = await Users.getAllUsers();
+
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (mentor === undefined)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+        } else {
+            if (mentor === undefined || mentor.deleted)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+
+            const user = all_users.find((elem) => elem.id === mentor.user_id);
+            if (current_user.id !== user.organization_id || current_user.id !== mentor.user_id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
+
+        const mentorProfile = ({ user_id, status } = req.body);
 
         const user = await Users.getUserById(mentorProfile.user_id);
         if (user.role !== 'MENTOR' && mentorProfile.status === 'APPROVED') {
@@ -68,8 +111,6 @@ async function updateMentorProfile(req, res) {
             });
         }
 
-        if (mentor === undefined || mentor.deleted)
-            return await res.status(404).json({ error: 'Mentor not found!' });
         await MentorProfiles.updateMentorProfile(req.params.id, mentorProfile);
         return await res.status(200).json({ id: req.params.id, ...mentor, ...mentorProfile });
     } catch (error) {
@@ -79,9 +120,28 @@ async function updateMentorProfile(req, res) {
 
 async function deleteMentorProfile(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_users = await Users.getAllUsers();
+
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
-        if (mentor === undefined || mentor.deleted)
-            return await res.status(404).json({ error: 'Mentor not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (mentor === undefined)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+        } else {
+            if (mentor === undefined || mentor.deleted)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+
+            const user = all_users.find((elem) => elem.id === mentor.user_id);
+            if (current_user.id !== user.organization_id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
+
         await MentorProfiles.deleteMentorProfile(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
@@ -91,8 +151,28 @@ async function deleteMentorProfile(req, res) {
 
 async function removeMentorProfile(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_users = await Users.getAllUsers();
+
         const mentor = await MentorProfiles.getMentorProfileById(req.params.id);
-        if (mentor === undefined) return await res.status(404).json({ error: 'Mentor not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (mentor === undefined)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+        } else {
+            if (mentor === undefined || mentor.deleted)
+                return await res.status(404).json({ error: 'Mentor not found!' });
+
+            const user = all_users.find((elem) => elem.id === mentor.user_id);
+            if (current_user.id !== user.organization_id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
+
         await MentorProfiles.removeMentorProfile(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
