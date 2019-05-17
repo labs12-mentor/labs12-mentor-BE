@@ -46,7 +46,39 @@ async function getMeetings(req, res) {
 
 async function addMeeting(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const meetingData = ({ match_id } = req.body);
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (meeting === undefined)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+        } else {
+            if (meeting === undefined || meeting.deleted)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+
+            const match = all_matches.find((elem) => meetingData.match_id === elem.id);
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         const id = await Meetings.insertMeeting(meetingData);
         return await res.status(201).json({ id, ...meetingData });
     } catch (error) {
@@ -56,10 +88,39 @@ async function addMeeting(req, res) {
 
 async function getMeeting(req, res) {
     try {
-        const meeting = await Meetings.getMeetingById(req.params.id);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
 
-        if (meeting === undefined || meeting.deleted)
-            return await res.status(404).json({ error: 'Meeting not found!' });
+        const meeting = await Meetings.getMeetingById(req.params.id);
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (meeting === undefined)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+        } else {
+            if (meeting === undefined || meeting.deleted)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+
+            const match = all_matches.find((elem) => meeting.match_id === elem.id);
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         return await res.status(200).json(meeting);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
@@ -68,10 +129,40 @@ async function getMeeting(req, res) {
 
 async function updateMeeting(req, res) {
     try {
-        const meeting = await Meetings.getMeetingById(req.params.id);
         const meetingData = ({ match_id } = req.body);
-        if (meeting === undefined || meeting.deleted)
-            return await res.status(404).json({ error: 'Meeting not found!' });
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
+        const meeting = await Meetings.getMeetingById(req.params.id);
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (meeting === undefined)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+        } else {
+            if (meeting === undefined || meeting.deleted)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+
+            const match = all_matches.find((elem) => meeting.match_id === elem.id);
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Meetings.updateMeeting(req.params.id, meetingData);
         return await res.status(200).json({ id: req.params.id, ...meetingData });
     } catch (error) {
@@ -81,9 +172,39 @@ async function updateMeeting(req, res) {
 
 async function deleteMeeting(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const meeting = await Meetings.getMeetingById(req.params.id);
-        if (meeting === undefined || meeting.deleted)
-            return await res.status(404).json({ error: 'Meeting not found!' });
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (meeting === undefined)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+        } else {
+            if (meeting === undefined || meeting.deleted)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+
+            const match = all_matches.find((elem) => meeting.match_id === elem.id);
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Meetings.deleteMeeting(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
@@ -93,9 +214,39 @@ async function deleteMeeting(req, res) {
 
 async function removeMeeting(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const meeting = await Meetings.getMeetingById(req.params.id);
-        if (meeting === undefined || meeting.deleted)
-            return await res.status(404).json({ error: 'Meeting not found!' });
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (meeting === undefined)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+        } else {
+            if (meeting === undefined || meeting.deleted)
+                return await res.status(404).json({ error: 'Meeting not found!' });
+
+            const match = all_matches.find((elem) => meeting.match_id === elem.id);
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Meetings.removeMeeting(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
