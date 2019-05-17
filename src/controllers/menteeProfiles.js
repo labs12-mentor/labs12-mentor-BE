@@ -20,7 +20,7 @@ async function getMenteeProfiles(req, res) {
         if (current_user.role !== 'ADMINISTRATOR') {
             const mentees = all_mentees.filter((elem) => {
                 const user = all_users.find((user) => user.id === elem.user_id);
-                return user.id === current_user.organization_id;
+                return user.organization_id === current_user.organization_id;
             });
             return await res.status(200).json(mentees);
         }
