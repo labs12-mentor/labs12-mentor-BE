@@ -11,9 +11,20 @@ const Users = require('../database/helpers/users');
 
 async function getMenteeProfiles(req, res) {
     try {
-        const mentees = await MenteeProfiles.getMenteeProfiles();
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_mentees = await MenteeProfiles.getMenteeProfiles();
+        const all_users = await Users.getAllUsers();
 
-        return await res.status(200).json(mentees);
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const mentees = all_mentees.filter((elem) => {
+                const user = all_users.find((user) => user.id === elem.user_id);
+                return user.id === current_user.organization_id;
+            });
+            return await res.status(200).json(mentees);
+        }
+        return await res.status(200).json(all_mentees);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
