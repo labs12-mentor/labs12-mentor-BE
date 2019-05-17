@@ -30,6 +30,10 @@ async function getNotifications(req, res) {
 
 async function addNotification(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const notificationData = ({ content, user_id } = req.body);
 
         const id = await Notifications.insertNotification(notificationData);
