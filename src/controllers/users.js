@@ -8,64 +8,88 @@ module.exports = {
 };
 const Users = require('../database/helpers/users');
 
-async function getAllUsers(req, res){
+async function getAllUsers(req, res) {
     try {
-        const users = await Users.getAllUsers();
-        return await res.status(200).json(users);
-    } catch(error) {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_users = await Users.getAllUsers();
+
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const users = all_users.filter(
+                (elem) => elem.organization_id === current_user.organization_id
+            );
+            return await res.status(200).json(users);
+        }
+
+        return await res.status(200).json(all_users);
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function getCurrentUser(req, res){
+async function getCurrentUser(req, res) {
     try {
         const user = await Users.getUserById(req.user.id);
 
-        if(user === undefined || user.deleted) return await res.status(404).json({ error: 'User not found!' });
-        
+        if (user === undefined || user.deleted)
+            return await res.status(404).json({ error: 'User not found!' });
+
         return await res.status(200).json(user);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function getUser(req, res){
+async function getUser(req, res) {
     try {
-        // const current_user = await Users.getUserById(req.user.id);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
         const user = await Users.getUserById(req.params.id);
-        // if(current_user === undefined){
-        //     return await res.status(403).json({ error: 'Cannot find this user!' });
-        // }
 
-        // if(current_user.role !== 'ADMINISTRATOR' && current_user.organization_id !== user.organization_id){
-        //     return await res.status(403).json({ error: 'Cannot find this user!' });
-        // }
+        if (current_user.role === 'ADMINISTRATOR') {
+            if (user === undefined) return await res.status(404).json({ error: 'User not found!' });
+        } else {
+            if (
+                user === undefined ||
+                user.deleted ||
+                user.organization_id !== current_user.organization_id
+            )
+                return await res.status(404).json({ error: 'User not found!' });
+        }
 
-        if(user === undefined || user.deleted) return await res.status(404).json({ error: 'User not found!' });
-        
         return await res.status(200).json(user);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function updateUser(req, res){
+async function updateUser(req, res) {
     try {
-        // const current_user = await Users.getUserById(req.user.id);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
         const user = await Users.getUserById(req.params.id);
 
-        // if(current_user === undefined){
-        //     return await res.status(403).json({ error: 'Cannot find this user!' });
-        // }
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (user === undefined) return await res.status(404).json({ error: 'User not found!' });
+        } else {
+            if (
+                user === undefined ||
+                user.deleted ||
+                user.organization_id !== current_user.organization_id
+            )
+                return await res.status(404).json({ error: 'User not found!' });
 
-        if(user === undefined || user.deleted) return await res.status(404).json({ error: 'User not found!' });
+            if (current_user.id !== user.id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
 
-        // if(current_user.role !== 'ADMINISTRATOR'){
-        //     if(!((current_user.role === 'OWNER' || current_user.role === 'MANAGER') && current_user.organization_id === user.organization_id)||(current_user.role === 'USER' && current_user.id !== user.id)){
-        //         return await res.status(403).json({ error: 'Cannot find this user!' });
-        //     }
-        // }
-        
         const updatedUser = {
             ...user,
             email: req.body.email,
@@ -76,48 +100,76 @@ async function updateUser(req, res){
             state: req.body.state,
             zipcode: req.body.zipcode,
             country: req.body.country
-        }
+        };
 
         await Users.updateUser(req.params.id, updatedUser);
 
         return await res.status(200).json(updatedUser);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function deleteUser(req, res){
+async function deleteUser(req, res) {
     try {
-        // const current_user = await Users.getUserById(req.user.id);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
         const user = await Users.getUserById(req.params.id);
 
-        // if(current_user === undefined || user === undefined){
-        //     return await res.status(403).json({ error: 'Cannot find this user!' });
-        // }
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (user === undefined) return await res.status(404).json({ error: 'User not found!' });
+        } else {
+            if (
+                user === undefined ||
+                user.deleted ||
+                user.organization_id !== current_user.organization_id
+            )
+                return await res.status(404).json({ error: 'User not found!' });
 
-        if(user === undefined || user.deleted) return await res.status(404).json({ error: 'User not found!' });
-
-        // if(current_user.role !== 'ADMINISTRATOR'){
-        //     if(!((current_user.role === 'OWNER' || current_user.role === 'MANAGER') && current_user.organization_id === user.organization_id)||(current_user.role === 'USER' && current_user.id !== user.id)){
-        //         return await res.status(403).json({ error: 'Cannot find this user!' });
-        //     }
-        // }
+            if (current_user.id !== user.id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
 
         await Users.deleteUser(req.params.id);
 
         return await res.status(200).json({ id: req.params.id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function removeUser(req, res){
+async function removeUser(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const user = await Users.getUserById(req.params.id);
-        if(user === undefined) return await res.status(404).json({ error: 'User not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (user === undefined) return await res.status(404).json({ error: 'User not found!' });
+        } else {
+            if (
+                user === undefined ||
+                user.deleted ||
+                user.organization_id !== current_user.organization_id
+            )
+                return await res.status(404).json({ error: 'User not found!' });
+
+            if (current_user.id !== user.id)
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Users.removeUser(req.params.id);
         return await res.status(200).json({ id: req.params.id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }

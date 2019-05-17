@@ -7,6 +7,9 @@ router.route('/')
     .get(authenticate, authorize(['ALL']), experiencesController.getExperiences)
     .post(authenticate, authorize(['ALL']), experiencesController.addExperience);
 
+router.route('/user/:id')
+    .get(authenticate, authorize(['ALL']), experiencesController.getExperiencesByUserId);
+
 router.route('/:id')
     .get(authenticate, authorize(['ALL']), experiencesController.getExperience)
     .put(authenticate, authorize(['ALL']), experiencesController.updateExperience)

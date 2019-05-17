@@ -9,13 +9,34 @@ module.exports = {
 const Matches = require('../database/helpers/matches');
 const Mentors = require('../database/helpers/mentorProfiles');
 const Mentees = require('../database/helpers/menteeProfiles');
+const Users = require('../database/helpers/users');
 const Notifications = require('../database/helpers/notifications');
 
 async function getMatches(req, res) {
     try {
-        const matches = await Matches.getMatches();
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_matches = await Matches.getMatches();
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
 
-        return await res.status(200).json(matches);
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const matches = all_matches.filter((elem) => {
+                const mentor = all_mentors.find((user) => elem.mentor_id === user.id);
+                const mentee = all_mentees.find((user) => elem.mentee_id === user.id);
+                const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+                const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+                return (
+                    current_user.organization_id === mentor_user.organization_id &&
+                    current_user.organization_id === mentee_user.organization_id
+                );
+            });
+            return await res.status(200).json(matches);
+        }
+        return await res.status(200).json(all_matches);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -23,6 +44,10 @@ async function getMatches(req, res) {
 
 async function addMatch(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const matchData = ({ status, mentor_id, mentee_id } = req.body);
         const match = await Matches.getMatchByMentorAndMentee(
             matchData.mentor_id,
@@ -57,9 +82,37 @@ async function addMatch(req, res) {
 
 async function getMatch(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const match = await Matches.getMatchById(req.params.id);
-        if (match === undefined || match.deleted)
-            return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         return await res.status(200).json(match);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
@@ -68,10 +121,39 @@ async function getMatch(req, res) {
 
 async function updateMatch(req, res) {
     try {
-        const match = await Matches.getMatchById(req.params.id);
         const matchData = ({ status, mentor_id, mentee_id } = req.body);
-        if (match === undefined || match.deleted)
-            return await res.status(404).json({ error: 'Match not found!' });
+
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
+        const match = await Matches.getMatchById(req.params.id);
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
 
         if (match.mentee_id !== matchData.mentee_id) {
             const mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
@@ -126,9 +208,37 @@ async function updateMatch(req, res) {
 
 async function deleteMatch(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const match = await Matches.getMatchById(req.params.id);
-        if (match === undefined || match.deleted)
-            return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Matches.deleteMatch(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
@@ -138,8 +248,37 @@ async function deleteMatch(req, res) {
 
 async function removeMatch(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const match = await Matches.getMatchById(req.params.id);
-        if (match === undefined) return await res.status(404).json({ error: 'Match not found!' });
+        const all_users = await Users.getAllUsers();
+        const all_mentors = await Mentors.getMentorProfiles();
+        const all_mentees = await Mentees.getMenteeProfiles();
+
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (match === undefined)
+                return await res.status(404).json({ error: 'Match not found!' });
+        } else {
+            if (match === undefined || match.deleted)
+                return await res.status(404).json({ error: 'Match not found!' });
+
+            const mentor = all_mentors.find((user) => match.mentor_id === user.id);
+            const mentee = all_mentees.find((user) => match.mentee_id === user.id);
+            const mentor_user = all_users.find((user) => mentor.user_id === user.id);
+            const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+
+            if (
+                current_user.organization_id !== mentor_user.organization_id ||
+                current_user.organization_id !== mentee_user.organization_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
         await Matches.removeMatch(req.params.id);
         return await res.status(200).json({ id: req.params.id });
     } catch (error) {
