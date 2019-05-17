@@ -11,24 +11,20 @@ const Users = require('../database/helpers/users');
 
 async function getMentorProfiles(req, res) {
     try {
-        // const user = await Users.getUserById(req.user.id);
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_mentors = await MentorProfiles.getMentorProfiles();
+        const all_users = await Users.getAllUsers();
 
-        // if(user === undefined){
-        //     return await res.status(403).json({ error: 'You are not authenticated!' });
-        // }
-
-        // let mentors = [];
-        // if(user.role !== 'ADMINISTRATOR'){
-        //     mentors = await MentorProfiles.getMentorProfilesByOrganization(user.organization_id);
-        // }else{
-        const mentors = await MentorProfiles.getMentorProfiles();
-        // }
-
-        // if(mentors === undefined){
-        //     mentors = [];
-        // }
-
-        return await res.status(200).json(mentors);
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const mentors = all_mentors.filter((elem) => {
+                const user = all_users.find((user) => user.id === elem.user_id);
+                return user.id === current_user.organization_id;
+            });
+            return await res.status(200).json(mentors);
+        }
+        return await res.status(200).json(all_mentors);
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
