@@ -1,5 +1,6 @@
 module.exports = {
     getExperiences,
+    getExperiencesByUserId,
     addExperience,
     getExperience,
     updateExperience,
@@ -15,6 +16,27 @@ async function getExperiences(req, res) {
         if (current_user === undefined)
             return await res.status(403).json({ error: 'Access denied!' });
         const all_experiences = await Experiences.getExperiences();
+        const all_users = await Users.getAllUsers();
+
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const experiences = all_experiences.filter((elem) => {
+                const user = all_users.find((user) => elem.user_id === user.id);
+                return current_user.organization_id === user.organization_id;
+            });
+            return await res.status(200).json(experiences);
+        }
+        return await res.status(200).json(all_experiences);
+    } catch (error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getExperiencesByUserId(req, res) {
+    try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_experiences = await Experiences.getExperiencesByUserId(req.params.id);
         const all_users = await Users.getAllUsers();
 
         if (current_user.role !== 'ADMINISTRATOR') {
