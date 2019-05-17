@@ -6,7 +6,7 @@ module.exports = {
     registerWithGithub,
     deleteInvitation,
     removeInvitation
-}
+};
 const Invitations = require('../database/helpers/invitations');
 const Users = require('../database/helpers/users');
 const { authValidator } = require('../validators');
@@ -14,73 +14,119 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 require('../middleware/passport');
 
-async function getAllInvitations(req, res){
+async function getAllInvitations(req, res) {
     try {
-        const invitations = await Invitations.getInvitations();
-        return await res.status(200).json(invitations);
-    } catch(error) {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const all_invitations = await Invitations.getInvitations();
+
+        if (current_user.role !== 'ADMINISTRATOR') {
+            const invitations = all_invitations.filter((elem) => {
+                return elem.organization_id === current_user.organization_id;
+            });
+            return await res.status(200).json(invitations);
+        }
+        return await res.status(200).json(all_invitations);
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function addInvitation(req, res){
+async function addInvitation(req, res) {
     try {
-        const invitationData = {
-            organization_id,
-            user_id,
-            role
-        } = req.body;
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+        const invitationData = ({ organization_id, user_id, role } = req.body);
+
         const id = await Invitations.insertInvitation(invitationData);
+
         return await res.status(201).json({ id, ...invitationData });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function getInvitation(req, res){
+async function getInvitation(req, res) {
     try {
         const invitation = await Invitations.getInvitationById(req.params.invitation_id);
-        if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
+        if (invitation === null || invitation.deleted)
+            return await res.status(404).json({ error: 'Invitation not found!' });
         return await res.status(200).json(invitation);
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function deleteInvitation(req, res){
+async function deleteInvitation(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const invitation = await Invitations.getInvitationById(req.params.invitation_id);
-        if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (invitation === undefined)
+                return await res.status(404).json({ error: 'Invitation not found!' });
+        } else {
+            if (invitation === undefined || invitation.deleted)
+                return await res.status(404).json({ error: 'Invitation not found!' });
+            if (
+                current_user.organization_id !== invitation.organization_id ||
+                current_user.id !== invitation.user_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
+
         await Invitations.deleteInvitation(req.params.invitation_id);
         return await res.status(200).json({ id: req.params.invitation_id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function removeInvitation(req, res){
+async function removeInvitation(req, res) {
     try {
+        const current_user = await Users.getUserById(req.user.id);
+        if (current_user === undefined)
+            return await res.status(403).json({ error: 'Access denied!' });
+
         const invitation = await Invitations.getInvitationById(req.params.invitation_id);
-        if(invitation === null || invitation.deleted) return await res.status(404).json({ error: 'Invitation not found!' });
+        if (
+            current_user.role === 'ADMINISTRATOR' ||
+            current_user.role === 'OWNER' ||
+            current_user.role === 'MANAGER'
+        ) {
+            if (invitation === undefined)
+                return await res.status(404).json({ error: 'Invitation not found!' });
+        } else {
+            if (invitation === undefined || invitation.deleted)
+                return await res.status(404).json({ error: 'Invitation not found!' });
+            if (
+                current_user.organization_id !== invitation.organization_id ||
+                current_user.id !== invitation.user_id
+            )
+                return await res.status(403).json({ error: 'Access denied!' });
+        }
+
         await Invitations.removeInvitation(req.params.invitation_id);
         return await res.status(200).json({ id: req.params.invitation_id });
-    } catch(error) {
+    } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
 }
 
-async function register(req, res){
-    const {
-        user_email,
-        user_password,
-        user_first_name,
-        user_last_name
-    } = req.body;
+async function register(req, res) {
+    const { user_email, user_password, user_first_name, user_last_name } = req.body;
 
-    const invitationData = {
-        organization_id,
-        role
-    } = await Invitations.getInvitationById(req.params.invitation_id);
+    const invitationData = ({ organization_id, role } = await Invitations.getInvitationById(
+        req.params.invitation_id
+    ));
 
     let userData = {
         email: user_email,
@@ -89,19 +135,17 @@ async function register(req, res){
         last_name: user_last_name,
         organization_id: invitationData.organization_id,
         role: invitationData.role
-    }
+    };
 
     const validUser = await authValidator.validateUser(userData);
-    if(!validUser){
+    if (!validUser) {
         return await res
             .status(400)
             .json({ error: 'Cannot register user - missing required fields!' });
     }
 
-    if(await Users.getUserByEmail(userData.email)){
-        return await res
-            .status(400)
-            .json({ error: 'User already exists!' });
+    if (await Users.getUserByEmail(userData.email)) {
+        return await res.status(400).json({ error: 'User already exists!' });
     }
 
     try {
@@ -110,17 +154,17 @@ async function register(req, res){
 
         await Users.insertUser(userData);
 
-        return res
-            .status(201)
-            .json({ message: 'User successfully registered!' });
-    } catch(error) {
-        return await res
-            .status(500)
-            .json({ error: error.message });
+        return res.status(201).json({ message: 'User successfully registered!' });
+    } catch (error) {
+        return await res.status(500).json({ error: error.message });
     }
 }
 
-async function registerWithGithub(req, res){
+async function registerWithGithub(req, res) {
     const invitationId = req.params.invitation_id;
-    return await passport.authenticate('github', { failureRedirect: '/', successRedirect: '/api', state: JSON.stringify({ invitation_id: invitationId })})(req, res);
+    return await passport.authenticate('github', {
+        failureRedirect: '/',
+        successRedirect: '/api',
+        state: JSON.stringify({ invitation_id: invitationId })
+    })(req, res);
 }
