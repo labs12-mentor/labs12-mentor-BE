@@ -2,7 +2,7 @@ const faker = require('faker');
 
 async function makeInvitation(i) {
     return {
-        organization_id: 1,
+        organization_id: 2,
         user_id: i,
         role: 'USER'
     };
