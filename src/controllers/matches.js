@@ -1,5 +1,7 @@
 module.exports = {
     getMatches,
+    getAvailableMentees,
+    getAvailableMentors,
     addMatch,
     getMatch,
     updateMatch,
@@ -38,6 +40,26 @@ async function getMatches(req, res) {
         }
         return await res.status(200).json(all_matches);
     } catch (error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getAvailableMentors(req, res){
+    try {
+        const matches = await Matches.getAvailableMentors();
+        
+        return await res.status(200).json(matches);
+    } catch(error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getAvailableMentees(req, res){
+    try {
+        const matches = await Matches.getAvailableMentees();
+
+        return await res.status(200).json(matches);
+    } catch(error) {
         return await res.status(500).json({ error: error.message });
     }
 }

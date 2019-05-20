@@ -13,7 +13,7 @@ exports.seed = async (knex, Promise) => {
   await knex("organizations").del();
 
   // if sqlite 
-  if (APP_ENV == "test") {
+  if (APP_ENV == "development") {
   await knex.raw("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='invitations';");
   await knex.raw("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='meetings';");
   await knex.raw("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='matches';");
@@ -25,7 +25,7 @@ exports.seed = async (knex, Promise) => {
   await knex.raw("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME='organizations';");
   }
 
-  if (APP_ENV == "development") {
+  if (APP_ENV == "production") {
   await knex.raw("ALTER SEQUENCE organizations_id_seq RESTART WITH 1");
   await knex.raw("ALTER SEQUENCE users_id_seq RESTART WITH 1");
   await knex.raw("ALTER SEQUENCE notifications_id_seq RESTART WITH 1");
