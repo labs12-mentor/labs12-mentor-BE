@@ -55,16 +55,17 @@ async function addMeeting(req, res) {
         const all_users = await Users.getAllUsers();
         const all_mentors = await Mentors.getMentorProfiles();
         const all_mentees = await Mentees.getMenteeProfiles();
-
-        const match = all_matches.find((elem) => meetingData.match_id === elem.id);
-        const mentor = all_mentors.find((user) => match.mentor_id === user.id);
-        const mentee = all_mentees.find((user) => match.mentee_id === user.id);
-        const mentor_user = all_users.find((user) => mentor.user_id === user.id);
-        const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
-
+        const match = await all_matches.find((elem) => Number(meetingData.match_id) === elem.id);
+        const mentor = await all_mentors.find((user) => match.mentor_id === user.id);
+        const mentee = await all_mentees.find((user) => match.mentee_id === user.id);
+        const mentor_user = await all_users.find((user) => mentor.user_id === user.id);
+        const mentee_user = await all_users.find((user) => mentee.user_id === user.id);
         if (
-            current_user.organization_id !== mentor_user.organization_id ||
-            current_user.organization_id !== mentee_user.organization_id
+            current_user.organization_id !== mentor_user.organization_id &&
+            current_user.organization_id !== mentee_user.organization_id &&
+            current_user.role !== 'ADMINISTRATOR' &&
+            current_user.role !== 'OWNER' &&
+            current_user.role !== 'MANAGER'
         )
             return await res.status(403).json({ error: 'Access denied!' });
         const id = await Meetings.insertMeeting(meetingData);
