@@ -17,9 +17,7 @@ async function truncate() {
 }
 
 async function getMentorProfiles() {
-    return await db
-        .select('*')
-        .from('mentorprofiles');
+    return await db.select('*').from('mentorprofiles');
 }
 
 async function getMentorProfileById(id) {
@@ -41,13 +39,14 @@ async function getMentorProfileByUserId(user_id) {
 async function insertMentorProfile(mentorProfile) {
     return await db('mentorprofiles')
         .insert({
-            user_id: mentorProfile.user_id
+            user_id: mentorProfile.user_id,
+            status: 'AVAILABLE'
         })
         .returning('id')
-        .then(response => {
+        .then((response) => {
             return {
                 id: response[0]
-            }
+            };
         });
 }
 
@@ -56,6 +55,7 @@ async function updateMentorProfile(id, mentorProfile) {
         .where({ id })
         .update({
             user_id: mentorProfile.user_id,
+            status: mentorProfile.status,
             deleted: mentorProfile.deleted
         });
 }

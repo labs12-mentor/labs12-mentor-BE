@@ -1,6 +1,7 @@
 module.exports = {
     truncate,
     getExperiences,
+    getExperiencesByUserId,
     getExperienceById,
     insertExperience,
     updateExperience,
@@ -16,9 +17,14 @@ async function truncate() {
 }
 
 async function getExperiences() {
+    return await db.select('*').from('experiences');
+}
+
+async function getExperiencesByUserId(user_id) {
     return await db
         .select('*')
-        .from('experiences');
+        .from('experiences')
+        .where({ user_id });
 }
 
 async function getExperienceById(id) {
@@ -33,14 +39,14 @@ async function insertExperience(experience) {
     return await db('experiences')
         .insert({
             user_id: experience.user_id,
-            name: experience.name,
+            name: experience.name
         })
         .returning('id')
-        .then(response => {
+        .then((response) => {
             return {
                 id: response[0]
-            }
-        })
+            };
+        });
 }
 
 async function updateExperience(id, experience) {
