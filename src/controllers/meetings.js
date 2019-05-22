@@ -29,7 +29,7 @@ async function getMeetings(req, res) {
                 const mentor = all_mentors.find((user) => match.mentor_id === user.id);
                 const mentee = all_mentees.find((user) => match.mentee_id === user.id);
                 const mentor_user = all_users.find((user) => mentor.user_id === user.id);
-                const mentee_user = all_mentors.find((user) => mentee.user_id === user.id);
+                const mentee_user = all_users.find((user) => mentee.user_id === user.id);
 
                 return (
                     current_user.organization_id === mentor_user.organization_id &&
