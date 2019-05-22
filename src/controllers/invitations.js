@@ -8,11 +8,29 @@ module.exports = {
     removeInvitation
 };
 const Invitations = require('../database/helpers/invitations');
+const Organizations = require('../database/helpers/organizations');
 const Users = require('../database/helpers/users');
 const { authValidator } = require('../validators');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const nodemailer = require('nodemailer');
 require('../middleware/passport');
+
+const smtpTransport = nodemailer.createTransport({
+    service: 'Gmail',
+    port: 465,
+    auth: {
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD
+    }
+});
+
+const mailOptions = {
+    from: process.env.MAIL,
+    to: '',
+    subject: '',
+    html: ''
+}
 
 async function getAllInvitations(req, res) {
     try {
@@ -38,10 +56,27 @@ async function addInvitation(req, res) {
         const current_user = await Users.getUserById(req.user.id);
         if (current_user === undefined)
             return await res.status(403).json({ error: 'Access denied!' });
-        const invitationData = ({ organization_id, user_id, role } = req.body);
+        const invitationData = ({ organization_id, user_id, role, email, name } = req.body);
+        const organization = await Organizations.getOrganizationById(organization_id);
 
-        const id = await Invitations.insertInvitation(invitationData);
+        const {id} = await Invitations.insertInvitation(invitationData);
+        await smtpTransport.sendMail({
+            ...mailOptions,
+            // to: email,
+            to: email,
+            subject: `${name}, you are invited to join ${organization.name} @ MentorMatch!`,
+            html: `
+                <h1>Hello from MentorMatch, ${name}!</h1>
+                <p>Your peers from ${organization.name} are waiting here for you! Click the link below to join MentorMatch!
+                <a href="https://mentormatch.netlify.com/invitation/${id}">https://mentormatch.netlify.com/invitation/${id}</a>
 
+                <h4>See you soon @ MentorMatch!</h4>
+                <p>Team MentorMatch</p>
+            `
+        }, async (err, response) => {
+            if(err) throw err;
+            await smtpTransport.close();
+        })
         return await res.status(201).json({ id, ...invitationData });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
