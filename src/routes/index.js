@@ -3,6 +3,7 @@ const { apiController } = require('../controllers');
 const socketMiddleware = require('../middleware/socketMiddleware');
 
 const auth = require('./auth');
+const contact = require('./contact');
 const experiences = require('./experiences');
 const invitations = require('./invitations');
 const matches = require('./matches');
@@ -23,6 +24,7 @@ router.route('/')
     .get(apiController.rootRoute);
 
 router.use('/auth', auth);
+router.use('/contact', contact)
 router.use('/experiences', experiences);
 router.use('/invitations', invitations);
 router.use('/matches', matches);
