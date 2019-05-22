@@ -70,6 +70,7 @@ async function addInvitation(req, res) {
                 <p>Your peers from ${organization.name} are waiting here for you! Click the link below to join MentorMatch!
                 <a href="https://mentormatch.netlify.com/invitation/${id}">https://mentormatch.netlify.com/invitation/${id}</a>
 
+                <hr>
                 <h4>See you soon @ MentorMatch!</h4>
                 <p>Team MentorMatch</p>
             `
