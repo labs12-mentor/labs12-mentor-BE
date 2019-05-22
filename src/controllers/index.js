@@ -1,5 +1,6 @@
 const apiController = require('./api');
 const authController = require('./auth');
+const contactController = require('./contact');
 const experiencesController = require('./experiences');
 const invitationsController = require('./invitations');
 const matchesController = require('./matches');
@@ -13,6 +14,7 @@ const usersController = require('./users');
 module.exports = {
     apiController,
     authController,
+    contactController,
     experiencesController,
     invitationsController,
     matchesController,
