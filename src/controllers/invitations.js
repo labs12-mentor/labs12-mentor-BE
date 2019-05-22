@@ -122,17 +122,22 @@ async function removeInvitation(req, res) {
 }
 
 async function register(req, res) {
-    const { user_email, user_password, user_first_name, user_last_name } = req.body;
+    const { user_email, user_password, user_first_name, user_last_name, user_street, user_country, user_state, user_city } = req.body;
 
     const invitationData = ({ organization_id, role } = await Invitations.getInvitationById(
         req.params.invitation_id
     ));
+
 
     let userData = {
         email: user_email,
         password: user_password,
         first_name: user_first_name,
         last_name: user_last_name,
+        street: user_street,
+        city: user_city,
+        state: user_state,
+        country: user_country,
         organization_id: invitationData.organization_id,
         role: invitationData.role
     };
