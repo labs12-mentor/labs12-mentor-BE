@@ -61,6 +61,11 @@ exports.seed = async (knex, Promise) => {
         await users.push(await makeUser(i, 'USER'));
     }
 
+    for (let i = 0; i < 50; i++) {
+        await users.push(await makeUser(i, 'MENTEE'));
+    }
+    console.log('----- MENTORS ADDED -----');
+
     const chunkSize = 30;
     console.log('----- USERS ADDED -----');
     //return knex("users").insert(users);
