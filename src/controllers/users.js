@@ -99,7 +99,8 @@ async function updateUser(req, res) {
             city: req.body.city,
             state: req.body.state,
             zipcode: req.body.zipcode,
-            country: req.body.country
+            country: req.body.country,
+            role: req.body.role
         };
 
         await Users.updateUser(req.params.id, updatedUser);
