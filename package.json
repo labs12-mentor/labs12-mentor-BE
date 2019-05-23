@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/labs12-mentor/labs12-mentor-BE#readme",
   "dependencies": {
+    "@google-cloud/storage": "^2.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
