@@ -86,3 +86,6 @@ typings/
 
 # yarn lock file
 yarn.lock
+
+# GCP keyfile
+keyfile.json
