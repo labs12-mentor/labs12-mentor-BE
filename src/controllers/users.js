@@ -100,6 +100,7 @@ async function updateUser(req, res) {
             state: req.body.state,
             zipcode: req.body.zipcode,
             country: req.body.country,
+            avatar_url: req.body.avatar_url,
             role: req.body.role
         };
 
