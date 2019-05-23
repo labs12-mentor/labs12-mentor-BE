@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const gcs = new Storage({
     projectId: process.env.GCS_PROJECT_ID,
-    keyFilename: '/path/to/keyfile.json'
+    // keyFilename: '/path/to/keyfile.json'
 });
   
 const bucketName = process.env.GCS_BUCKET_NAME
