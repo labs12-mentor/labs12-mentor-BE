@@ -4,7 +4,6 @@ module.exports = {
 }
 
 require('dotenv').config();
-const fs = require('fs');
 
 async function uploadAvatar(req, res){
     try {
