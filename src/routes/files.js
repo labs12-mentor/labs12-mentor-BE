@@ -17,4 +17,7 @@ router.route('/avatar/:id')
 router.route('/logo')
     .post(authenticate, authorize(['ALL']), upload.single('logo'), filesController.uploadLogo);
 
+router.route('/logo/:id')
+    .post(authenticate, authorize(['ALL']), upload.single('logo'), filesController.getLogo);
+
 module.exports = router;
