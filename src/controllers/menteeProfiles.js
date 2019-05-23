@@ -108,14 +108,14 @@ async function updateMenteeProfile(req, res) {
         const menteeData = ({ user_id, wanted_mentor_id, status } = req.body);
 
         const user = await Users.getUserById(menteeData.user_id);
-        if (user.role !== 'MENTEE' && menteeProfile.status === 'APPROVED') {
-            await Users.updateUser(menteeProfile.user_id, {
+        if (user.role !== 'MENTEE' && menteeData.status === 'APPROVED') {
+            await Users.updateUser(menteeData.user_id, {
                 role: 'MENTEE'
             });
         }
 
-        await MenteeProfiles.updateMenteeProfile(req.params.id, menteeProfile);
-        return await res.status(200).json({ id: req.params.id, ...mentee, ...menteeProfile });
+        await MenteeProfiles.updateMenteeProfile(req.params.id, menteeData);
+        return await res.status(200).json({ id: req.params.id, ...mentee, ...menteeData });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
