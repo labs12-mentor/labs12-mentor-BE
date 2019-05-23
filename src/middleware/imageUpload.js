@@ -16,7 +16,7 @@ function getPublicUrl(filename) {
     return 'https://storage.googleapis.com/' + bucketName + '/' + filename;
 }
   
-let imageUpload = {};
+const imageUpload = {};
   
 imageUpload.uploadToGCS = (req, res, next) => {
     if(!req.file) return next();
