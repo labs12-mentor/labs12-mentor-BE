@@ -5,6 +5,7 @@ const socketMiddleware = require('../middleware/socketMiddleware');
 const auth = require('./auth');
 const contact = require('./contact');
 const experiences = require('./experiences');
+const files = require('./files');
 const invitations = require('./invitations');
 const matches = require('./matches');
 const meetings = require('./meetings');
@@ -26,6 +27,7 @@ router.route('/')
 router.use('/auth', auth);
 router.use('/contact', contact)
 router.use('/experiences', experiences);
+router.use('/files', files);
 router.use('/invitations', invitations);
 router.use('/matches', matches);
 router.use('/meetings', meetings);

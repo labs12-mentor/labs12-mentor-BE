@@ -50,12 +50,13 @@ async function addMeeting(req, res) {
         if (current_user === undefined)
             return await res.status(403).json({ error: 'Access denied!' });
 
-        const meetingData = ({ match_id } = req.body);
+        const meetingData = ({ content } = req.body);
         const all_matches = await Matches.getMatches();
         const all_users = await Users.getAllUsers();
         const all_mentors = await Mentors.getMentorProfiles();
         const all_mentees = await Mentees.getMenteeProfiles();
-        const match = await all_matches.find((elem) => Number(meetingData.match_id) === elem.id);
+
+        const match = await all_matches.find((elem) => current_user.id === elem.mentor_id || current_user.id === elem.mentee_id);
         const mentor = await all_mentors.find((user) => match.mentor_id === user.id);
         const mentee = await all_mentees.find((user) => match.mentee_id === user.id);
         const mentor_user = await all_users.find((user) => mentor.user_id === user.id);

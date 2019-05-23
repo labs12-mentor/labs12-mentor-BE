@@ -23,6 +23,7 @@ exports.up = function(knex, Promise) {
     table.string("role").notNullable();
     table.string("github_id");
     table.string("github_token");
+    table.string("avatar_url");
 
     table
       .integer("organization_id")
