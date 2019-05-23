@@ -20,7 +20,8 @@ const imageUpload = {};
   
 imageUpload.uploadToGCS = (req, res, next) => {
     if(!req.file) return next();
-  
+    
+    // replace with UUID
     const gcsname = req.file.originalname;
     const file = bucket.file(gcsname);
   
