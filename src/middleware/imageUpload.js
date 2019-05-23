@@ -5,11 +5,11 @@ const fs = require('fs');
 require('dotenv').config();
 
 const gcs = new Storage({
-    projectId: 'your-project-id',
+    projectId: process.env.GCS_PROJECT_ID,
     keyFilename: '/path/to/keyfile.json'
 });
   
-const bucketName = 'bucket-name-for-upload'
+const bucketName = process.env.GCS_BUCKET_NAME
 const bucket = gcs.bucket(bucketName);
   
 function getPublicUrl(filename) {
