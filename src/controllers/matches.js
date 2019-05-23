@@ -81,7 +81,7 @@ async function addMatch(req, res) {
         const id = await Matches.insertMatch(matchData);
 
         await Mentors.updateMentorProfile(matchData.mentor_id, { status: 'UNAVAILABLE' });
-        await Mentees.updateMenteeProfile(matchData.mentor_id, { status: 'UNAVAILABLE' });
+        await Mentees.updateMenteeProfile(matchData.mentee_id, { status: 'UNAVAILABLE' });
 
         const mentor = await Mentors.getMentorProfileById(mentor_id);
         const mentee = await Mentees.getMenteeProfileById(mentee_id);
