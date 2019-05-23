@@ -3,7 +3,10 @@ const { filesController } = require('../controllers');
 const authenticate = require('../middleware/authenticate');
 const authorize = require('../middleware/authorize');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({
+    storage: multer.memoryStorage,
+    fileSize: 5*1024*1024
+});
 
 router.route('/avatar')
     .post(authenticate, authorize(['ALL']), upload.single('avatar'), filesController.uploadAvatar);
