@@ -31,7 +31,8 @@ async function register(req, res){
         user_email,
         user_password,
         user_first_name,
-        user_last_name
+        user_last_name,
+        user_avatar_url
     } = req.body;
 
     let organizationData = {
@@ -45,6 +46,7 @@ async function register(req, res){
         password: user_password,
         first_name: user_first_name,
         last_name: user_last_name,
+        avatar_url: user_avatar_url,
         organization_id: -1
     }
 
