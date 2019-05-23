@@ -2,6 +2,7 @@ const apiController = require('./api');
 const authController = require('./auth');
 const contactController = require('./contact');
 const experiencesController = require('./experiences');
+const filesController = require('./files');
 const invitationsController = require('./invitations');
 const matchesController = require('./matches');
 const menteeProfilesController = require('./menteeProfiles');
@@ -16,6 +17,7 @@ module.exports = {
     authController,
     contactController,
     experiencesController,
+    filesController,
     invitationsController,
     matchesController,
     menteeProfilesController,
