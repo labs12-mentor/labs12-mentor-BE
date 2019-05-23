@@ -14,7 +14,7 @@ const gcs = new Storage({
     // keyFilename: 'keyfile.json'
     credentials: {
         client_email: process.env.GCS_CLIENT_EMAIL,
-        private_key: process.env.GCS_PRIVATE_KEY
+        private_key: process.env.GCS_PRIVATE_KEY.replace(/\\n/g, '\n')
     },
     clientOptions: {
         clientId: process.env.GCS_CLIENT_ID,
