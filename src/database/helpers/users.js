@@ -69,6 +69,7 @@ async function insertUser(user) {
             state: user.state,
             zipcode: user.zipcode,
             country: user.country,
+            avatar_url: user.avatar_url,
             role: user.role,
             organization_id: user.organization_id,
             github_id: user.github_id,
@@ -95,6 +96,7 @@ async function updateUser(id, user) {
             state: user.state,
             zipcode: user.zipcode,
             country: user.country,
+            avatar_url: user.avatar_url,
             role: user.role,
             organization_id: user.organization_id,
             deleted: user.deleted
