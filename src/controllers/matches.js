@@ -177,49 +177,49 @@ async function updateMatch(req, res) {
                 return await res.status(403).json({ error: 'Access denied!' });
         }
 
-        // if (match.mentee_id !== matchData.mentee_id) {
-        //     const mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
-        //     await Notifications.insertNotification({
-        //         user_id: mentor.user_id,
-        //         content: 'Your match has been updated - now you are matched with a new mentee!'
-        //     });
+        if (match.mentee_id !== matchData.mentee_id) {
+            const mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
+            await Notifications.insertNotification({
+                user_id: mentor.user_id,
+                content: 'Your match has been updated - now you are matched with a new mentee!'
+            });
 
-        //     await Mentees.updateMenteeProfile(match.mentee_id, { status: 'AVAILABLE' });
-        //     const old_mentee = await Mentees.getMenteeProfileById(match.mentee_id);
-        //     await Notifications.insertNotification({
-        //         user_id: old_mentee.user_id,
-        //         content: 'Your match has been removed!'
-        //     });
+            await Mentees.updateMenteeProfile(match.mentee_id, { status: 'AVAILABLE' });
+            const old_mentee = await Mentees.getMenteeProfileById(match.mentee_id);
+            await Notifications.insertNotification({
+                user_id: old_mentee.user_id,
+                content: 'Your match has been removed!'
+            });
 
-        //     await Mentees.updateMenteeProfile(matchData.mentee_id, { status: 'UNAVAILABLE' });
-        //     const new_mentee = await Mentees.getMenteeProfileById(matchData.mentee_id);
-        //     await Notifications.insertNotification({
-        //         user_id: new_mentee.user_id,
-        //         content: 'You have been matched with your mentor!'
-        //     });
-        // }
+            await Mentees.updateMenteeProfile(matchData.mentee_id, { status: 'UNAVAILABLE' });
+            const new_mentee = await Mentees.getMenteeProfileById(matchData.mentee_id);
+            await Notifications.insertNotification({
+                user_id: new_mentee.user_id,
+                content: 'You have been matched with your mentor!'
+            });
+        }
 
-        // if (match.mentor_id !== matchData.mentor_id) {
-        //     const mentee = await Mentees.getMenteeProfileById(mentee_id);
-        //     await Notifications.insertNotification({
-        //         user_id: mentee.user_id,
-        //         content: 'Your match has been updated - now you are matched with a new mentor!'
-        //     });
+        if (match.mentor_id !== matchData.mentor_id) {
+            const mentee = await Mentees.getMenteeProfileById(mentee_id);
+            await Notifications.insertNotification({
+                user_id: mentee.user_id,
+                content: 'Your match has been updated - now you are matched with a new mentor!'
+            });
 
-        //     await Mentors.updateMentorProfile(match.mentor_id, { status: 'AVAILABLE' });
-        //     const old_mentor = await Mentors.getMentorProfileById(match.mentor_id);
-        //     await Notifications.insertNotification({
-        //         user_id: old_mentor.user_id,
-        //         content: 'Your match has been removed!'
-        //     });
+            await Mentors.updateMentorProfile(match.mentor_id, { status: 'AVAILABLE' });
+            const old_mentor = await Mentors.getMentorProfileById(match.mentor_id);
+            await Notifications.insertNotification({
+                user_id: old_mentor.user_id,
+                content: 'Your match has been removed!'
+            });
 
-        //     await Mentors.updateMentorProfile(matchData.mentor_id, { status: 'UNAVAILABLE' });
-        //     const new_mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
-        //     await Notifications.insertNotification({
-        //         user_id: new_mentor.user_id,
-        //         content: 'You have been matched with your mentee!'
-        //     });
-        // }
+            await Mentors.updateMentorProfile(matchData.mentor_id, { status: 'UNAVAILABLE' });
+            const new_mentor = await Mentors.getMentorProfileById(matchData.mentor_id);
+            await Notifications.insertNotification({
+                user_id: new_mentor.user_id,
+                content: 'You have been matched with your mentee!'
+            });
+        }
 
         await Matches.updateMatch(req.params.id, matchData);
         return await res.status(200).json({ id: req.params.id, ...matchData });
