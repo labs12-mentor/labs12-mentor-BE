@@ -1,7 +1,8 @@
 module.exports = {
     uploadAvatar,
     getAvatar,
-    uploadLogo
+    uploadLogo,
+    getLogo
 }
 
 require('dotenv').config();
@@ -36,6 +37,14 @@ async function uploadLogo(req, res){
     try {
         console.log(req.file);
         return await res.status(200).json({ message: 'Logo uploaded!' });
+    } catch (error) {
+        return await res.status(500).json({ error: error.message });
+    }
+}
+
+async function getLogo(req, res){
+    try {
+        return await res.status(200).json({ message: 'Logo fetched!' });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
