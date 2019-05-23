@@ -12,6 +12,7 @@ async function makeAdmin() {
         state: faker.address.state(),
         zipcode: faker.address.zipCode(),
         country: faker.address.country(),
+        avatar_url: faker.internet.avatar(),
         role: 'ADMINISTRATOR',
         organization_id: 1
     };
@@ -28,6 +29,7 @@ async function makeUser(i, role) {
         state: faker.address.state(),
         zipcode: faker.address.zipCode(),
         country: faker.address.country(),
+        avatar_url: faker.internet.avatar(),
         role: role,
         organization_id: 2
     };
