@@ -11,9 +11,17 @@ const upload = multer({
 
 const gcs = new Storage({
     projectId: process.env.GCS_PROJECT_ID,
-    keyFilename: 'keyfile.json'
+    // keyFilename: 'keyfile.json'
+    credentials: {
+        client_email: process.env.GCS_CLIENT_EMAIL,
+        private_key: process.env.GCS_PRIVATE_KEY
+    },
+    clientOptions: {
+        clientId: process.env.GCS_CLIENT_ID,
+        keyId: process.env.GCS_KEY_ID
+    }
 });
-  
+
 const bucketName = process.env.GCS_BUCKET_NAME
 const bucket = gcs.bucket(bucketName);
   
