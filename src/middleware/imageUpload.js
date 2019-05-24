@@ -1,48 +1,61 @@
 'use strict';
 
-const {Storage} = require('@google-cloud/storage');
-const fs = require('fs');
 require('dotenv').config();
+const uuidv4 = require('uuid/v4');
+const { Storage } = require('@google-cloud/storage');
+const multer = require('multer');
+const upload = multer({
+    storage: multer.memoryStorage(),
+    fileSize: 5*1024*1024
+});
 
 const gcs = new Storage({
     projectId: process.env.GCS_PROJECT_ID,
-    // keyFilename: '/path/to/keyfile.json'
+    credentials: {
+        private_key: process.env.GCS_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.GCS_CLIENT_EMAIL
+    }
+    // keyFilename: 'keyfile.json'
 });
-  
+
 const bucketName = process.env.GCS_BUCKET_NAME
 const bucket = gcs.bucket(bucketName);
   
-function getPublicUrl(filename) {
-    return 'https://storage.googleapis.com/' + bucketName + '/' + filename;
+async function getPublicUrl(filename) {
+    return await `https://storage.googleapis.com/${bucketName}/${filename}`;
 }
   
-const imageUpload = {};
-  
-imageUpload.uploadToGCS = (req, res, next) => {
+async function uploadToGCS(req, res, next){
     if(!req.file) return next();
     
-    // replace with UUID
-    const gcsname = req.file.originalname;
+    const gcsname = uuidv4();
     const file = bucket.file(gcsname);
   
-    const stream = file.createWriteStream({
+    const stream = await file.createWriteStream({
         metadata: {
             contentType: req.file.mimetype
-        }
+        },
+        resumable: false
     });
   
-    stream.on('error', (err) => {
+    await stream.on('error', (err) => {
         req.file.cloudStorageError = err;
         next(err);
     });
   
-    stream.on('finish', () => {
+    await stream.on('finish', async () => {
         req.file.cloudStorageObject = gcsname;
-        req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
-        next();
+        await file.makePublic().then(async () => {
+            req.file.cloudStoragePublicUrl = await getPublicUrl(gcsname);
+            next();
+        });
     });
   
-    stream.end(req.file.buffer);
+    await stream.end(req.file.buffer);
 }
 
-module.exports = imageUpload;
+module.exports = {
+    uploadToGCS,
+    getPublicUrl,
+    upload
+};

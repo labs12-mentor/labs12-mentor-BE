@@ -1,12 +1,9 @@
 module.exports = {
     uploadAvatar,
-    getAvatar,
-    uploadLogo,
-    getLogo
+    uploadLogo
 }
 
 require('dotenv').config();
-const fs = require('fs');
 
 async function uploadAvatar(req, res){
     try {
@@ -14,16 +11,7 @@ async function uploadAvatar(req, res){
         if(req.file && req.file.cloudStoragePublicUrl){
             data.imageUrl = req.file.cloudStoragePublicUrl;
         }
-        return await res.status(200).json({ message: 'Avatar uploaded!', data });
-    } catch (error) {
-        return await res.status(500).json({ error: error.message });
-    }
-}
-
-async function getAvatar(req, res){
-    try {
-        // return await res.download(uploadFolder + filename);
-        return await res.status(200).json({ message: 'Avatar fetched!' });
+        return await res.status(200).json({ message: 'Avatar uploaded!', ...data });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
@@ -35,15 +23,7 @@ async function uploadLogo(req, res){
         if(req.file && req.file.cloudStoragePublicUrl){
             data.imageUrl = req.file.cloudStoragePublicUrl;
         }
-        return await res.status(200).json({ message: 'Logo uploaded!' });
-    } catch (error) {
-        return await res.status(500).json({ error: error.message });
-    }
-}
-
-async function getLogo(req, res){
-    try {
-        return await res.status(200).json({ message: 'Logo fetched!' });
+        return await res.status(200).json({ message: 'Logo uploaded!', ...data });
     } catch (error) {
         return await res.status(500).json({ error: error.message });
     }
