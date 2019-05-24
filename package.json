@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preinstall":"node preinstall",
     "start": "node index",
     "server": "nodemon index",
     "test": "jest --watch --verbose"
