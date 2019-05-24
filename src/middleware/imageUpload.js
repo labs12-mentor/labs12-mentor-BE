@@ -14,6 +14,14 @@ const gcs = new Storage({
     keyFilename: 'keyfile.json'
 });
 
+async function func1(){
+    const result = await gcs.authClient.getCredentials();
+    console.log(result);
+};
+
+func1();
+
+
 const bucketName = process.env.GCS_BUCKET_NAME
 const bucket = gcs.bucket(bucketName);
   
